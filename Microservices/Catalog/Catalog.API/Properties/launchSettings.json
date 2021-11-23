@@ -4,17 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:49830",
-      "sslPort": 0
+      "applicationUrl": "http://localhost:25720",
+      "sslPort": 44337
     }
   },
   "profiles": {
-    "MicroShop.Catalog": {
+    "Catalog.API": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "weatherforecast",
-      "applicationUrl": "http://localhost:5226",
+      "applicationUrl": "https://localhost:7114;http://localhost:5114",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

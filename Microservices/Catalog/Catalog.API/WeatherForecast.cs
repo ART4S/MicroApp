@@ -1,4 +1,4 @@
-namespace MicroShop.Catalog
+namespace Catalog.API
 {
     public class WeatherForecast
     {
