@@ -1,17 +1,11 @@
-var builder = WebApplication.CreateBuilder(args);
+using Catalog.API.Configuration;
+using Microsoft.AspNetCore;
 
-// Add services to the container.
+IWebHost host = CreateWebHostBuilder(args).Build().MigrateCatalogDbContext();
 
-builder.Services.AddControllers();
+host.Run();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+    WebHost.CreateDefaultBuilder(args)
+        .UseWebRoot("WebContent")
+        .UseStartup<Startup>();

@@ -3,7 +3,28 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "Microservices\Catalog\Catalog.API\Catalog.API.csproj", "{86EECD77-87D5-4AE7-928D-228CD6436810}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "Microservices\Catalog\Catalog.API\Catalog.API.csproj", "{86EECD77-87D5-4AE7-928D-228CD6436810}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{4FF9D643-A267-471F-9BF5-3B10E2952D70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{B290D5CB-404F-4F63-9E0D-4CDB16410B74}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Domian", "Microservices\Catalog\Catalog.Domian\Catalog.Domian.csproj", "{31456D4B-4574-4512-AC22-A63C1472AED7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8003A297-18DA-4511-9504-E168DD12FCA5}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.env = .env
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3359FD6B-7061-4DFE-9D07-AF600135A273}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Infrastructure", "Microservices\Catalog\Catalog.Infrastructure\Catalog.Infrastructure.csproj", "{C7E66DB9-9662-4EB0-BC89-ECCE458806E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{F17D7550-AA79-4DA0-AFDA-06158D2B90B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebHost.Customization", "Common\WebHost.Customization\WebHost.Customization.csproj", "{A6643D9D-429A-492F-92B2-2295C4FDAFA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +36,32 @@ Global
 		{86EECD77-87D5-4AE7-928D-228CD6436810}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86EECD77-87D5-4AE7-928D-228CD6436810}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86EECD77-87D5-4AE7-928D-228CD6436810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31456D4B-4574-4512-AC22-A63C1472AED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31456D4B-4574-4512-AC22-A63C1472AED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31456D4B-4574-4512-AC22-A63C1472AED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31456D4B-4574-4512-AC22-A63C1472AED7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3359FD6B-7061-4DFE-9D07-AF600135A273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3359FD6B-7061-4DFE-9D07-AF600135A273}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3359FD6B-7061-4DFE-9D07-AF600135A273}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3359FD6B-7061-4DFE-9D07-AF600135A273}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7E66DB9-9662-4EB0-BC89-ECCE458806E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7E66DB9-9662-4EB0-BC89-ECCE458806E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7E66DB9-9662-4EB0-BC89-ECCE458806E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7E66DB9-9662-4EB0-BC89-ECCE458806E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6643D9D-429A-492F-92B2-2295C4FDAFA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6643D9D-429A-492F-92B2-2295C4FDAFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6643D9D-429A-492F-92B2-2295C4FDAFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6643D9D-429A-492F-92B2-2295C4FDAFA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{86EECD77-87D5-4AE7-928D-228CD6436810} = {B290D5CB-404F-4F63-9E0D-4CDB16410B74}
+		{B290D5CB-404F-4F63-9E0D-4CDB16410B74} = {4FF9D643-A267-471F-9BF5-3B10E2952D70}
+		{31456D4B-4574-4512-AC22-A63C1472AED7} = {B290D5CB-404F-4F63-9E0D-4CDB16410B74}
+		{C7E66DB9-9662-4EB0-BC89-ECCE458806E9} = {B290D5CB-404F-4F63-9E0D-4CDB16410B74}
+		{A6643D9D-429A-492F-92B2-2295C4FDAFA5} = {F17D7550-AA79-4DA0-AFDA-06158D2B90B9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0D7E1679-C2B2-48DF-B7EF-C2EA32DDEE8F}

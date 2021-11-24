@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  catalog-data:
+   container_name: catalog-data
+   environment:
+    - ACCEPT_EULA=Y
+    - SA_PASSWORD=${SA_PASSWORD}
+   ports:
+    - "1433:1433"
+   volumes:
+    - microshop-catalog-data:/var/opt/mssql
+
+  catalog-api:
+    container_name: catalog-api
+    build:
+      context: .
+      dockerfile: Microservices/Catalog/Catalog.API/Dockerfile
+      args:
+       BUILD_MODE: Debug
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=catalog-data;Database=catalog_db;User Id=sa;Password=${SA_PASSWORD}
+    ports:
+      - "5000:80"
+
+volumes:
+  microshop-catalog-data:
+   external: false

@@ -1,0 +1,3 @@
+Creating migration for CatalogDbContext:
+1. Run mssql container:  docker run -e ACCEPT_EULA=Y -e SA_PASSWORD=Qwerty123 -p 1433:1433 --name msssql -d mcr.microsoft.com/mssql/server
+3. Execute command: dotnet ef migrations add Initial -s ./Microservices/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj -p ./Microservices/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj -o DataAccess/Migrations
