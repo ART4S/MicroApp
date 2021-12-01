@@ -15,13 +15,13 @@ services:
     container_name: catalog-api
     build:
       context: .
-      dockerfile: Microservices/Catalog/Catalog.API/Dockerfile
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
       args:
        BUILD_MODE: Debug
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=catalog-data;Database=catalog_db;User Id=sa;Password=${SA_PASSWORD}
+      - ConnectionStrings__DefaultConnection=Server=catalog-data;Database=catalog_db;User Id=sa;Password=${SA_PASSWORD};Persist Security Info=true;
     ports:
       - "5000:80"
 

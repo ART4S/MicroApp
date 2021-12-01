@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+	<CatalogType>
+		<Id>b21aa7a9-596c-495e-8d47-bdbaaeb2abcd</Id>
+		<Type>Mug</Type>
+	</CatalogType>
+	<CatalogType>
+		<Id>f238ae4d-dd41-4a00-89e1-b973b2883d0d</Id>
+		<Type>T-Shirt</Type>
+	</CatalogType>
+	<CatalogType>
+		<Id>cb0123bf-6cba-467e-9ea0-aa8376ec539d</Id>
+		<Type>Pin</Type>
+	</CatalogType>
+</Root>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+	<CatalogBrand>
+		<Id>b547cfd2-d341-44f7-a985-4acf6c068487</Id>
+		<Brand>.NET</Brand>
+	</CatalogBrand>
+	<CatalogBrand>
+		<Id>5c0557aa-8b27-4f16-9274-54d59b74e99f</Id>
+		<Brand>Other</Brand>
+	</CatalogBrand>
+</Root>
