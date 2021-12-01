@@ -1,4 +1,5 @@
-﻿using Catalog.API.Infrastructure.Pagination;
+﻿using Catalog.API.Infrastructure.Attributes;
+using Catalog.API.Infrastructure.Pagination;
 using Catalog.Application.Dto.CatalogBrand;
 using Catalog.Application.Dto.CatalogItem;
 using Catalog.Application.Dto.CatalogType;
@@ -27,10 +28,8 @@ public class CatalogController : BaseController
 
     [HttpGet("{id:guid}/info")]
     [ProducesResponseType(typeof(CatalogItemInfoDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetItemInfo(Guid id)
+    public async Task<IActionResult> GetItemInfo([RequiredNonDefault] Guid id)
     {
-        if (id == Guid.Empty) return BadRequest();
-
         return Ok(await Mediator.Send(new GetItemInfoRequest(id)));
     }
 
@@ -59,7 +58,7 @@ public class CatalogController : BaseController
 
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> DeleteItem(Guid id)
+    public async Task<IActionResult> DeleteItem([RequiredNonDefault] Guid id)
     {
         await Mediator.Send(new DeleteItemRequest(id));
 

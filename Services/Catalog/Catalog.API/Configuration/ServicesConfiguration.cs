@@ -88,10 +88,7 @@ static class ServicesConfiguration
         services.AddMvc(opt =>
         {
             opt.Filters.Add<ValidationAttribute>();
-        }).AddFluentValidation(cfg =>
-        {
-            cfg.DisableDataAnnotationsValidation = true;
-        });
+        }).AddFluentValidation();
 
         services.AddValidatorsFromAssemblyContaining(typeof(ICatalogDbContext));
     }
