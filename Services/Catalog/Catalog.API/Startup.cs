@@ -17,6 +17,7 @@ class Startup
         services.AddSwagger();
         services.AddCatalogDbContext(Configuration);
         services.AddIntegrationServices(Configuration);
+        services.AddTaskScheduling(Configuration);
         services.AddRepositories();
         services.AddMediator();
         services.AddAutoMapper();

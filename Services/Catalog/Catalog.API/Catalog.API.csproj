@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
@@ -31,6 +35,7 @@
     <ProjectReference Include="..\..\..\EventBus\EventBus.RabbitMQ.DependencyInjection\EventBus.RabbitMQ.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\..\Shared\HostConfiguration\HostConfiguration.csproj" />
     <ProjectReference Include="..\..\..\Shared\IntegrationServices\IntegrationServices.csproj" />
+    <ProjectReference Include="..\..\..\Shared\TaskScheduling\TaskScheduling.csproj" />
     <ProjectReference Include="..\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
   </ItemGroup>
 

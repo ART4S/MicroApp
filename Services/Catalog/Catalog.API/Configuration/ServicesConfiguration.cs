@@ -1,4 +1,5 @@
 ﻿using Catalog.API.Infrastructure.Attributes;
+using Catalog.API.Infrastructure.BackgroundTasks;
 using Catalog.Application.Interfaces.DataAccess;
 using Catalog.Application.PipelineBehaviours;
 using Catalog.Infrastructure.DataAccess.Catalog;
@@ -12,7 +13,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
+using TaskScheduling;
 
 namespace Catalog.API.Configuration;
 
@@ -34,12 +37,12 @@ static class ServicesConfiguration
     {
         string connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddScoped<DbConnection>(_ => new SqlConnection(connectionString));
+        services.AddScoped(_ => new SqlConnection(connectionString));
 
         services.AddDbContext<CatalogDbContext>((sp, options) =>
         {
             options.UseSqlServer(
-                connection: sp.GetRequiredService<DbConnection>(),
+                connection: sp.GetRequiredService<SqlConnection>(),
                 sqlOptions => sqlOptions.MigrationsAssembly(typeof(CatalogDbContext).Assembly.FullName));
         });
 
@@ -53,7 +56,7 @@ static class ServicesConfiguration
         services.AddDbContext<IntegrationDbContext>((sp, options) =>
         {
             options.UseSqlServer(
-                connection: sp.GetRequiredService<DbConnection>(), 
+                connection: sp.GetRequiredService<SqlConnection>(), 
                 sqlOptions => sqlOptions.MigrationsAssembly(typeof(CatalogDbContext).Assembly.FullName));
         });
 
@@ -99,5 +102,19 @@ static class ServicesConfiguration
         {
             options.SuppressModelStateInvalidFilter = true;
         });
+    }
+
+    public static void AddTaskScheduling(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScheduler(
+            settings: new SchedulerSettings() 
+            { 
+                PoolingIntervalSec = configuration.GetValue<int>("BackgroundTasks:PoolingIntervalSec"), 
+            }, 
+            taskSettings: new[]
+            {
+                new BackgroundTaskSettings<IntegrationEventBackgroundTask>(
+                    Schedule: configuration.GetValue<string>("BackgroundTasks:IntegrationEventSchedule"))
+            });
     }
 }

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Catalog.Application.Requests.Catalog.DeleteItem;
 
-public class DeleteItemRequestHandler : AsyncRequestHandler<DeleteItemRequest>
+public class DeleteItemRequestHandler : IRequestHandler<DeleteItemRequest>
 {
     private readonly ICatalogDbContext _catalogDb;
     private readonly IIntegrationEventService _integrationService;
@@ -20,9 +20,9 @@ public class DeleteItemRequestHandler : AsyncRequestHandler<DeleteItemRequest>
         _integrationService = integrationService;
     }
 
-    protected override async Task Handle(DeleteItemRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteItemRequest request, CancellationToken cancellationToken)
     {
-        CatalogItem? item = await _catalogDb.CatalogItems.FindAsync(request.Id);
+        CatalogItem? item = await _catalogDb.CatalogItems.FindAsync(request.ItemId);
 
         if (item is null)
             throw new NotFoundException(nameof(CatalogItem));
@@ -32,5 +32,7 @@ public class DeleteItemRequestHandler : AsyncRequestHandler<DeleteItemRequest>
         await _catalogDb.SaveChanges();
 
         await _integrationService.Save(new CatalogItemRemovedIntegrationEvent(item.Id));
+
+        return Unit.Value;
     }
 }

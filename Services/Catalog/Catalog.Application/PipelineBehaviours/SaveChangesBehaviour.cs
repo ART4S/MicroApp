@@ -55,6 +55,6 @@ public class SaveChangesBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
             throw;
         }
 
-        return await next();
+        return response;
     }
 }
