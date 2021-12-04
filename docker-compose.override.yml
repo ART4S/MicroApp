@@ -18,6 +18,7 @@ services:
     - microshop-catalog-data:/var/opt/mssql
 
   catalog-api:
+    image: catalog-api:dev
     container_name: catalog-api
     build:
       context: .
@@ -35,6 +36,27 @@ services:
       - RabbitMQSettings__Retries=3
     ports:
       - "5000:80"
+
+  basket-api:
+   image: basket-api:dev
+   container_name: basket-api
+   build:
+    context: .
+    dockerfile: Services/Basket/Basket.API/Dockerfile
+    args:
+     BUILD_MODE: Debug
+   environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=http://+:80
+     - ConnectionStrings__DefaultConnection=;
+     - RabbitMQSettings__HostName=rabbitmq
+     - RabbitMQSettings__ClientName=Basket,
+     - RabbitMQSettings__UserName=${RABBITMQ_USER}
+     - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
+     - RabbitMQSettings__Retries=3
+   ports:
+     - "5001:80"
+
 
 volumes:
   microshop-catalog-data:

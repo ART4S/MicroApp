@@ -12,3 +12,8 @@ services:
     depends_on:
     - catalog-data
     - rabbitmq
+
+  basket-api:
+   image: ${DOCKER_REGISTRY-}basket-api
+   depends_on:
+    - rabbitmq
