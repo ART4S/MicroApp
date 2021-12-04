@@ -1,4 +1,4 @@
-﻿using Catalog.Domian.Common;
+﻿using Catalog.Domian.Abstractions;
 
 namespace Catalog.Domian.Entities;
 

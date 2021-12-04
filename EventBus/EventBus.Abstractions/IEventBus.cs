@@ -2,8 +2,7 @@
 
 public interface IEventBus
 {
-    void Publish<TEvent>(TEvent @event)
-        where TEvent : IEvent;
+    void Publish(IEvent @event);
 
     void Subscribe<TEvent, TEventHandler>()
         where TEvent : IEvent

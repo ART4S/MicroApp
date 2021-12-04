@@ -20,10 +20,8 @@ public class GetItemInfoRequestHandler : IRequestHandler<GetItemInfoRequest, Cat
 
     public async Task<CatalogItemInfoDto> Handle(GetItemInfoRequest request, CancellationToken cancellationToken)
     {
-        CatalogItem? item = await _catalogDb.CatalogItems.FindAsync(request.Id);
-
-        if (item is null)
-            throw new NotFoundException(nameof(CatalogItem));
+        CatalogItem item = await _catalogDb.CatalogItems.FindAsync(request.Id) ??
+            throw new EntityNotFoundException(nameof(CatalogItem));
 
         return _mapper.Map<CatalogItemInfoDto>(item);
     }

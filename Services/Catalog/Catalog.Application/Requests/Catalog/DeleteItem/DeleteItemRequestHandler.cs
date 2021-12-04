@@ -22,16 +22,16 @@ public class DeleteItemRequestHandler : IRequestHandler<DeleteItemRequest>
 
     public async Task<Unit> Handle(DeleteItemRequest request, CancellationToken cancellationToken)
     {
-        CatalogItem? item = await _catalogDb.CatalogItems.FindAsync(request.ItemId);
-
-        if (item is null)
-            throw new NotFoundException(nameof(CatalogItem));
+        CatalogItem item = await _catalogDb.CatalogItems.FindAsync(request.ItemId) ??
+            throw new EntityNotFoundException(nameof(CatalogItem));
 
         _catalogDb.CatalogItems.Remove(item);
 
         await _catalogDb.SaveChanges();
 
-        await _integrationService.Save(new CatalogItemRemovedIntegrationEvent(item.Id));
+        await _integrationService.Save(new CatalogItemRemovedIntegrationEvent(
+            ItemId: item.Id, 
+            PictureName: item.PictureName));
 
         return Unit.Value;
     }

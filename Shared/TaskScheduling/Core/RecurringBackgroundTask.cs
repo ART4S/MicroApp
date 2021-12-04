@@ -1,12 +1,12 @@
 ﻿using NCrontab;
 
-namespace TaskScheduling;
+namespace TaskScheduling.Core;
 
-internal record ScheduledBackgroundTask
+internal record RecurringBackgroundTask
 {
     private readonly CrontabSchedule _schedule;
 
-    public ScheduledBackgroundTask(Type type, string cronSchedule)
+    public RecurringBackgroundTask(Type type, string cronSchedule)
     {
         _schedule = CrontabSchedule.Parse(cronSchedule);
         Type = type;
@@ -19,6 +19,6 @@ internal record ScheduledBackgroundTask
 
     public void CalculateNextRunTime()
     {
-        NextRunTime = _schedule.GetNextOccurrence(DateTime.Now);
+        NextRunTime = _schedule.GetNextOccurrence(DateTime.UtcNow);
     }
 }

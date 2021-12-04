@@ -8,6 +8,7 @@ public class CatalogItemConfiguration : IEntityTypeConfiguration<CatalogItem>
 {
     public void Configure(EntityTypeBuilder<CatalogItem> builder)
     {
-        // TODO: configure
+        builder.Property(x => x.Price)
+            .HasPrecision(18, 2);
     }
 }

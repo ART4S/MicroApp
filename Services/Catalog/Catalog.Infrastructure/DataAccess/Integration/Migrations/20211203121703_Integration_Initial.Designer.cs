@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Catalog.Infrastructure.DataAccess.Integration.Migrations
 {
     [DbContext(typeof(IntegrationDbContext))]
-    [Migration("20211201155424_Integration_Initial")]
+    [Migration("20211203121703_Integration_Initial")]
     partial class Integration_Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,9 @@ namespace Catalog.Infrastructure.DataAccess.Integration.Migrations
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("EventType")
                         .IsRequired()

@@ -1,4 +1,4 @@
-﻿namespace TaskScheduling;
+﻿namespace TaskScheduling.Core;
 
 public abstract record BackgroundTaskSettings
 {
@@ -9,6 +9,7 @@ public abstract record BackgroundTaskSettings
     }
 
     public Type Type { get; }
+
     public string Schedule { get; }
 }
 

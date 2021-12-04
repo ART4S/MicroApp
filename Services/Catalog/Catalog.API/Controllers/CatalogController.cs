@@ -9,6 +9,7 @@ using Catalog.Application.Requests.Catalog.GetBrands;
 using Catalog.Application.Requests.Catalog.GetItemInfo;
 using Catalog.Application.Requests.Catalog.GetItems;
 using Catalog.Application.Requests.Catalog.GetTypes;
+using Catalog.Application.Requests.Catalog.UpdateItem;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers;
@@ -17,7 +18,7 @@ namespace Catalog.API.Controllers;
 [Route("api/v1/[controller]")]
 public class CatalogController : BaseController
 {
-    [HttpGet("items")]
+    [HttpGet]
     [ProducesResponseType(typeof(PagedResponse<CatalogItemDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetItems([FromQuery] PagedRequest<CatalogItemDto> request)
     {
@@ -49,14 +50,23 @@ public class CatalogController : BaseController
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> CreateItem(CatalogItemCreateDto item)
+    public async Task<IActionResult> CreateItem(CatalogItemEditDto item)
     {
         Guid id = await Mediator.Send(new CreateItemRequest(item));
 
         return CreatedAtAction(actionName: nameof(GetItemInfo), routeValues: new { id }, null);
     }
 
-    [HttpDelete]
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateItem([RequiredNonDefault] Guid id, CatalogItemEditDto item)
+    {
+        await Mediator.Send(new UpdateItemRequest(id, item));
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteItem([RequiredNonDefault] Guid id)
     {

@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Application.Dto.CatalogItem;
 
-public record CatalogItemCreateDto
+public record CatalogItemEditDto
 {
     public string Name { get; init; }
 

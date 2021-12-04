@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Catalog.API.Configuration;
-using EventBus.RabbitMQ.DependencyInjection;
 
 class Startup
 {
@@ -17,6 +16,7 @@ class Startup
         services.AddSwagger();
         services.AddCatalogDbContext(Configuration);
         services.AddIntegrationServices(Configuration);
+        services.AddEvents();
         services.AddTaskScheduling(Configuration);
         services.AddRepositories();
         services.AddMediator();
@@ -46,5 +46,7 @@ class Startup
         { 
             endpoints.MapControllers();
         });
+
+        app.SubscribeToEvents();
     }
 }

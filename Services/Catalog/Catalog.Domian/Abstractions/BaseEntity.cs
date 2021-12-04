@@ -1,4 +1,4 @@
-﻿namespace Catalog.Domian.Common;
+﻿namespace Catalog.Domian.Abstractions;
 
 public abstract class BaseEntity
 {

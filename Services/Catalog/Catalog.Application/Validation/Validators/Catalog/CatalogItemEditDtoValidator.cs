@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.Validation.Validators.Catalog;
 
-public class CatalogItemCreateDtoValidator : AbstractValidator<CatalogItemCreateDto>
+public class CatalogItemEditDtoValidator : AbstractValidator<CatalogItemEditDto>
 {
-    public CatalogItemCreateDtoValidator(ICatalogDbContext dbContext)
+    public CatalogItemEditDtoValidator(ICatalogDbContext dbContext)
     {
         RuleFor(x => x.Name).NotEmpty();
 

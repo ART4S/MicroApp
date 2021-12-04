@@ -7,19 +7,17 @@ namespace Catalog.Application.Requests.Pictures.GetCatalogItemPicture;
 
 public class GetCatalogItemPictureRequestHandler : IRequestHandler<GetCatalogItemPictureRequest, PictureDto>
 {
-    private readonly IPictureRepository _pictureRepo;
+    private readonly IItemPictureRepository _pictureRepo;
 
-    public GetCatalogItemPictureRequestHandler(IPictureRepository pictureRepo)
+    public GetCatalogItemPictureRequestHandler(IItemPictureRepository pictureRepo)
     {
         _pictureRepo = pictureRepo;
     }
 
     public async Task<PictureDto> Handle(GetCatalogItemPictureRequest request, CancellationToken cancellationToken)
     {
-        if (!await _pictureRepo.CatalogItemHasPicture(request.ItemId))
-            throw new NotFoundException("Picture");
-
-        PictureDto pic = await _pictureRepo.GetCatalogItemPicture(request.ItemId);
+        PictureDto pic = await _pictureRepo.GetPicture(request.ItemId) ??
+            throw new EntityNotFoundException("Picture");
 
         return pic;
     }

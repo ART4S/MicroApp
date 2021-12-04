@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Catalog.Infrastructure.DataAccess.Catalog.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20211201155406_Catalog_Initial")]
+    [Migration("20211203121648_Catalog_Initial")]
     partial class Catalog_Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

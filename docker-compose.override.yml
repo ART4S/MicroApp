@@ -1,6 +1,12 @@
 version: '3.4'
 
 services:
+
+  rabbitmq:
+   container_name: rabbitmq
+   ports:
+    - "15672:15672"
+
   catalog-data:
    container_name: catalog-data
    environment:
@@ -22,6 +28,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=catalog-data;Database=catalog_db;User Id=sa;Password=${SA_PASSWORD};Persist Security Info=true;
+      - RabbitMQSettings__HostName=rabbitmq
+      - RabbitMQSettings__ClientName=Catalog,
+      - RabbitMQSettings__UserName=${RABBITMQ_USER}
+      - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
+      - RabbitMQSettings__Retries=3
     ports:
       - "5000:80"
 

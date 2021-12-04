@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Hosting;
+using TaskScheduling.Core;
 
 namespace TaskScheduling.Hosting;
 
 internal class SchedulerBackgroundService : BackgroundService
 {
-    private readonly ISchedulerService _scheduler;
+    private readonly SchedulerService _scheduler;
 
-    public SchedulerBackgroundService(ISchedulerService scheduler)
+    public SchedulerBackgroundService(SchedulerService scheduler)
     {
         _scheduler = scheduler;
     }

@@ -8,9 +8,9 @@ namespace Catalog.API.Controllers;
 [ApiController]
 public class PicturesController : BaseController
 {
-    private readonly IPictureRepository _pictureRepo;
+    private readonly IItemPictureRepository _pictureRepo;
 
-    public PicturesController(IPictureRepository pictureRepo)
+    public PicturesController(IItemPictureRepository pictureRepo)
     {
         _pictureRepo = pictureRepo;
     }

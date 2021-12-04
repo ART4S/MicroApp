@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Catalog.Application.Dto.CatalogItem;
 using Catalog.Application.Interfaces.DataAccess;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.Requests.Catalog.GetItems
 {
@@ -19,7 +20,11 @@ namespace Catalog.Application.Requests.Catalog.GetItems
 
         public Task<IQueryable<CatalogItemDto>> Handle(GetItemsRequest request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_catalogDb.CatalogItems.ProjectTo<CatalogItemDto>(_mapper.ConfigurationProvider));
+            var items = _catalogDb.CatalogItems
+                .AsNoTracking()
+                .ProjectTo<CatalogItemDto>(_mapper.ConfigurationProvider);
+
+            return Task.FromResult(items);
         }
     }
 }

@@ -1,6 +1,9 @@
 version: '3.4'
 
 services:
+  rabbitmq:
+   image: rabbitmq:3.9-management
+
   catalog-data:
    image: mcr.microsoft.com/mssql/server:latest
 
@@ -8,3 +11,4 @@ services:
     image: ${DOCKER_REGISTRY-}catalog-api
     depends_on:
     - catalog-data
+    - rabbitmq

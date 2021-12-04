@@ -55,7 +55,7 @@ class ExceptionHandlerMiddleware
                 await httpContext.Response.WriteAsync(ex.UserMessage);
                 break;
 
-            case NotFoundException ex:
+            case EntityNotFoundException ex:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await httpContext.Response.WriteAsync(ex.UserMessage);
                 break;
@@ -70,22 +70,22 @@ class ExceptionHandlerMiddleware
                 {
                     var env = httpContext.RequestServices.GetService<IWebHostEnvironment>();
                     if (env.IsDevelopment())
-                        await httpContext.Response.WriteAsync(BuildExceptionMessage(exception));
-
+                        await httpContext.Response.WriteAsync(BuildDeveloperExceptionMessage(exception));
                 }
+
                 break;
         }
     }
 
-    private static string BuildExceptionMessage(Exception exception)
+    private static string BuildDeveloperExceptionMessage(Exception exception)
     {
         StringBuilder sb = new();
 
-        Exception current = exception;
+        Exception? current = exception;
 
         JsonSerializerOptions options = new() { WriteIndented = true };
 
-        while (current != null)
+        while (current is not null)
         {
             sb.AppendLine(JsonSerializer.Serialize(new
             {
@@ -96,8 +96,7 @@ class ExceptionHandlerMiddleware
 
             current = current.InnerException;
 
-            if (current is not null)
-                sb.AppendLine();
+            sb.AppendLine();
         }
 
         return sb.ToString();

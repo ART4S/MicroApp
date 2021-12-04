@@ -9,21 +9,27 @@ public class IntegrationEventLogEntry
 
     public IntegrationEventLogEntry(IntegrationEvent @event)
     {
+        Id = @event.Id;
+        CreationDate = @event.CreationDate;
         EventType = @event.GetType().FullName;
         Content = JsonSerializer.Serialize(@event, @event.GetType());
-        Status = IntegrationEventStatus.Pending;
+        Status = DeliveryStatus.Pending;
     }
 
     public Guid Id { get; private set; }
+    public DateTime CreationDate { get; private set; }
     public string EventType { get; private set; }
     public string Content { get; private set; }
-    public IntegrationEventStatus Status { get; private set; }
+    public DeliveryStatus Status { get; private set; }
     public IntegrationEvent IntegrationEvent { get; private set; }
 
-    public void DeserializeEvent()
+    public void DeserializeEvent(Type toType)
     {
-        IntegrationEvent = JsonSerializer.Deserialize(Content, Type.GetType(EventType)) as IntegrationEvent;
+        IntegrationEvent = (IntegrationEvent) JsonSerializer.Deserialize(
+            Content, 
+            toType, 
+            new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
     }
 
-    public void Complete() => Status = IntegrationEventStatus.Completed;
+    public void Complete() => Status = DeliveryStatus.Completed;
 }

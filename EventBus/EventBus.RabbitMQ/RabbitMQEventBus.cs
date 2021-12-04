@@ -5,21 +5,23 @@ using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
+using System.Net.Mime;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 
 namespace EventBus.RabbitMQ;
 
 public class RabbitMQEventBus : IEventBus, IDisposable
 {
-    const string BrokerName = "PlayingWithDocker";
+    const string BROKER_NAME = "MicroApp";
 
     private readonly ILogger _logger;
     private readonly IServiceProvider _services;
     private readonly RabbitMQSettings _settings;
     private readonly IConnection _connection;
-    private IModel _channel;
+    private IModel _subscriptionChannel;
     private readonly Dictionary<string, SubscriptionInfo> _events = new();
 
     public RabbitMQEventBus(ILogger<RabbitMQEventBus> logger, IServiceProvider services, RabbitMQSettings settings)
@@ -28,7 +30,7 @@ public class RabbitMQEventBus : IEventBus, IDisposable
         _services = services;
         _settings = settings;
         _connection = CreateConnection();
-        _channel = CreateChannel();
+        _subscriptionChannel = CreateSubscriptionChannel();
     }
 
     private IConnection CreateConnection()
@@ -37,7 +39,9 @@ public class RabbitMQEventBus : IEventBus, IDisposable
         { 
             HostName = _settings.HostName, 
             UserName = _settings.UserName, 
-            Password = _settings.Password 
+            Password = _settings.Password,
+            ClientProvidedName = _settings.ClientName,
+            DispatchConsumersAsync = true,
         };
 
         return Policy.Handle<BrokerUnreachableException>().WaitAndRetry(
@@ -53,12 +57,22 @@ public class RabbitMQEventBus : IEventBus, IDisposable
             .Execute(() => factory.CreateConnection());
     }
 
-    private IModel CreateChannel()
+    private IModel CreateSubscriptionChannel()
     {
-        IModel channel = _connection.CreateModel();
+        IModel channel;
+
+        try
+        {
+            channel = _connection.CreateModel();
+        }
+        catch(Exception ex)
+        {
+            // TODO: log
+            throw;
+        }
 
         channel.ExchangeDeclare(
-            exchange: BrokerName,
+            exchange: BROKER_NAME,
             type: ExchangeType.Direct,
             durable: true,
             autoDelete: false,
@@ -73,14 +87,12 @@ public class RabbitMQEventBus : IEventBus, IDisposable
         channel.CallbackException += (s, a) =>
         {
             // TODO: log
-            _logger.LogError(a.Exception, "Error in RabbitMQ");
-            _logger.LogWarning("Recreating RabbitMQ channel");
 
-            _channel.Dispose();
-            _channel = CreateChannel();
+            _subscriptionChannel?.Dispose();
+            _subscriptionChannel = CreateSubscriptionChannel();
         };
 
-        EventingBasicConsumer consumer = new(channel);
+        AsyncEventingBasicConsumer consumer = new(channel);
 
         consumer.Received += Consumer_Recievd;
 
@@ -89,23 +101,43 @@ public class RabbitMQEventBus : IEventBus, IDisposable
         return channel;
     }
 
-    public void Publish<TEvent>(TEvent @event) where TEvent : IEvent
+    public void Publish(IEvent @event)
     {
-        Policy.Handle<BrokerUnreachableException>().Or<SocketException>().WaitAndRetry(
+        var policy = Policy.Handle<BrokerUnreachableException>().Or<SocketException>().WaitAndRetry(
             retryCount: _settings.Retries,
             sleepDurationProvider: (attempt) => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
             onRetry: (exception, _) =>
             {
                 // TODO: log
-            })
-            .Execute(() =>
-            {
-                _channel.BasicPublish(
-                    exchange: BrokerName,
-                    routingKey: GetEventName<TEvent>(),
-                    basicProperties: default,
-                    body: JsonSerializer.SerializeToUtf8Bytes(@event));
             });
+
+        // TODO: log
+
+        using (var channel = _connection.CreateModel())
+        {
+            channel.ExchangeDeclare(
+                exchange: BROKER_NAME,
+                type: ExchangeType.Direct,
+                durable: true,
+                autoDelete: false,
+                arguments: null);
+
+            // TODO: log
+
+            policy.Execute(() =>
+            {
+                IBasicProperties props = _subscriptionChannel.CreateBasicProperties();
+
+                props.DeliveryMode = 2;
+                props.ContentType = MediaTypeNames.Application.Json;
+
+                _subscriptionChannel.BasicPublish(
+                    exchange: BROKER_NAME,
+                    routingKey: GetEventName(@event),
+                    basicProperties: props,
+                    body: JsonSerializer.SerializeToUtf8Bytes(@event, @event.GetType()));
+            });
+        }
     }
 
     public void Subscribe<TEvent, TEventHandler>()
@@ -116,9 +148,9 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
         if (!_events.TryGetValue(eventName, out var eventInfo))
         {
-            _channel.QueueBind(
+            _subscriptionChannel.QueueBind(
                 queue: _settings.ClientName, 
-                exchange: BrokerName,
+                exchange: BROKER_NAME,
                 routingKey: eventName);
 
             eventInfo = new(EventType: typeof(TEvent));
@@ -130,48 +162,49 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
         if (eventInfo.Handlers.Any(x => x.EventHandlerType == handlerType))
         {
-            _logger.LogWarning("Event handler {EventHandler} for event {Event} already exists", handlerType.FullName, typeof(TEvent).FullName);
+            _logger.LogWarning("Event handler {EventHandler} for event {Event} already exists", handlerType.Name, GetEventName<TEvent>());
             return;
         }
 
-        EventingBasicConsumer consumer = new(_channel);
+        AsyncEventingBasicConsumer consumer = new(_subscriptionChannel);
 
         consumer.Received += Consumer_Recievd;
 
-        string tag = _channel.BasicConsume(queue: _settings.ClientName, autoAck: false, consumer: consumer);
+        string tag = _subscriptionChannel.BasicConsume(queue: _settings.ClientName, autoAck: false, consumer: consumer);
 
         EventHandlerInfo handler = new(tag, handlerType);
 
         eventInfo.Handlers.Add(handler);
     }
 
-    private void Consumer_Recievd(object? sender, BasicDeliverEventArgs args)
+    private async Task Consumer_Recievd(object? sender, BasicDeliverEventArgs args)
     {
         string eventName = args.RoutingKey;
 
         try
         {
-            HandleEvent(eventName, args.Body.ToArray());
+            await HandleEvent(eventName, args.Body.ToArray());
         }
         catch(JsonException ex)
         {
             // TODO: log
+            return;
         }
         catch (NotSupportedException ex)
         {
             // TODO: log
+            return;
         }
         catch(Exception ex)
         {
             // TODO: log
+            return;
         }
-        finally
-        {
-            _channel.BasicAck(args.DeliveryTag, multiple: false);
-        }
+
+        _subscriptionChannel.BasicAck(args.DeliveryTag, multiple: false);
     }
 
-    private void HandleEvent(string eventName, byte[] body)
+    private async Task HandleEvent(string eventName, byte[] body)
     {
         if (!_events.TryGetValue(eventName, out var eventInfo))
         {
@@ -179,15 +212,18 @@ public class RabbitMQEventBus : IEventBus, IDisposable
             return;
         }
 
-        using IServiceScope scope = _services.CreateScope();
+        object @event = JsonSerializer.Deserialize(
+            body, 
+            eventInfo.EventType, 
+            new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
-        object @event = JsonSerializer.Deserialize(body, eventInfo.EventType);
+        using IServiceScope scope = _services.CreateScope();
 
         foreach (var handlerInfo in eventInfo.Handlers)
         {
-            var handler = _services.GetRequiredService(handlerInfo.EventHandlerType);
+            var handler = scope.ServiceProvider.GetRequiredService(handlerInfo.EventHandlerType);
 
-            handlerInfo.EventHandlerType
+            await (Task) handlerInfo.EventHandlerType
                 .GetMethod("Handle", BindingFlags.Instance | BindingFlags.Public)
                 .Invoke(handler, new object[] { @event });
         }
@@ -209,25 +245,27 @@ public class RabbitMQEventBus : IEventBus, IDisposable
         {
             if (handlerInfo.EventHandlerType == typeof(TEventHandler))
             {
-                _channel.BasicCancel(handlerInfo.Tag);
+                _subscriptionChannel.BasicCancel(handlerInfo.Tag);
                 eventInfo.Handlers.Remove(handlerInfo);
             }
         }
 
         if (eventInfo.Handlers.Count == 0)
         {
-            _channel.QueueBind(queue: _settings.ClientName, exchange: BrokerName, routingKey: eventName);
+            _subscriptionChannel.QueueBind(queue: _settings.ClientName, exchange: BROKER_NAME, routingKey: eventName);
             _events.Remove(eventName);
             _logger.LogWarning("Event {Event} has no handlers", eventName);
         }
     }
 
-    private string GetEventName<TEvent>() => typeof(TEvent).Name!;
+    private string GetEventName<TEvent>() => typeof(TEvent).Name;
+
+    private string GetEventName(IEvent @event) => @event.GetType().Name;
 
     public void Dispose()
     {
         _events.Clear();
-        _channel.Dispose();
+        _subscriptionChannel.Dispose();
         _connection.Dispose();
     }
 }

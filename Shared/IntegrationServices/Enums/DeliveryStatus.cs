@@ -1,6 +1,6 @@
 ﻿namespace IntegrationServices.Enums;
 
-public enum IntegrationEventStatus
+public enum DeliveryStatus
 {
     Pending,
     Completed

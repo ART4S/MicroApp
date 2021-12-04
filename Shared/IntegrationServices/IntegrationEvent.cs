@@ -8,17 +8,12 @@ public abstract record IntegrationEvent : IEvent
     public IntegrationEvent()
     {
         Id = Guid.NewGuid();
-        CreateDate = DateTime.Now;
+        CreationDate = DateTime.UtcNow;
     }
 
-    [JsonConstructor]
-    public IntegrationEvent(Guid id, DateTime createDate)
-    {
-        Id = id;
-        CreateDate = createDate;
-    }
-
+    [JsonInclude]
     public Guid Id { get; private init;  }
 
-    public DateTime CreateDate { get; private init; }
+    [JsonInclude]
+    public DateTime CreationDate { get; private init; }
 }
