@@ -13,7 +13,11 @@ services:
     - catalog-data
     - rabbitmq
 
+  basket-data:
+   image: redis:latest
+
   basket-api:
    image: ${DOCKER_REGISTRY-}basket-api
    depends_on:
+    - basket-data
     - rabbitmq

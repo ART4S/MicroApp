@@ -1,0 +1,42 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcBasket";
+
+import "google/protobuf/wrappers.proto";
+
+package BasketApi;
+
+service Basket{
+	rpc GetBasket(GetBasketRequest) returns (BasketReply);
+	rpc UpdateBasket(UpdateBasketRequest) returns(BasketReply);
+	rpc CheckoutBasket(CheckoutBasketRequest) returns (google.protobuf.Empty);
+
+}
+
+message GetBasketRequest {
+	string buyerId = 1;
+}
+
+message UpdateBasketRequest{
+	string buyerId = 1;
+	repeated BasketItemReply items = 2;
+}
+
+message BasketReply {
+	string buyerId = 1;
+	repeated BasketItemReply items = 2;
+}
+
+message BasketItemReply {
+	string id = 1;
+	int32 catalogItemId = 2;
+	string catalogItemName = 3;
+	google.protobuf.DoubleValue price = 4;
+	google.protobuf.DoubleValue oldPrice = 5;
+	int32 quantity = 6;
+	string pictureUrl = 7;
+}
+
+message CheckoutBasketRequest {
+
+}

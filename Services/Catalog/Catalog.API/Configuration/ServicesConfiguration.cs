@@ -74,7 +74,7 @@ static class ServicesConfiguration
             (sp) => ActivatorUtilities.CreateInstance<IntegrationEventService>(sp, typeof(ICatalogDbContext).Assembly));
     }
 
-    public static void AddEvents(this IServiceCollection services)
+    public static void AddEventHandlers(this IServiceCollection services)
     {
         services.AddScoped<CatalogItemRemovedIntegrationEventHandler>();
     }

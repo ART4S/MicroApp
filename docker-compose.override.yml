@@ -37,6 +37,13 @@ services:
     ports:
       - "5000:80"
 
+  basket-data:
+   container_name: basket-data
+   ports:
+     - "6379:6379"
+   volumes:
+     - microshop-basket-data:/data
+
   basket-api:
    image: basket-api:dev
    container_name: basket-api
@@ -48,7 +55,7 @@ services:
    environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=http://+:80
-     - ConnectionStrings__DefaultConnection=;
+     - ConnectionStrings__RedisConnection=basket-data
      - RabbitMQSettings__HostName=rabbitmq
      - RabbitMQSettings__ClientName=Basket,
      - RabbitMQSettings__UserName=${RABBITMQ_USER}
@@ -57,7 +64,19 @@ services:
    ports:
      - "5001:80"
 
+  basket-grpcui:
+   image: fullstorydev/grpcui
+   container_name: basket-grpcui
+   command:
+    - "-plaintext"
+    - "basket-api:80"
+   ports:
+     - "8080:8080"
+   depends_on:
+     - basket-api
 
 volumes:
   microshop-catalog-data:
+   external: false
+  microshop-basket-data:
    external: false

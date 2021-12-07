@@ -1,4 +1,7 @@
-﻿class Startup
+﻿using Basket.API.Configuration;
+using GrpcBasket;
+
+class Startup
 {
     public Startup(IConfiguration configuration)
     {
@@ -9,37 +12,29 @@
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
-
-        services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1", new()
-            {
-                Title = "MicroApp - Basket.API",
-                Version = "v1"
-            });
-        });
+        services.AddGrpc();
+        services.AddGrpcReflection();
+        services.AddDataAccess(Configuration);
+        services.AddIntegrationServices(Configuration);
+        services.AddAutoMapper();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        //app.UseCustomExceptionHandler();
-
-        app.UseSwagger();
-        app.UseSwaggerUI(setup =>
-        {
-            setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.API V1");
-        });
+        app.UseCustomExceptionHandler();
 
         app.UseRouting();
 
-        app.UseAuthorization();
-
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapControllers();
+            if (env.IsDevelopment())
+            {
+                endpoints.MapGrpcReflectionService();
+            }
+
+            endpoints.MapGrpcService<BasketService>();
         });
 
-        //app.SubscribeToEvents();
+        app.SubscribeToEvents();
     }
 }
