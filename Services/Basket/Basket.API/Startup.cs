@@ -21,20 +21,14 @@ class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.UseCustomExceptionHandler();
-
         app.UseRouting();
 
         app.UseEndpoints(endpoints =>
         {
             if (env.IsDevelopment())
-            {
                 endpoints.MapGrpcReflectionService();
-            }
 
             endpoints.MapGrpcService<BasketService>();
         });
-
-        app.SubscribeToEvents();
     }
 }

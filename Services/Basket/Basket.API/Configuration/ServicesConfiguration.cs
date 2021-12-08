@@ -9,14 +9,6 @@ namespace Basket.API.Configuration;
 
 static class ServicesConfiguration
 {
-    public static void ConfigureApi(this IServiceCollection services)
-    {
-        services.Configure<ApiBehaviorOptions>(options =>
-        {
-            options.SuppressModelStateInvalidFilter = true;
-        });
-    }
-
     public static void AddDataAccess(this IServiceCollection services, IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("RedisConnection");

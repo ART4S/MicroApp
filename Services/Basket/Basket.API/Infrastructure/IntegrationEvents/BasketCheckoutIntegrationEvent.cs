@@ -5,7 +5,28 @@ namespace Basket.API.Infrastructure.IntegrationEvents;
 
 public record BasketCheckoutIntegrationEvent : IntegrationEvent
 {
-    public string City { get; set; }
+    public BasketCheckoutIntegrationEvent(
+        Guid requestId, string city, string street, string state, 
+        string country, string zipCode, string cardNumber, string cardHolderName,
+        DateTime cardExpiration, string cardSecurityNumber, Guid cardTypeId, CustomerBasket basket)
+    {
+        RequestId = requestId;
+        City = city;
+        Street = street;
+        State = state;
+        Country = country;
+        ZipCode = zipCode;
+        CardNumber = cardNumber;
+        CardHolderName = cardHolderName;
+        CardExpiration = cardExpiration;
+        CardSecurityNumber = cardSecurityNumber;
+        CardTypeId = cardTypeId;
+        Basket = basket;
+    }
+
+    public Guid RequestId { get; private set; }
+
+    public string City { get; private set; }
 
     public string Street { get; private set; }
 
@@ -13,21 +34,17 @@ public record BasketCheckoutIntegrationEvent : IntegrationEvent
 
     public string Country { get; private set; }
 
-    public string ZipCode { get; set; }
+    public string ZipCode { get; private set; }
 
-    public string CardNumber { get; set; }
+    public string CardNumber { get; private set; }
 
-    public string CardHolderName { get; set; }
+    public string CardHolderName { get; private set; }
 
-    public DateTime CardExpiration { get; set; }
+    public DateTime CardExpiration { get; private set; }
 
-    public string CardSecurityNumber { get; set; }
+    public string CardSecurityNumber { get; private set; }
 
-    public int CardTypeId { get; set; }
+    public Guid CardTypeId { get; private set; }
 
-    public string Buyer { get; set; }
-
-    public Guid RequestId { get; set; }
-
-    public CustomerBasket Basket { get; set; }
+    public CustomerBasket Basket { get; private set; }
 }

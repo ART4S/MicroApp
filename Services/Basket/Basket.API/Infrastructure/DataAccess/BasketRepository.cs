@@ -27,7 +27,7 @@ class BasketRepository : IBasketRepository
     {
         var basket = await _database.StringGetAsync(buyerId);
 
-        if (basket.IsNullOrEmpty)
+        if (basket.IsNull)
             return null;
 
         return JsonSerializer.Deserialize<CustomerBasket>(
@@ -35,15 +35,8 @@ class BasketRepository : IBasketRepository
             new JsonSerializerOptions() { PropertyNameCaseInsensitive = false });
     }
 
-    public async Task AddOrUpdate(CustomerBasket basket)
+    public async Task Update(CustomerBasket basket)
     {
-        CustomerBasket? existingBasket = await Get(basket.BuyerId);
-
-        if (existingBasket is not null)
-            _mapper.Map(basket, existingBasket);
-
-        basket = existingBasket ?? basket;
-
         await _database.StringSetAsync(basket.BuyerId, JsonSerializer.Serialize(basket));
     }
 }
