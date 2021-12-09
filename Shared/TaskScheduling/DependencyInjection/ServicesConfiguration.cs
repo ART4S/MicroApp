@@ -13,10 +13,8 @@ public static class ServicesConfiguration
         Action<Exception, IBackgroundTask, IServiceProvider> exceptionHandler)
     {
         var tasks = taskSettings
-            .Select(x => new RecurringBackgroundTask(x.Type, x.Schedule))
+            .Select(x => new RecurringBackgroundTask(x.Type, x.Schedule, x.Factory))
             .ToList();
-
-        tasks.ForEach(x => services.AddScoped(x.Type));
 
         services.AddSingleton((sp) => ActivatorUtilities.CreateInstance<SchedulerService>(sp, settings, tasks, exceptionHandler));
 

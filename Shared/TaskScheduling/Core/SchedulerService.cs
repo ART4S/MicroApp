@@ -8,13 +8,13 @@ internal class SchedulerService
     private readonly IServiceProvider _services;
     private readonly SchedulerSettings _settings;
     private readonly ICollection<RecurringBackgroundTask> _taskSettings;
-    private readonly Action<Exception, IBackgroundTask, IServiceProvider> _exceptionHandler;
+    private readonly Action<Exception, IBackgroundTask?, IServiceProvider> _exceptionHandler;
 
     public SchedulerService(
         IServiceProvider services,
         SchedulerSettings settings,
         ICollection<RecurringBackgroundTask> taskSettings,
-        Action<Exception, IBackgroundTask, IServiceProvider> exceptioHandler)
+        Action<Exception, IBackgroundTask?, IServiceProvider> exceptioHandler)
     {
         _services = services;
         _settings = settings;
@@ -35,13 +35,10 @@ internal class SchedulerService
 
             var scope = _services.CreateScope();
 
-            var tasksReadyToRun = tasksToRun
-                .Select(x => scope.ServiceProvider.GetRequiredService(x.Type))
-                .OfType<IBackgroundTask>();
-
             foreach (var task in tasksToRun)
             {
-                var taskReadyToRun = (IBackgroundTask) scope.ServiceProvider.GetRequiredService(task.Type);
+                if (!TryCreateTask(task, scope.ServiceProvider, out IBackgroundTask taskReadyToRun))
+                    continue;
 
                 Task.Run(async () =>
                 {
@@ -65,5 +62,28 @@ internal class SchedulerService
             await Task.Delay(TimeSpan.FromSeconds(_settings.PollingIntervalSec), stoppingToken);
             return stoppingToken.IsCancellationRequested;
         }
+    }
+
+    private bool TryCreateTask(
+        RecurringBackgroundTask taskDescription, 
+        IServiceProvider services, 
+        out IBackgroundTask task)
+    {
+        task = null;
+
+        try
+        {
+            task = (IBackgroundTask)(taskDescription.Factory is not null
+                ? taskDescription.Factory(services)
+                : ActivatorUtilities.CreateInstance(services, taskDescription.Type));
+
+            return true;
+        }
+        catch(Exception exeption)
+        {
+            _exceptionHandler?.Invoke(exeption, task, services);
+        }
+
+        return false;
     }
 }

@@ -4,6 +4,7 @@ ENV BUILD_MODE=$BUILD_MODE
 EXPOSE 80
 
 WORKDIR /src
+COPY "Shared/TaskScheduling/TaskScheduling.csproj" "Shared/TaskScheduling/TaskScheduling.csproj"
 COPY "Shared/IntegrationServices/IntegrationServices.csproj" "Shared/IntegrationServices/IntegrationServices.csproj"
 COPY "EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj" "EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj"
 COPY "EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj" "EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj"

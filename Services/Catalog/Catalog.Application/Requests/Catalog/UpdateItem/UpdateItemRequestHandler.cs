@@ -33,7 +33,13 @@ public class UpdateItemRequestHandler : IRequestHandler<UpdateItemRequest, Unit>
         decimal? newPrice = request.Item.Price;
 
         if (oldPrice != newPrice)
-            await _integrationService.Save(new CatalogItemPriceChangedIntegrationEvent(newPrice));
+        {
+            await _integrationService.Save(new CatalogItemPriceChangedIntegrationEvent
+            (
+                ItemId: item.Id,
+                NewPrice: newPrice
+            ));
+        }
 
         _mapper.Map(request.Item, item);
 

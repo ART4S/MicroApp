@@ -10,11 +10,7 @@ static class HostConfiguration
     {
         var config = host.Services.GetRequiredService<IConfiguration>();
 
-        bool createDb = false;
-
-        var section = config.GetSection("CreateNewDb");
-        if (section.Exists())
-            createDb = section.Get<bool>();
+        bool createDb = config.GetValue<bool>("CreateNewDb");
 
         if (createDb)
             host.MigrateDbContext<CatalogDbContext>((services, db) => new CatalogDbContextSeed(services, db).Seed());

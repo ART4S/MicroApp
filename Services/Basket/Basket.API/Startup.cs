@@ -12,11 +12,13 @@ class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddAppServices();
         services.AddGrpc();
         services.AddGrpcReflection();
         services.AddDataAccess(Configuration);
         services.AddIntegrationServices(Configuration);
         services.AddAutoMapper();
+        services.AddTaskScheduling(Configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -98,7 +98,7 @@ public class CatalogDbContextSeed
                 {
                     using StringReader sr = new(node.OuterXml);
 
-                    object entity = serializer.Deserialize(sr);
+                    object? entity = serializer.Deserialize(sr);
 
                     if (entity is null)
                     {

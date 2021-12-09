@@ -35,7 +35,7 @@ public class IntegrationEventService : IIntegrationEventService
     public async Task MarkEventAsCompleted(Guid eventId)
     {
         var @event = await _integrationDb.IntegrationEvents.FindAsync(eventId) ?? 
-            throw new Exception($"Event with id={eventId} is missing");
+            throw new Exception($"Event with id={eventId} not found");
 
         @event.Complete();
 

@@ -2,4 +2,4 @@
 
 namespace Catalog.Application.Integration.Events;
 
-public record CatalogItemPriceChangedIntegrationEvent(decimal? NewPrice) : IntegrationEvent;
+public record CatalogItemPriceChangedIntegrationEvent(Guid ItemId, decimal? NewPrice) : IntegrationEvent;

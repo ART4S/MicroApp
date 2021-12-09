@@ -24,10 +24,11 @@
     <ProjectReference Include="..\..\..\EventBus\EventBus.Abstractions\EventBus.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\EventBus\EventBus.RabbitMQ.DependencyInjection\EventBus.RabbitMQ.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\..\Shared\IntegrationServices\IntegrationServices.csproj" />
+    <ProjectReference Include="..\..\..\Shared\TaskScheduling\TaskScheduling.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\basket.proto" GrpcServices="Server"/>
+    <Protobuf Include="Protos\basket.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>

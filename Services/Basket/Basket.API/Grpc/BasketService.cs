@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Basket.API.Infrastructure.DataAccess;
-using Basket.API.Infrastructure.IntegrationEvents;
+using Basket.API.Infrastructure.Integration.Events;
 using Basket.API.Model;
 using EventBus.Abstractions;
 using Google.Protobuf.WellKnownTypes;
