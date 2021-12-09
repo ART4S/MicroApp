@@ -1,12 +1,10 @@
 ﻿using Catalog.API.Infrastructure.Attributes;
 using Catalog.API.Infrastructure.BackgroundTasks;
 using Catalog.Application.Integration.EventHandlers;
-using Catalog.Application.Integration.Events;
-using Catalog.Application.Interfaces.DataAccess;
 using Catalog.Application.PipelineBehaviours;
+using Catalog.Application.Services.DataAccess;
 using Catalog.Infrastructure.DataAccess.Catalog;
 using Catalog.Infrastructure.DataAccess.Catalog.Repositories;
-using EventBus.Abstractions;
 using EventBus.RabbitMQ.DependencyInjection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -28,7 +26,7 @@ static class ServicesConfiguration
         {
             options.SwaggerDoc("v1", new()
             {
-                Title = "MicroApp - Catalog.API",
+                Title = "MicroShop - Catalog.API",
                 Version = "v1"
             });
         });

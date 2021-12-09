@@ -4,7 +4,7 @@ using EventBus.Abstractions;
 
 namespace Basket.API.Configuration;
 
-static class PipelineConfiguration
+static class AppConfiguration
 {
     public static void SubscribeToEvents(this IApplicationBuilder app)
     {

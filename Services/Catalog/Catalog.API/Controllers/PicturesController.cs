@@ -1,6 +1,6 @@
 ﻿using Catalog.Application.Dto.Pictures;
-using Catalog.Application.Interfaces.DataAccess;
 using Catalog.Application.Requests.Pictures.GetCatalogItemPicture;
+using Catalog.Application.Services.DataAccess;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers;

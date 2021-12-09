@@ -5,7 +5,7 @@ using EventBus.Abstractions;
 
 namespace Catalog.API.Configuration;
 
-static class PipelineConfiguration
+static class AppConfiguration
 {
     public static void UseCustomExceptionHandler(this IApplicationBuilder app)
     {

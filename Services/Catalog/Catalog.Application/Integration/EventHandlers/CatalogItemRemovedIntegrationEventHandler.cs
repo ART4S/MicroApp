@@ -1,5 +1,5 @@
 ﻿using Catalog.Application.Integration.Events;
-using Catalog.Application.Interfaces.DataAccess;
+using Catalog.Application.Services.DataAccess;
 using EventBus.Abstractions;
 
 namespace Catalog.Application.Integration.EventHandlers;

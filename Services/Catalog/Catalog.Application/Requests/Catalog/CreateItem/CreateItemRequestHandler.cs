@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Catalog.Application.Interfaces.DataAccess;
+using Catalog.Application.Services.DataAccess;
 using Catalog.Domian.Entities;
 using MediatR;
 

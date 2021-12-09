@@ -64,16 +64,35 @@ services:
    ports:
      - "5001:80"
 
-  basket-grpcui:
-   image: fullstorydev/grpcui
-   container_name: basket-grpcui
-   command:
-    - "-plaintext"
-    - "basket-api:80"
+  ordering-api:
+   image: ordering-api:dev
+   container_name: ordering-api
+   build:
+    context: .
+    dockerfile: Services/Ordering/Ordering.API/Dockerfile
+    args:
+     BUILD_MODE: Debug
+   environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=http://+:80
+     - RabbitMQSettings__HostName=rabbitmq
+     - RabbitMQSettings__ClientName=Ordering,
+     - RabbitMQSettings__UserName=${RABBITMQ_USER}
+     - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
+     - RabbitMQSettings__Retries=3
    ports:
-     - "8080:8080"
-   depends_on:
-     - basket-api
+    - "5003:80"
+
+  #basket-grpcui:
+  # image: fullstorydev/grpcui
+  # container_name: basket-grpcui
+  # command:
+  #  - "-plaintext"
+  #  - "basket-api:80"
+  # ports:
+  #   - "8080:8080"
+  # depends_on:
+  #   - basket-api
 
 volumes:
   microshop-catalog-data:

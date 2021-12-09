@@ -21,3 +21,8 @@ services:
    depends_on:
     - basket-data
     - rabbitmq
+
+  ordering-api:
+   image: ${DOCKER_REGISTRY-}ordering-api
+   depends_on:
+    - rabbitmq

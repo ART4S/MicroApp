@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Catalog.Application.Exceptions;
 using Catalog.Application.Integration.Events;
-using Catalog.Application.Interfaces.DataAccess;
+using Catalog.Application.Services.DataAccess;
 using Catalog.Domian.Entities;
 using IntegrationServices;
 using MediatR;

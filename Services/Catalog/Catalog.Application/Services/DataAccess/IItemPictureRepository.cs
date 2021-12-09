@@ -1,6 +1,6 @@
 ﻿using Catalog.Application.Dto.Pictures;
 
-namespace Catalog.Application.Interfaces.DataAccess;
+namespace Catalog.Application.Services.DataAccess;
 
 public interface IItemPictureRepository
 {

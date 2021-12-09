@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Catalog.Application.Interfaces.DataAccess;
+namespace Catalog.Application.Services.DataAccess;
 
 public interface ICatalogDbContext
 {

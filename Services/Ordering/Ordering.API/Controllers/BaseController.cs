@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Catalog.API.Controllers;
+namespace Ordering.API.Controllers;
 
 public class BaseController : ControllerBase
 {
