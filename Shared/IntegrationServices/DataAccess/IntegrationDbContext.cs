@@ -1,4 +1,4 @@
-﻿using IntegrationServices.Entities;
+﻿using IntegrationServices.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

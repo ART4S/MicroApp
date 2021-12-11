@@ -4,7 +4,6 @@ option csharp_namespace = "GrpcBasket";
 
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
 
 package BasketApi;
 
@@ -29,11 +28,10 @@ message BasketReply {
 }
 
 message BasketItemReply {
-	string id = 1;
-	int32 catalogItemId = 2;
-	string catalogItemName = 3;
-	google.protobuf.DoubleValue price = 4;
-	google.protobuf.DoubleValue oldPrice = 5;
+	string productId = 2;
+	string productName = 3;
+	google.protobuf.DoubleValue unitPrice = 4;
+	google.protobuf.DoubleValue oldUnitPrice = 5;
 	int32 quantity = 6;
 	string pictureUrl = 7;
 }
@@ -41,14 +39,4 @@ message BasketItemReply {
 message CheckoutBasketRequest {
 	string requestId = 1;
 	string buyerId = 2;
-	string city = 3;
-	string street = 4;
-	string state = 5;
-	string country = 6;
-	string zipCode = 7;
-	string cardNumber = 8;
-	string cardHolderName = 9;
-	google.protobuf.Timestamp cardExpiration = 10;
-	string cardSecurityNumber = 11;
-	string cardTypeId = 12;
 }

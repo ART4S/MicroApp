@@ -64,6 +64,16 @@ services:
    ports:
      - "5001:80"
 
+  ordering-data:
+   container_name: ordering-data
+   environment:
+    - ACCEPT_EULA=Y
+    - SA_PASSWORD=${SA_PASSWORD}
+   ports:
+    - "1434:1433"
+   volumes:
+    - microshop-ordering-data:/var/opt/mssql
+
   ordering-api:
    image: ordering-api:dev
    container_name: ordering-api
@@ -75,6 +85,7 @@ services:
    environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=http://+:80
+     - ConnectionStrings__DefaultConnection=Server=ordering-data;Database=ordering_db;User Id=sa;Password=${SA_PASSWORD};Persist Security Info=true;
      - RabbitMQSettings__HostName=rabbitmq
      - RabbitMQSettings__ClientName=Ordering,
      - RabbitMQSettings__UserName=${RABBITMQ_USER}
@@ -98,4 +109,6 @@ volumes:
   microshop-catalog-data:
    external: false
   microshop-basket-data:
+   external: false
+  microshop-ordering-data:
    external: false

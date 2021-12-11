@@ -12,9 +12,16 @@ class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddAppServices();
         services.AddControllers();
         services.AddSwagger();
+        services.AddOrderingDbContext(Configuration);
         services.AddIntegrationServices(Configuration);
+        services.AddMediator();
+        services.AddAutoMapper();
+        services.AddEventHandlers();
+        services.AddValidation();
+        services.ConfigureApi();
     }
 
     public void ConfigureContainer(ContainerBuilder builder)

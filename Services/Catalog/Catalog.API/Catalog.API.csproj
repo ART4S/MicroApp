@@ -40,16 +40,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="InitialData\CatalogItem.xml">
+    <None Update="SeedData\CatalogItem.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InitialData\CatalogBrand.xml">
+    <None Update="SeedData\CatalogBrand.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InitialData\CatalogType.xml">
+    <None Update="SeedData\CatalogType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="InitialData\ItemPictures.zip">
+    <None Update="SeedData\ItemPictures.zip">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>

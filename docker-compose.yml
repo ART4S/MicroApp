@@ -22,7 +22,11 @@ services:
     - basket-data
     - rabbitmq
 
+  ordering-data:
+   image: mcr.microsoft.com/mssql/server:latest
+
   ordering-api:
    image: ${DOCKER_REGISTRY-}ordering-api
    depends_on:
+    - ordering-data
     - rabbitmq

@@ -5,13 +5,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Xml;
 using System.Xml.Serialization;
-using Catalog.Infrastructure.DataAccess.Catalog.Repositories;
+using Catalog.Infrastructure.DataAccess.Repositories;
 
 namespace Catalog.Infrastructure.DataAccess.Catalog;
 
 public class CatalogDbContextSeed
 {
-    private const string INITIALDATA_FOLDER_NAME = "InitialData";
+    private const string INITIALDATA_FOLDER_NAME = "SeedData";
 
     private readonly ILogger _logger;
     private readonly CatalogDbContext _dbContext;
@@ -102,7 +102,7 @@ public class CatalogDbContextSeed
 
                     if (entity is null)
                     {
-                        _logger.LogError("Cannot parse text {Text} from file {File}", node.InnerText, file);
+                        _logger.LogError("Cannot parse text {Text} from file {File}", node.OuterXml, file);
 
                         throw new Exception($"Entity of type {entityType.Name} is null");
                     }
@@ -121,12 +121,10 @@ public class CatalogDbContextSeed
         return result;
     }
 
-    private IEnumerable<Type> GetEntityTypes()
-    {
-        return typeof(CatalogDbContext).GetProperties()
+    private static IEnumerable<Type> GetEntityTypes() =>
+        typeof(CatalogDbContext).GetProperties()
             .Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
             .Select(x => x.PropertyType.GetGenericArguments().First());
-    }
 
     private void AddPictures()
     {

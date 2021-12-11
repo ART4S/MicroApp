@@ -1,4 +1,4 @@
-﻿using Catalog.Application.Abstractions;
+﻿using Catalog.Application.Requests.Abstractions;
 using Catalog.Application.Services.DataAccess;
 using IntegrationServices.DataAccess;
 using MediatR;

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+	<CardTypeDict>
+		<Id>1</Id>
+		<Name>Visa</Name>
+	</CardTypeDict>
+	<CardTypeDict>
+		<Id>2</Id>
+		<Name>Mastercard</Name>
+	</CardTypeDict>
+</Root>

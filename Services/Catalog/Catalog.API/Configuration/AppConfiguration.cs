@@ -9,7 +9,7 @@ static class AppConfiguration
 {
     public static void UseCustomExceptionHandler(this IApplicationBuilder app)
     {
-        app.UseMiddleware<ExceptionHandlerMiddleware>();
+        app.UseMiddleware<CustomExceptionHandlerMiddleware>();
     }
 
     public static void SubscribeToEvents(this IApplicationBuilder app)

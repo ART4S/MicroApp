@@ -1,4 +1,6 @@
-﻿namespace IntegrationServices;
+﻿using IntegrationServices.Model;
+
+namespace IntegrationServices;
 
 public interface IIntegrationEventService
 {

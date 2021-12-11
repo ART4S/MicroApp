@@ -25,28 +25,28 @@ public class BasketService : Basket.BasketBase
     {
         BasketReply response = new() { BuyerId = request.BuyerId };
 
-        CustomerBasket? basket = await _basketRepo.Get(request.BuyerId);
+        BasketEntry? entry = await _basketRepo.Get(request.BuyerId);
 
-        if (basket is null)
+        if (entry is null)
             return response;
 
-        return _mapper.Map(basket, response);
+        return _mapper.Map(entry.Basket, response);
     }
 
     public override async Task<BasketReply> UpdateBasket(UpdateBasketRequest request, ServerCallContext context)
     {
         CustomerBasket basket = _mapper.Map<CustomerBasket>(request);
 
-        await _basketRepo.Update(basket);
+        await _basketRepo.Update(new BasketEntry(basket));
 
         return _mapper.Map<BasketReply>(basket);
     }
 
     public override async Task<Empty> CheckoutBasket(CheckoutBasketRequest request, ServerCallContext context)
     {
-        CustomerBasket? basket = await _basketRepo.Get(request.BuyerId);
+        BasketEntry? entry = await _basketRepo.Get(request.BuyerId);
 
-        if (basket is null)
+        if (entry is null)
         {
             context.Status = new Status(StatusCode.NotFound, $"Basket for buyer {request.BuyerId} is not created yet");
             return new Empty();
@@ -55,17 +55,7 @@ public class BasketService : Basket.BasketBase
         _eventBus.Publish(new BasketCheckoutIntegrationEvent
         (
             requestId: Guid.Parse(request.RequestId),
-            city: request.City,
-            street: request.Street,
-            state: request.State,
-            country: request.Country,
-            zipCode: request.ZipCode,
-            cardNumber: request.CardNumber,
-            cardHolderName: request.CardHolderName,
-            cardExpiration: request.CardExpiration.ToDateTime(),
-            cardSecurityNumber: request.CardSecurityNumber,
-            cardTypeId: Guid.Parse(request.CardTypeId),
-            basket: basket
+            basket: entry.Basket
         ));
 
         return new Empty();

@@ -1,5 +1,5 @@
-﻿using System.Net.Mime;
-using System.Text;
+﻿using Ordering.Application.Exceptions;
+using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -33,21 +33,21 @@ class CustomExceptionHandlerMiddleware
 
         switch (exception)
         {
-            //case RequestValidationException ex:
-            //    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-            //    httpContext.Response.ContentType = MediaTypeNames.Application.Json;
+            case CommandValidationException ex:
+                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                httpContext.Response.ContentType = MediaTypeNames.Application.Json;
 
-            //    await httpContext.Response.WriteAsJsonAsync(new
-            //    {
-            //        Message = ex.UserMessage,
-            //        ex.Errors
-            //    }, new JsonSerializerOptions()
-            //    {
-            //        WriteIndented = true,
-            //        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            //    });
+                await httpContext.Response.WriteAsJsonAsync(new
+                {
+                    Message = ex.UserMessage,
+                    Errors = ex.Errors
+                }, new JsonSerializerOptions()
+                {
+                    WriteIndented = true,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                });
 
-            //    break;
+                break;
 
             //case InvalidRequestException ex:
             //    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;

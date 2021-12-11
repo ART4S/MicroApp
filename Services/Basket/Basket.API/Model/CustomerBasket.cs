@@ -1,10 +1,21 @@
-﻿namespace Basket.API.Model;
+﻿using System.Text.Json.Serialization;
+
+namespace Basket.API.Model;
 
 public class CustomerBasket
 {
+    [JsonConstructor]
+    public CustomerBasket(List<BasketItem> items)
+    {
+        Items = items;
+    }
+
+    public CustomerBasket() 
+    {
+        Items = new List<BasketItem>();
+    }
+
     public string BuyerId { get; set; }
 
-    public DateTime LastUpdate { get; set; }
-
-    public List<BasketItem> Items { get; private set; } = new List<BasketItem>();
+    public List<BasketItem> Items { get; }
 }

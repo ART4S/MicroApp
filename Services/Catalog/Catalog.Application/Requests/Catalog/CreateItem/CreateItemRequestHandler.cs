@@ -22,7 +22,7 @@ public class CreateItemRequestHandler : IRequestHandler<CreateItemRequest, Guid>
 
         await _catalogDb.CatalogItems.AddAsync(item);
 
-        await _catalogDb.SaveChanges();
+        await _catalogDb.SaveChangesAsync();
 
         return item.Id;
     }

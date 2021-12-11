@@ -7,9 +7,10 @@ namespace Catalog.Application.Services.DataAccess;
 public interface ICatalogDbContext
 {
     DatabaseFacade Database { get; }
-    Task<int> SaveChanges(CancellationToken cancellationToken = default);
 
     DbSet<CatalogItem> CatalogItems { get; }
     DbSet<CatalogBrand> CatalogBrands { get; }
     DbSet<CatalogType> CatalogTypes { get; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

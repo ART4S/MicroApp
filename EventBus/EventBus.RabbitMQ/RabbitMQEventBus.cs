@@ -8,14 +8,13 @@ using RabbitMQ.Client.Exceptions;
 using System.Net.Mime;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Text;
 using System.Text.Json;
 
 namespace EventBus.RabbitMQ;
 
 public class RabbitMQEventBus : IEventBus, IDisposable
 {
-    const string BROKER_NAME = "MicroApp";
+    const string BROKER_NAME = "MicroShop";
 
     private readonly ILogger _logger;
     private readonly IServiceProvider _services;
@@ -188,16 +187,19 @@ public class RabbitMQEventBus : IEventBus, IDisposable
         catch(JsonException ex)
         {
             // TODO: log
+            _logger.LogError("", ex);
             return;
         }
         catch (NotSupportedException ex)
         {
             // TODO: log
+            _logger.LogError("", ex);
             return;
         }
         catch(Exception ex)
         {
             // TODO: log
+            _logger.LogError("", ex);
             return;
         }
 
@@ -252,7 +254,7 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
         if (eventInfo.Handlers.Count == 0)
         {
-            _subscriptionChannel.QueueBind(queue: _settings.ClientName, exchange: BROKER_NAME, routingKey: eventName);
+            _subscriptionChannel.QueueUnbind(queue: _settings.ClientName, exchange: BROKER_NAME, routingKey: eventName);
             _events.Remove(eventName);
             _logger.LogWarning("Event {Event} has no handlers", eventName);
         }

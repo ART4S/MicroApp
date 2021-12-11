@@ -27,7 +27,7 @@ public class DeleteItemRequestHandler : IRequestHandler<DeleteItemRequest>
 
         _catalogDb.CatalogItems.Remove(item);
 
-        await _catalogDb.SaveChanges();
+        await _catalogDb.SaveChangesAsync();
 
         await _integrationService.Save(new CatalogItemRemovedIntegrationEvent(
             ItemId: item.Id, 

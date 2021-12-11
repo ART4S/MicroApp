@@ -43,7 +43,7 @@ public class UpdateItemRequestHandler : IRequestHandler<UpdateItemRequest, Unit>
 
         _mapper.Map(request.Item, item);
 
-        await _catalogDb.SaveChanges();
+        await _catalogDb.SaveChangesAsync();
         
         return Unit.Value;
     }

@@ -7,12 +7,12 @@ namespace Basket.API.Infrastructure.BackgroundTasks;
 
 public class DeleteExpiredBasketsBackgroundTask : IBackgroundTask
 {
-    private readonly ICurrentTimeService _currentTime;
+    private readonly ICurrentTime _currentTime;
     private readonly IBasketRepository _basketRepo;
     private readonly TimeSpan _expiration;
 
     public DeleteExpiredBasketsBackgroundTask(
-        ICurrentTimeService currentTime, 
+        ICurrentTime currentTime, 
         IBasketRepository basketRepo, 
         TimeSpan expiration)
     {
@@ -31,7 +31,7 @@ public class DeleteExpiredBasketsBackgroundTask : IBackgroundTask
 
         foreach(string buyerId in buyers)
         {
-            CustomerBasket? basket = await _basketRepo.Get(buyerId);
+            BasketEntry? basket = await _basketRepo.Get(buyerId);
 
             if (basket is null)
             {
@@ -43,7 +43,7 @@ public class DeleteExpiredBasketsBackgroundTask : IBackgroundTask
                 expiredBaskets.Add(buyerId);
         }
 
-        foreach(string buyerId in buyers)
+        foreach(string buyerId in expiredBaskets)
         {
             await _basketRepo.Remove(buyerId);
         }

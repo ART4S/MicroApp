@@ -4,7 +4,7 @@ using Catalog.Application.Integration.EventHandlers;
 using Catalog.Application.PipelineBehaviours;
 using Catalog.Application.Services.DataAccess;
 using Catalog.Infrastructure.DataAccess.Catalog;
-using Catalog.Infrastructure.DataAccess.Catalog.Repositories;
+using Catalog.Infrastructure.DataAccess.Repositories;
 using EventBus.RabbitMQ.DependencyInjection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -14,12 +14,17 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
+using System.Reflection;
 using TaskScheduling.Core;
 
 namespace Catalog.API.Configuration;
 
 static class ServicesConfiguration
 {
+    private static Assembly ApplicationAssebly => typeof(ICatalogDbContext).Assembly;
+    private static Assembly InfrastructureAssebly => typeof(CatalogDbContext).Assembly;
+
     public static void AddSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
@@ -36,13 +41,13 @@ static class ServicesConfiguration
     {
         string connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddScoped(_ => new SqlConnection(connectionString));
+        services.AddScoped<DbConnection>((sp) => new SqlConnection(connectionString));
 
         services.AddDbContext<CatalogDbContext>((sp, options) =>
         {
             options.UseSqlServer(
-                connection: sp.GetRequiredService<SqlConnection>(),
-                sqlOptions => sqlOptions.MigrationsAssembly(typeof(CatalogDbContext).Assembly.FullName));
+                connection: sp.GetRequiredService<DbConnection>(),
+                sqlOptions => sqlOptions.MigrationsAssembly(InfrastructureAssebly.FullName));
         });
 
         services.AddScoped<ICatalogDbContext, CatalogDbContext>();
@@ -62,14 +67,14 @@ static class ServicesConfiguration
         services.AddDbContext<IntegrationDbContext>((sp, options) =>
         {
             options.UseSqlServer(
-                connection: sp.GetRequiredService<SqlConnection>(), 
-                sqlOptions => sqlOptions.MigrationsAssembly(typeof(CatalogDbContext).Assembly.FullName));
+                connection: sp.GetRequiredService<DbConnection>(), 
+                sqlOptions => sqlOptions.MigrationsAssembly(InfrastructureAssebly.FullName));
         });
 
         services.AddScoped<IIntegrationDbContext, IntegrationDbContext>();
 
         services.AddScoped<IIntegrationEventService, IntegrationEventService>(
-            (sp) => ActivatorUtilities.CreateInstance<IntegrationEventService>(sp, typeof(ICatalogDbContext).Assembly));
+            (sp) => ActivatorUtilities.CreateInstance<IntegrationEventService>(sp, ApplicationAssebly));
     }
 
     public static void AddEventHandlers(this IServiceCollection services)
@@ -86,7 +91,7 @@ static class ServicesConfiguration
     {
         services.AddMediatR(typeof(ICatalogDbContext));
 
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CommandValidationBehaviour<,>));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(SaveChangesBehaviour<,>));
     }
 
@@ -94,7 +99,7 @@ static class ServicesConfiguration
     {
         services.AddAutoMapper(config =>
         {
-            config.AddMaps(typeof(ICatalogDbContext));
+            config.AddMaps(ApplicationAssebly);
         });
     }
 
@@ -105,7 +110,7 @@ static class ServicesConfiguration
             opt.Filters.Add<ValidationAttribute>();
         }).AddFluentValidation();
 
-        services.AddValidatorsFromAssemblyContaining(typeof(ICatalogDbContext));
+        services.AddValidatorsFromAssembly(ApplicationAssebly);
     }
 
     public static void ConfigureApi(this IServiceCollection services)

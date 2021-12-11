@@ -1,5 +1,6 @@
 ﻿using EventBus.Abstractions;
 using IntegrationServices;
+using IntegrationServices.Model;
 using TaskScheduling.Abstractions;
 
 namespace Catalog.API.Infrastructure.BackgroundTasks;

@@ -1,6 +1,5 @@
 ﻿using IntegrationServices.DataAccess;
-using IntegrationServices.Entities;
-using IntegrationServices.Enums;
+using IntegrationServices.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 

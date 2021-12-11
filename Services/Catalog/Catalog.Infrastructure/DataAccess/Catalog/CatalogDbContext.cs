@@ -19,7 +19,7 @@ public class CatalogDbContext : DbContext, ICatalogDbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public Task<int> SaveChanges(CancellationToken cancellationToken = default)
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return base.SaveChangesAsync(cancellationToken);
     }

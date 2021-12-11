@@ -13,7 +13,7 @@ static class ServicesConfiguration
 {
     public static void AddAppServices(this IServiceCollection services)
     {
-        services.AddSingleton<ICurrentTimeService, CurrentTimeService>();
+        services.AddSingleton<ICurrentTime, CurrentTime>();
     }
 
     public static void AddDataAccess(this IServiceCollection services, IConfiguration configuration)

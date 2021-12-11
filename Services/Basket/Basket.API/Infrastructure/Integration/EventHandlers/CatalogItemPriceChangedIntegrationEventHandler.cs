@@ -20,25 +20,25 @@ public class CatalogItemPriceChangedIntegrationEventHandler : IEventHandler<Cata
 
     public async Task Handle(CatalogItemPriceChangedIntegrationEvent @event)
     {
-        CustomerBasket? basket = await _basketRepo.Get(@event.ItemId);
+        BasketEntry? entry = await _basketRepo.Get(@event.ItemId);
 
-        if (basket is null)
+        if (entry is null)
         {
             // TODO: log
             return;
         }
 
-        var items = basket.Items.Where(x => x.Id == @event.ItemId);
+        var items = entry.Basket.Items.Where(x => x.ProductId == @event.ItemId);
 
         foreach (BasketItem item in items)
         {
-            if (item.Price != @event.NewPrice)
+            if (item.UnitPrice != @event.NewPrice)
             {
-                item.OldPrice = item.Price;
-                item.Price = @event.NewPrice;
+                item.OldUnitPrice = item.UnitPrice;
+                item.UnitPrice = @event.NewPrice;
             }
         }
 
-        await _basketRepo.Update(basket);
+        await _basketRepo.Update(entry);
     }
 }

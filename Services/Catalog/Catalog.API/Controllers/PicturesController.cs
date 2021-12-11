@@ -1,6 +1,5 @@
 ﻿using Catalog.Application.Dto.Pictures;
 using Catalog.Application.Requests.Pictures.GetCatalogItemPicture;
-using Catalog.Application.Services.DataAccess;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers;
@@ -8,13 +7,6 @@ namespace Catalog.API.Controllers;
 [ApiController]
 public class PicturesController : BaseController
 {
-    private readonly IItemPictureRepository _pictureRepo;
-
-    public PicturesController(IItemPictureRepository pictureRepo)
-    {
-        _pictureRepo = pictureRepo;
-    }
-
     [HttpGet("api/v1/catalog/items/{itemId:guid}/picture")]
     public async Task<IActionResult> GetCatalogItemPicture(Guid itemId)
     {
