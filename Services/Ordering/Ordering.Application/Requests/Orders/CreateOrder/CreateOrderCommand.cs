@@ -1,5 +1,5 @@
 ﻿using Ordering.Application.Integration.Models;
-using Ordering.Application.Requests.Abstractions;
+using Ordering.Application.Requests.Common;
 
 namespace Ordering.Application.Requests.Orders.CreateOrder;
 

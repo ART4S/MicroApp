@@ -8,13 +8,20 @@ using Ordering.Application.Services.Common;
 using Ordering.Application.Services.DataAccess;
 using Ordering.Infrastructure.DataAccess.Ordering;
 using Microsoft.EntityFrameworkCore;
-using IntegrationServices.DataAccess;
 using IntegrationServices;
 using System.Reflection;
 using TaskScheduling.Core;
 using Ordering.API.Infrastructure.BackgroundTasks;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
+using Ordering.Application.Services.Identity;
+using Ordering.Infrastructure.Identity;
+using IntegrationServices.EF;
+using IdempotencyServices.EF;
+using IdempotencyServices.Mediator;
+using Ordering.Infrastructure.Common;
+using IdempotencyServices;
+using Ordering.Application.Requests.Orders.CreateOrder;
 
 namespace Ordering.API.Configuration;
 
@@ -29,6 +36,11 @@ static class ServicesConfiguration
     public static void AddAppServices(this IServiceCollection services)
     {
         services.AddSingleton<ICurrentTime, CurrentTime>();
+    }
+
+    public static void AddIdentityServices(this IServiceCollection services)
+    {
+        services.AddScoped<IIdentityService, IdentityService>();
     }
 
     public static void AddSwagger(this IServiceCollection services)
@@ -80,7 +92,7 @@ static class ServicesConfiguration
         services.AddScoped<IIntegrationDbContext, IntegrationDbContext>();
 
         services.AddScoped<IIntegrationEventService, IntegrationEventService>(
-            (sp) => ActivatorUtilities.CreateInstance<IntegrationEventService>(sp, InfrastructureAssembly));
+            (sp) => ActivatorUtilities.CreateInstance<IntegrationEventService>(sp, ApplicationAssembly));
     }
 
     public static void AddEventHandlers(this IServiceCollection services)
@@ -141,5 +153,34 @@ static class ServicesConfiguration
         {
             options.SuppressModelStateInvalidFilter = true;
         });
+    }
+
+    public static void AddIdempotencyServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        string connectionString = configuration.GetConnectionString("DefaultConnection");
+
+        services.AddDbContext<IdempotencyDbContext>(options =>
+        {
+            options.UseSqlServer(connectionString, sqlOptions =>
+            {
+                sqlOptions.MigrationsAssembly(InfrastructureAssembly.FullName);
+            });
+        });
+
+        services.AddScoped<IIdempotencyDbContext, IdempotencyDbContext>();
+
+        services.AddSingleton<Func<DateTime>>(sp =>
+        {
+            var currentTime = sp.GetRequiredService<ICurrentTime>();
+            return () => currentTime.Now;
+        });
+
+        services.AddScoped<IClientRequestService, ClientRequestService>();
+
+        services.AddScoped
+        (
+            typeof(IRequestHandler<IdempotentRequest<CreateOrderCommand, Unit>, Unit>),
+            typeof(IdempotentRequestHandler<CreateOrderCommand, Unit>)
+        );
     }
 }

@@ -34,14 +34,6 @@ public class OrderingDbContextSeed
 
         try
         {
-            _dbContext.Buyers.Add(new()
-            {
-                Id = new Guid("43c3dd1e-c305-40ab-9ba9-0e7deda89299"),
-                Name = "Test User",
-            });
-
-            _dbContext.SaveChanges();
-
             foreach (var entry in LoadEntitiesFromXml())
             {
                 _dbContext.AddRange(entry.Entities);
@@ -59,7 +51,7 @@ public class OrderingDbContextSeed
         }
         catch(Exception ex)
         {
-            _logger.LogError("", ex);
+            _logger.LogError("", ex); // TODO: log
 
             transaction.Rollback();
 

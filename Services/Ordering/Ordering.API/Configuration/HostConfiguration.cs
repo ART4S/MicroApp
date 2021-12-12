@@ -1,5 +1,6 @@
 ﻿using HostConfiguration;
-using IntegrationServices.DataAccess;
+using IdempotencyServices.EF;
+using IntegrationServices.EF;
 using Ordering.Infrastructure.DataAccess.Ordering;
 
 namespace Ordering.API.Configuration;
@@ -23,7 +24,12 @@ static class HostConfiguration
     public static IHost MigrateIntegrationDbContext(this IHost host)
     {
         host.MigrateDbContext<IntegrationDbContext>();
+        return host;
+    }
 
+    public static IHost MigrateIdempotencyDbContext(this IHost host)
+    {
+        host.MigrateDbContext<IdempotencyDbContext>();
         return host;
     }
 }

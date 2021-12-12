@@ -6,6 +6,7 @@ EXPOSE 80
 WORKDIR /src
 COPY "Shared/HostConfiguration/HostConfiguration.csproj" "Shared/HostConfiguration/HostConfiguration.csproj"
 COPY "Shared/IntegrationServices/IntegrationServices.csproj" "Shared/IntegrationServices/IntegrationServices.csproj"
+COPY "Shared/IdempotencyServices/IdempotencyServices.csproj" "Shared/IdempotencyServices/IdempotencyServices.csproj"
 COPY "Shared/TaskScheduling/TaskScheduling.csproj" "Shared/TaskScheduling/TaskScheduling.csproj"
 COPY "EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj" "EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj"
 COPY "EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj" "EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj"

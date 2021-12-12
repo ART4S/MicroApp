@@ -1,10 +1,10 @@
 using Autofac.Extensions.DependencyInjection;
 using Ordering.API.Configuration;
 
-IHost host = CreateHostBuilder(args)
-    .Build()
+IHost host = CreateHostBuilder(args).Build()
     .MigrateOrderingDbContext()
-    .MigrateIntegrationDbContext();
+    .MigrateIntegrationDbContext()
+    .MigrateIdempotencyDbContext();
 
 host.Run();
 

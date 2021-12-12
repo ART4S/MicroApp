@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace IntegrationServices.DataAccess;
+namespace IntegrationServices.EF;
 
 public class IntegrationDbContext : DbContext, IIntegrationDbContext
 {

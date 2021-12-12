@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\IdempotencyServices\IdempotencyServices.csproj" />
     <ProjectReference Include="..\..\..\Shared\IntegrationServices\IntegrationServices.csproj" />
     <ProjectReference Include="..\Ordering.Domian\Ordering.Domian.csproj" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using EventBus.Abstractions;
+using IdempotencyServices.Mediator;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Integration.Events;
@@ -21,10 +22,14 @@ public class BasketCheckoutIntegrationEventHandler : IEventHandler<BasketCheckou
 
     public async Task Handle(BasketCheckoutIntegrationEvent @event)
     {
-        CreateOrderCommand command = new(@event.Basket.BuyerId, @event.Basket.Items);
-
         try
         {
+            var command = new IdempotentRequest<CreateOrderCommand, Unit>
+            (
+                id: @event.RequestId,
+                originalRequest: new(@event.Basket.BuyerId, @event.Basket.Items)
+            );
+
             await _mediator.Send(command);
         }
         catch (Exception ex)

@@ -111,7 +111,7 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderAddreses",
+                name: "OrderAddresses",
                 columns: table => new
                 {
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -123,9 +123,9 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderAddreses", x => x.OrderId);
+                    table.PrimaryKey("PK_OrderAddresses", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_OrderAddreses_Orders_OrderId",
+                        name: "FK_OrderAddresses_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
@@ -186,7 +186,7 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrderAddreses");
+                name: "OrderAddresses");
 
             migrationBuilder.DropTable(
                 name: "OrderItems");

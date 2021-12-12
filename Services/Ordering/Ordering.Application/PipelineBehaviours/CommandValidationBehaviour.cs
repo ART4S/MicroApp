@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Exceptions;
-using Ordering.Application.Requests.Abstractions;
+using Ordering.Application.Requests.Common;
 
 namespace Ordering.Application.PipelineBehaviours;
 

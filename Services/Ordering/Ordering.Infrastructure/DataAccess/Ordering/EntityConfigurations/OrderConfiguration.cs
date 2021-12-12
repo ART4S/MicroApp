@@ -10,7 +10,7 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         builder.OwnsOne(x => x.Address, x =>
         {
-            x.ToTable("OrderAddreses");
+            x.ToTable("OrderAddresses");
         });
     }
 }

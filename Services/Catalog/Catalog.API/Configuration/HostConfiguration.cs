@@ -1,6 +1,6 @@
 ﻿using Catalog.Infrastructure.DataAccess.Catalog;
 using HostConfiguration;
-using IntegrationServices.DataAccess;
+using IntegrationServices.EF;
 
 namespace Catalog.API.Configuration;
 

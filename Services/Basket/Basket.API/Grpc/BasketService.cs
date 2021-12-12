@@ -48,13 +48,13 @@ public class BasketService : Basket.BasketBase
 
         if (entry is null)
         {
-            context.Status = new Status(StatusCode.NotFound, $"Basket for buyer {request.BuyerId} is not created yet");
+            context.Status = new Status(StatusCode.NotFound, $"Basket for buyer {request.BuyerId} not found");
             return new Empty();
         }
 
         _eventBus.Publish(new BasketCheckoutIntegrationEvent
         (
-            requestId: Guid.Parse(request.RequestId),
+            requestId: request.RequestId,
             basket: entry.Basket
         ));
 

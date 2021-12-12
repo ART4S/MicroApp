@@ -12,7 +12,7 @@ using Ordering.Infrastructure.DataAccess.Ordering;
 namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
 {
     [DbContext(typeof(OrderingDbContext))]
-    [Migration("20211211081150_Ordering_Initial")]
+    [Migration("20211212134858_Ordering_Initial")]
     partial class Ordering_Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -214,7 +214,7 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("OrderAddreses", (string)null);
+                            b1.ToTable("OrderAddresses", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");

@@ -212,7 +212,7 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("OrderAddreses", (string)null);
+                            b1.ToTable("OrderAddresses", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");

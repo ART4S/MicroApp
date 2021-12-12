@@ -5,13 +5,13 @@ namespace Basket.API.Infrastructure.Integration.Events;
 
 public record BasketCheckoutIntegrationEvent : IntegrationEvent
 {
-    public BasketCheckoutIntegrationEvent(Guid requestId, CustomerBasket basket)
+    public BasketCheckoutIntegrationEvent(string requestId, CustomerBasket basket)
     {
         RequestId = requestId;
         Basket = basket;
     }
 
-    public Guid RequestId { get; }
+    public string RequestId { get; }
 
     public CustomerBasket Basket { get; }
 }

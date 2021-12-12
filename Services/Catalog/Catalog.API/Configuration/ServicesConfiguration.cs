@@ -9,7 +9,7 @@ using EventBus.RabbitMQ.DependencyInjection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using IntegrationServices;
-using IntegrationServices.DataAccess;
+using IntegrationServices.EF;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;

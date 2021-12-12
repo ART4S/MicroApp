@@ -1,14 +1,14 @@
-﻿using IntegrationServices.Model;
+﻿using IdempotencyServices.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace IntegrationServices.DataAccess;
+namespace IdempotencyServices.EF;
 
-public interface IIntegrationDbContext
+public interface IIdempotencyDbContext
 {
     DatabaseFacade Database { get; }
 
-    DbSet<IntegrationEventLogEntry> IntegrationEvents { get; }
+    DbSet<ClientRequest> ClientRequests { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

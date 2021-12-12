@@ -1,6 +1,6 @@
 ﻿using Catalog.Application.Requests.Abstractions;
 using Catalog.Application.Services.DataAccess;
-using IntegrationServices.DataAccess;
+using IntegrationServices.EF;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;

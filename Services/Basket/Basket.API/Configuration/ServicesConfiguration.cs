@@ -1,5 +1,6 @@
 ﻿using Basket.API.Infrastructure.BackgroundTasks;
 using Basket.API.Infrastructure.DataAccess;
+using Basket.API.Infrastructure.Integration.EventHandlers;
 using Basket.API.Infrastructure.Mapper.Converters;
 using Basket.API.Infrastructure.Services;
 using EventBus.RabbitMQ.DependencyInjection;
@@ -35,6 +36,11 @@ static class ServicesConfiguration
             UserName: configuration.GetValue<string>("RabbitMQSettings:UserName"),
             Password: configuration.GetValue<string>("RabbitMQSettings:Password")
         ));
+    }
+
+    public static void AddEventHandlers(this IServiceCollection services)
+    {
+        services.AddScoped<OrderStartedIntegrationEventHandler>();
     }
 
     public static void AddAutoMapper(this IServiceCollection services)

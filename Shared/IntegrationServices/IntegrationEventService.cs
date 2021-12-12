@@ -1,4 +1,4 @@
-﻿using IntegrationServices.DataAccess;
+﻿using IntegrationServices.EF;
 using IntegrationServices.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;

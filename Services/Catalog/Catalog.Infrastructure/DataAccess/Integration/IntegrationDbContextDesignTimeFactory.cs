@@ -1,4 +1,4 @@
-﻿using IntegrationServices.DataAccess;
+﻿using IntegrationServices.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

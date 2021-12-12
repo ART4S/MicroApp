@@ -13,15 +13,18 @@ class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddAppServices();
+        services.AddIdentityServices();
         services.AddControllers();
         services.AddSwagger();
         services.AddOrderingDbContext(Configuration);
         services.AddIntegrationServices(Configuration);
+        services.AddIdempotencyServices(Configuration);
         services.AddMediator();
         services.AddAutoMapper();
         services.AddEventHandlers();
         services.AddValidation();
         services.ConfigureApi();
+        services.AddTaskScheduling(Configuration);
     }
 
     public void ConfigureContainer(ContainerBuilder builder)

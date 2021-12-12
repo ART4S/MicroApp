@@ -16,6 +16,7 @@ class Startup
         services.AddGrpc();
         services.AddGrpcReflection();
         services.AddDataAccess(Configuration);
+        services.AddEventHandlers();
         services.AddIntegrationServices(Configuration);
         services.AddAutoMapper();
         services.AddTaskScheduling(Configuration);
@@ -32,5 +33,7 @@ class Startup
 
             endpoints.MapGrpcService<BasketService>();
         });
+
+        app.SubscribeToEvents();
     }
 }
