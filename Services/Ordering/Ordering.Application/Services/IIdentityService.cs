@@ -1,4 +1,4 @@
-﻿using Ordering.Application.Dto;
+﻿using Ordering.Application.Model.Identity;
 
 namespace Ordering.Application.Services.Identity;
 

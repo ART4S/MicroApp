@@ -130,7 +130,7 @@ static class ServicesConfiguration
             ), 
             taskSettings: new[]
             {
-                new BackgroundTaskSettings<IntegrationEventBackgroundTask>(
+                new BackgroundTaskSettings<PublishIntegrationEventsBackgroundTask>(
                     Schedule: configuration.GetValue<string>("BackgroundTasks:IntegrationEventSchedule"))
             },
             exceptionHandler: (exception, task, services) =>

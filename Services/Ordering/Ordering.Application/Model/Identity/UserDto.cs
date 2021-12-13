@@ -1,4 +1,4 @@
-﻿namespace Ordering.Application.Dto;
+﻿namespace Ordering.Application.Model.Identity;
 
 public class UserDto
 {

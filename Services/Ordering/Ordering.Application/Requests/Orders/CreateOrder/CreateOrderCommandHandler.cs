@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using IntegrationServices;
 using MediatR;
-using Ordering.Application.Dto;
 using Ordering.Application.Exceptions;
 using Ordering.Application.Integration.Events;
 using Ordering.Application.Integration.Models;
+using Ordering.Application.Model.Identity;
 using Ordering.Application.Services.Common;
 using Ordering.Application.Services.DataAccess;
 using Ordering.Application.Services.Identity;

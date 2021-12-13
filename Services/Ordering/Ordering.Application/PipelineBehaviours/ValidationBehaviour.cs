@@ -2,18 +2,17 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Exceptions;
-using Ordering.Application.Requests.Common;
 
 namespace Ordering.Application.PipelineBehaviours;
 
-public class CommandValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : Command<TResponse>
+public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
     private readonly ILogger _logger;
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public CommandValidationBehaviour(
-        ILogger<CommandValidationBehaviour<TRequest, TResponse>> logger,
+    public ValidationBehaviour(
+        ILogger<ValidationBehaviour<TRequest, TResponse>> logger,
         IEnumerable<IValidator<TRequest>> validators)
     {
         _logger = logger;
@@ -34,7 +33,7 @@ public class CommandValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
                     .ToArray();
 
                 if (errors.Length > 0)
-                    throw new CommandValidationException(errors);
+                    throw new RequestValidationException(errors);
             }
             catch (Exception ex)
             {

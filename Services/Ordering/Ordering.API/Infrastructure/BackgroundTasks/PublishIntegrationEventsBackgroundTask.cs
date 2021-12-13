@@ -5,12 +5,12 @@ using TaskScheduling.Abstractions;
 
 namespace Ordering.API.Infrastructure.BackgroundTasks;
 
-class IntegrationEventBackgroundTask : IBackgroundTask
+class PublishIntegrationEventsBackgroundTask : IBackgroundTask
 {
     private readonly IEventBus _eventBus;
     private readonly IIntegrationEventService _integrationService;
 
-    public IntegrationEventBackgroundTask(
+    public PublishIntegrationEventsBackgroundTask(
         IEventBus eventBus,
         IIntegrationEventService integrationService)
     {

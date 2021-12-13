@@ -22,6 +22,9 @@ using IdempotencyServices.Mediator;
 using Ordering.Infrastructure.Common;
 using IdempotencyServices;
 using Ordering.Application.Requests.Orders.CreateOrder;
+using Ordering.API.Infrastructure.Attributes;
+using FluentValidation.AspNetCore;
+using Ordering.Application.Requests.Orders.ConfirmOrder;
 
 namespace Ordering.API.Configuration;
 
@@ -104,7 +107,7 @@ static class ServicesConfiguration
     {
         services.AddMediatR(ApplicationAssembly);
 
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CommandValidationBehaviour<,>));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(SaveChangesBehaviour<,>));
     }
 
@@ -118,10 +121,10 @@ static class ServicesConfiguration
 
     public static void AddValidation(this IServiceCollection services)
     {
-        //services.AddMvc(opt =>
-        //{
-        //    opt.Filters.Add<ValidationAttribute>();
-        //}).AddFluentValidation();
+        services.AddMvc(opt =>
+        {
+            opt.Filters.Add<ValidationAttribute>();
+        }).AddFluentValidation();
 
         services.AddValidatorsFromAssembly(ApplicationAssembly);
     }
@@ -135,7 +138,7 @@ static class ServicesConfiguration
             ),
             taskSettings: new[]
             {
-                new BackgroundTaskSettings<IntegrationEventBackgroundTask>(
+                new BackgroundTaskSettings<PublishIntegrationEventsBackgroundTask>(
                     Schedule: configuration.GetValue<string>("BackgroundTasks:IntegrationEventSchedule"))
             },
             exceptionHandler: (exception, task, services) =>
@@ -181,6 +184,12 @@ static class ServicesConfiguration
         (
             typeof(IRequestHandler<IdempotentRequest<CreateOrderCommand, Unit>, Unit>),
             typeof(IdempotentRequestHandler<CreateOrderCommand, Unit>)
+        );
+
+        services.AddScoped
+        (
+            typeof(IRequestHandler<IdempotentRequest<ConfirmOrderCommand, Unit>, Unit>),
+            typeof(IdempotentRequestHandler<ConfirmOrderCommand, Unit>)
         );
     }
 }

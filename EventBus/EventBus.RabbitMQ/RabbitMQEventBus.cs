@@ -188,13 +188,11 @@ public class RabbitMQEventBus : IEventBus, IDisposable
         {
             // TODO: log
             _logger.LogError("", ex);
-            return;
         }
         catch (NotSupportedException ex)
         {
             // TODO: log
             _logger.LogError("", ex);
-            return;
         }
         catch(Exception ex)
         {

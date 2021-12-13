@@ -22,30 +22,17 @@ public class DeleteExpiredBasketsBackgroundTask : IBackgroundTask
     }
 
     public async Task Run(CancellationToken cancellationToken)
-    {
-        string[] buyers = await _basketRepo.GetBuyers();
-
-        List<string> expiredBaskets = new();
-        
+    {        
         DateTime now = _currentTime.Now;
 
-        foreach(string buyerId in buyers)
+        string[] buyers = await _basketRepo.GetBuyers();
+
+        foreach (string buyerId in buyers)
         {
             BasketEntry? basket = await _basketRepo.Get(buyerId);
 
-            if (basket is null)
-            {
-                // TODO: log
-                continue;
-            }
-
-            if (now - basket.LastUpdate > _expiration)
-                expiredBaskets.Add(buyerId);
-        }
-
-        foreach(string buyerId in expiredBaskets)
-        {
-            await _basketRepo.Remove(buyerId);
+            if (basket is not null && now - basket.LastUpdate > _expiration)
+                await _basketRepo.Remove(buyerId);
         }
     }
 }

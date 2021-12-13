@@ -18,8 +18,7 @@ public class IdempotentRequestHandler<TRequest, TResponse> : IRequestHandler<Ide
 
     public async Task<TResponse?> Handle(IdempotentRequest<TRequest, TResponse> request, CancellationToken cancellationToken)
     {
-        if (await _requestService.Exists(request.Id))
-            return default;
+        if (await _requestService.Exists(request.Id)) return default;
 
         await _requestService.Create(request.Id, typeof(TRequest).Name);
 

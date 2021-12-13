@@ -33,7 +33,7 @@ class CustomExceptionHandlerMiddleware
 
         switch (exception)
         {
-            case CommandValidationException ex:
+            case RequestValidationException ex:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 httpContext.Response.ContentType = MediaTypeNames.Application.Json;
 
@@ -54,10 +54,10 @@ class CustomExceptionHandlerMiddleware
             //    await httpContext.Response.WriteAsync(ex.UserMessage);
             //    break;
 
-            //case EntityNotFoundException ex:
-            //    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-            //    await httpContext.Response.WriteAsync(ex.UserMessage);
-            //    break;
+            case EntityNotFoundException ex:
+                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await httpContext.Response.WriteAsync(ex.UserMessage);
+                break;
 
             default:
                 var logger = httpContext.RequestServices

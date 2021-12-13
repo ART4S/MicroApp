@@ -12,6 +12,8 @@ public class CatalogItem : BaseEntity
 
     public string? PictureName { get; set; }
 
+    public int AvailableInStock { get; set; }
+
     public Guid BrandId { get; set; }
     public CatalogBrand Brand { get; set; }
 
