@@ -22,38 +22,6 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Ordering.Domian.Aggregates.OrderAggregate.Order", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrderStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("PaymentMethodId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BuyerId");
-
-                    b.HasIndex("OrderStatusId");
-
-                    b.HasIndex("PaymentMethodId");
-
-                    b.ToTable("Orders");
-                });
-
             modelBuilder.Entity("Ordering.Domian.Dictionaries.CardTypeDict", b =>
                 {
                     b.Property<int>("Id")
@@ -88,7 +56,7 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
                     b.ToTable("OrderStatusesDict");
                 });
 
-            modelBuilder.Entity("Ordering.Domian.Entities.BuyerAggregate.Buyer", b =>
+            modelBuilder.Entity("Ordering.Domian.Entities.Buyer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,7 +71,67 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
                     b.ToTable("Buyers");
                 });
 
-            modelBuilder.Entity("Ordering.Domian.Entities.BuyerAggregate.PaymentMethod", b =>
+            modelBuilder.Entity("Ordering.Domian.Entities.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("PaymentMethodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("OrderStatusId");
+
+                    b.HasIndex("PaymentMethodId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Ordering.Domian.Entities.OrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsInStock")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("Ordering.Domian.Entities.PaymentMethod", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,34 +170,9 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
                     b.ToTable("PaymentMethods");
                 });
 
-            modelBuilder.Entity("Ordering.Domian.Entities.OrderAggregate.OrderItem", b =>
+            modelBuilder.Entity("Ordering.Domian.Entities.Order", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderItems");
-                });
-
-            modelBuilder.Entity("Ordering.Domian.Aggregates.OrderAggregate.Order", b =>
-                {
-                    b.HasOne("Ordering.Domian.Entities.BuyerAggregate.Buyer", "Buyer")
+                    b.HasOne("Ordering.Domian.Entities.Buyer", "Buyer")
                         .WithMany()
                         .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -181,7 +184,7 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Ordering.Domian.Entities.BuyerAggregate.PaymentMethod", "PaymentMethod")
+                    b.HasOne("Ordering.Domian.Entities.PaymentMethod", "PaymentMethod")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId");
 
@@ -228,9 +231,20 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
                     b.Navigation("PaymentMethod");
                 });
 
-            modelBuilder.Entity("Ordering.Domian.Entities.BuyerAggregate.PaymentMethod", b =>
+            modelBuilder.Entity("Ordering.Domian.Entities.OrderItem", b =>
                 {
-                    b.HasOne("Ordering.Domian.Entities.BuyerAggregate.Buyer", "Buyer")
+                    b.HasOne("Ordering.Domian.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Ordering.Domian.Entities.PaymentMethod", b =>
+                {
+                    b.HasOne("Ordering.Domian.Entities.Buyer", "Buyer")
                         .WithMany("PaymentMethods")
                         .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -247,21 +261,14 @@ namespace Ordering.Infrastructure.DataAccess.Ordering.Migrations
                     b.Navigation("CardType");
                 });
 
-            modelBuilder.Entity("Ordering.Domian.Entities.OrderAggregate.OrderItem", b =>
-                {
-                    b.HasOne("Ordering.Domian.Aggregates.OrderAggregate.Order", null)
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
-                });
-
-            modelBuilder.Entity("Ordering.Domian.Aggregates.OrderAggregate.Order", b =>
-                {
-                    b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("Ordering.Domian.Entities.BuyerAggregate.Buyer", b =>
+            modelBuilder.Entity("Ordering.Domian.Entities.Buyer", b =>
                 {
                     b.Navigation("PaymentMethods");
+                });
+
+            modelBuilder.Entity("Ordering.Domian.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

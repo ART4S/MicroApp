@@ -10,7 +10,7 @@ public interface ICatalogDbContext
 
     DbSet<CatalogItem> CatalogItems { get; }
     DbSet<CatalogBrand> CatalogBrands { get; }
-    DbSet<CatalogTypeDict> CatalogTypes { get; }
+    DbSet<CatalogType> CatalogTypes { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

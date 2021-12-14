@@ -8,10 +8,8 @@ using Ordering.Application.Model.Identity;
 using Ordering.Application.Services.Common;
 using Ordering.Application.Services.DataAccess;
 using Ordering.Application.Services.Identity;
-using Ordering.Domian.Aggregates.OrderAggregate;
 using Ordering.Domian.Dictionaries;
-using Ordering.Domian.Entities.BuyerAggregate;
-using Ordering.Domian.Entities.OrderAggregate;
+using Ordering.Domian.Entities;
 
 namespace Ordering.Application.Requests.Orders.CreateOrder;
 
@@ -48,8 +46,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand>
             OrderStatusId = OrderStatusDict.Submitted.Id,
         };
 
-        foreach (BasketItem item in request.Items)
-            order.OrderItems.Add(_mapper.Map<OrderItem>(item));
+        foreach (BasketItem basketItem in request.Items)
+        {
+            var item = _mapper.Map<OrderItem>(basketItem);
+            item.IsInStock = true;
+            order.OrderItems.Add(item);
+        }
 
         await _orderingDb.Orders.AddAsync(order);
 

@@ -125,12 +125,12 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
             policy.Execute(() =>
             {
-                IBasicProperties props = _subscriptionChannel.CreateBasicProperties();
+                IBasicProperties props = channel.CreateBasicProperties();
 
                 props.DeliveryMode = 2;
                 props.ContentType = MediaTypeNames.Application.Json;
 
-                _subscriptionChannel.BasicPublish(
+                channel.BasicPublish(
                     exchange: BROKER_NAME,
                     routingKey: GetEventName(@event),
                     basicProperties: props,

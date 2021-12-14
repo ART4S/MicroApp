@@ -1,6 +1,6 @@
 ﻿using Catalog.Domian.Abstractions;
 
-namespace Ordering.Domian.Entities.BuyerAggregate;
+namespace Ordering.Domian.Entities;
 
 public class Buyer : BaseEntity
 {

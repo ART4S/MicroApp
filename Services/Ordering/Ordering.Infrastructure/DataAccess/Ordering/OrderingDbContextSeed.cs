@@ -47,6 +47,8 @@ public class OrderingDbContextSeed
                 else _dbContext.SaveChanges();
             }
 
+            SeedTestData();
+
             transaction.Commit();
         }
         catch(Exception ex)
@@ -57,6 +59,47 @@ public class OrderingDbContextSeed
 
             throw;
         }
+    }
+
+    private void SeedTestData()
+    {
+        _dbContext.Buyers.Add(new() { Id = new Guid("7f6e4cf9-ac94-4a91-bbe5-e88dcf7a3980"), Name = "Test User" });
+
+        _dbContext.PaymentMethods.Add(new()
+        {
+            Id = new Guid("43d978fd-2a32-497e-9d29-121111e742d3"),
+            Alias = "Alias",
+            BuyerId = new Guid("7f6e4cf9-ac94-4a91-bbe5-e88dcf7a3980"),
+            CardHolderName = "TEST USER",
+            CardNumber = "2324 2345 2342 3534",
+            CardTypeId = 1,
+            Expiration = DateTime.Now.AddYears(3),
+            SecurityNumber = "123"
+        });
+
+        _dbContext.Orders.Add(new()
+        {
+            Id = new Guid("bf6f8d9e-ab2c-44ad-a40a-ffe253fdf72c"),
+            BuyerId = new Guid("7f6e4cf9-ac94-4a91-bbe5-e88dcf7a3980"),
+            Address = new("street", "city", "state", "country", "12345"),
+            Description = "Desc",
+            OrderDate = DateTime.Now,
+            OrderStatusId = 2,
+            PaymentMethodId = new Guid("43d978fd-2a32-497e-9d29-121111e742d3"),
+            OrderItems = 
+            { 
+                new() 
+                { 
+                    Id = Guid.NewGuid(), 
+                    IsInStock = true, 
+                    ProductId = new Guid("269b7ee2-6baf-4707-9ffa-baaab0569f09"),
+                    Quantity = 2,
+                    UnitPrice = 15
+                } 
+            }
+        });
+
+        _dbContext.SaveChanges();
     }
 
     private List<(string TableName, Type EntityType, List<object> Entities)> LoadEntitiesFromXml()

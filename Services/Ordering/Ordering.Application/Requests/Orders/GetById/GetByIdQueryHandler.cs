@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using System.Data.Common;
 using Dapper;
-using Ordering.Domian.Aggregates.OrderAggregate;
 using Ordering.Application.Exceptions;
 using Ordering.Application.Model.Orders;
+using Ordering.Domian.Entities;
 
 namespace Ordering.Application.Requests.Orders.GetById;
 

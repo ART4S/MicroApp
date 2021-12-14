@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Ordering.Application.Integration.Models;
 using Ordering.Application.Model.Orders;
-using Ordering.Domian.Aggregates.OrderAggregate;
-using Ordering.Domian.Entities.OrderAggregate;
+using Ordering.Domian.Entities;
 
 namespace Ordering.Application.MapperProfiles;
 
@@ -11,7 +10,7 @@ public class OrdersProfile : Profile
     public OrdersProfile()
     {
         CreateMap<BasketItem, OrderItem>(MemberList.Destination)
-            .ForMember(dest => dest.InStock, opt => opt.Ignore());
+            .ForMember(dest => dest.IsInStock, opt => opt.Ignore());
 
         CreateMap<Order, OrderEditDto>()
             .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Address.Country))

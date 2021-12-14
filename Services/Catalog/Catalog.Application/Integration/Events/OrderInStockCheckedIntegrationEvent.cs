@@ -3,4 +3,4 @@ using IntegrationServices.Model;
 
 namespace Catalog.Application.Integration.Events;
 
-public record OrderConfirmedIntegrationEvent(ConfirmedOrder Order) : IntegrationEvent;
+public record OrderInStockCheckedIntegrationEvent(OrderInStock Order) : IntegrationEvent;

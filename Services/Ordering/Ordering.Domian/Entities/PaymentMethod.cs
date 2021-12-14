@@ -1,7 +1,7 @@
 ﻿using Catalog.Domian.Abstractions;
 using Ordering.Domian.Dictionaries;
 
-namespace Ordering.Domian.Entities.BuyerAggregate;
+namespace Ordering.Domian.Entities;
 
 public class PaymentMethod : BaseEntity
 {

@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using Ordering.Application.Requests.Common;
+using Ordering.Application.Requests.Abstractions;
 using Ordering.Application.Services.DataAccess;
 using Polly;
 using System.Data.Common;

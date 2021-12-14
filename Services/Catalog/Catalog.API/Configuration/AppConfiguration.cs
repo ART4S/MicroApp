@@ -17,5 +17,6 @@ static class AppConfiguration
         var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
         eventBus.Subscribe<CatalogItemRemovedIntegrationEvent, CatalogItemRemovedIntegrationEventHandler>();
+        eventBus.Subscribe<OrderConfirmedIntegrationEvent, OrderConfirmedIntegrationEventHandler>();
     }
 }

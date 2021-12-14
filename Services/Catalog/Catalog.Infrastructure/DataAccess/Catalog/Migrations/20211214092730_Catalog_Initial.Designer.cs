@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Catalog.Infrastructure.DataAccess.Catalog.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20211203121648_Catalog_Initial")]
+    [Migration("20211214092730_Catalog_Initial")]
     partial class Catalog_Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,9 @@ namespace Catalog.Infrastructure.DataAccess.Catalog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("AvailableInStock")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("BrandId")
                         .HasColumnType("uniqueidentifier");
 
@@ -59,6 +62,7 @@ namespace Catalog.Infrastructure.DataAccess.Catalog.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("TypeId")

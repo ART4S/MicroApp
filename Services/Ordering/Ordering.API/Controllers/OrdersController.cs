@@ -21,7 +21,7 @@ public class OrdersController : BaseController
         return Ok(await Mediator.Send(new GetUserOrdersQuery(userId)));
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("{orderId:guid}")]
     [ProducesResponseType(typeof(OrderInfoDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetById([RequiredNonDefault]Guid orderId)
     {

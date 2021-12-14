@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Integration.Events;
 using Ordering.Application.Integration.Models;
 using Ordering.Application.Services.DataAccess;
-using Ordering.Domian.Aggregates.OrderAggregate;
 using Ordering.Domian.Dictionaries;
+using Ordering.Domian.Entities;
 
 namespace Ordering.Application.Requests.Orders.ConfirmOrder;
 
@@ -30,11 +30,12 @@ public class ConfirmOrderCommandHandler : IRequestHandler<ConfirmOrderCommand>
     {
         Order order = await _orderingDb.Orders
             .Include(x => x.Address)
-            .SingleAsync(x => x.Id == request.orderId);
+            .Include(x => x.OrderItems)
+            .SingleAsync(x => x.Id == request.OrderId);
 
-        _mapper.Map(request.order, order);
+        _mapper.Map(request.Order, order);
 
-        order.OrderStatusId = OrderStatusDict.Confirmed.Id;
+        order.OrderStatusId = OrderStatusDict.ConfirmedByUser.Id;
 
         await _orderingDb.SaveChangesAsync();
 

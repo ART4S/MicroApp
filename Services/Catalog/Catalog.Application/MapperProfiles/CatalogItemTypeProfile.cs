@@ -8,6 +8,6 @@ public class CatalogItemTypeProfile : Profile
 {
     public CatalogItemTypeProfile()
     {
-        CreateMap<CatalogTypeDict, CatalogTypeDto>(MemberList.Destination);
+        CreateMap<CatalogType, CatalogTypeDto>(MemberList.Destination);
     }
 }

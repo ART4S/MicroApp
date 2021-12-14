@@ -80,6 +80,7 @@ static class ServicesConfiguration
     public static void AddEventHandlers(this IServiceCollection services)
     {
         services.AddScoped<CatalogItemRemovedIntegrationEventHandler>();
+        services.AddScoped<OrderConfirmedIntegrationEventHandler>();
     }
 
     public static void AddRepositories(this IServiceCollection services)

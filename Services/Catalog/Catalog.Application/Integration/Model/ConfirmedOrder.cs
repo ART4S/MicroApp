@@ -15,3 +15,13 @@ public record ConfirmedOrder
     [JsonInclude]
     public List<ConfirmedOrderItem> Items { get; private set; }
 }
+
+public record ConfirmedOrderItem
+{
+    [JsonInclude]
+    public Guid ProductId { get; private set; }
+
+    [JsonInclude]
+    public int Quantity { get; private set; }
+}
+

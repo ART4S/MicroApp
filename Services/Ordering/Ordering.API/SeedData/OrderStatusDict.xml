@@ -6,11 +6,11 @@
 	</OrderStatusDict>
 	<OrderStatusDict>
 		<Id>2</Id>
-		<Name>WaitingValidation</Name>
+		<Name>ConfirmedByUser</Name>
 	</OrderStatusDict>
 	<OrderStatusDict>
 		<Id>3</Id>
-		<Name>Confirmed</Name>
+		<Name>Accepted</Name>
 	</OrderStatusDict>
 	<OrderStatusDict>
 		<Id>4</Id>

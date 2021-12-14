@@ -2,7 +2,7 @@
 
 namespace Ordering.Application.Integration.Models;
 
-public class CustomerBasket
+public record CustomerBasket
 {
     [JsonInclude]
     public Guid BuyerId { get; private set; }
@@ -10,3 +10,16 @@ public class CustomerBasket
     [JsonInclude]
     public List<BasketItem> Items { get; private set; }
 }
+
+public record BasketItem
+{
+    [JsonInclude]
+    public Guid ProductId { get; private set; }
+
+    [JsonInclude]
+    public decimal UnitPrice { get; private set; }
+
+    [JsonInclude]
+    public int Quantity { get; private set; }
+}
+

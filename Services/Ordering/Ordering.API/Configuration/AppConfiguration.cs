@@ -17,5 +17,6 @@ static class AppConfiguration
         var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
         eventBus.Subscribe<BasketCheckoutIntegrationEvent, BasketCheckoutIntegrationEventHandler>();
+        eventBus.Subscribe<OrderInStockCheckedIntegrationEvent, OrderInStockCheckedIntegrationEventHandler>();
     }
 }

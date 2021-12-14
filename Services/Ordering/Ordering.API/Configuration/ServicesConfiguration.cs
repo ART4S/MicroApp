@@ -101,6 +101,7 @@ static class ServicesConfiguration
     public static void AddEventHandlers(this IServiceCollection services)
     {
         services.AddScoped<BasketCheckoutIntegrationEventHandler>();
+        services.AddScoped<OrderInStockCheckedIntegrationEventHandler>();
     }
 
     public static void AddMediator(this IServiceCollection services)

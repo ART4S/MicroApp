@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ordering.Domian.Aggregates.OrderAggregate;
+using Ordering.Domian.Entities;
 
 namespace Ordering.Infrastructure.DataAccess.Ordering.EntityConfigurations;
 

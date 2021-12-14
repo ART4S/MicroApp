@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Ordering.Domian.Aggregates.OrderAggregate;
 using Ordering.Domian.Dictionaries;
-using Ordering.Domian.Entities.BuyerAggregate;
-using Ordering.Domian.Entities.OrderAggregate;
+using Ordering.Domian.Entities;
 
 namespace Ordering.Application.Services.DataAccess;
 

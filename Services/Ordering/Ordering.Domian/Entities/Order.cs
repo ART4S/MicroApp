@@ -1,10 +1,8 @@
 ﻿using Catalog.Domian.Abstractions;
 using Microsoft.eShopOnContainers.Services.Ordering.Domain.AggregatesModel.OrderAggregate;
 using Ordering.Domian.Dictionaries;
-using Ordering.Domian.Entities.BuyerAggregate;
-using Ordering.Domian.Entities.OrderAggregate;
 
-namespace Ordering.Domian.Aggregates.OrderAggregate;
+namespace Ordering.Domian.Entities;
 
 public class Order : BaseEntity
 {
