@@ -31,7 +31,7 @@ class CustomExceptionHandlerMiddleware
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
         httpContext.Response.ContentType = MediaTypeNames.Text.Plain;
 
-        switch (exception)
+        gswitch (exception)
         {
             case RequestValidationException ex:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
