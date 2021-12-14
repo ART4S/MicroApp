@@ -1,6 +1,6 @@
 ﻿using Basket.API.Infrastructure.DataAccess;
 using Basket.API.Infrastructure.Services;
-using Basket.API.Model;
+using Basket.API.Models;
 using TaskScheduling.Abstractions;
 
 namespace Basket.API.Infrastructure.BackgroundTasks;

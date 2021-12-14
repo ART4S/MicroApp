@@ -35,10 +35,12 @@ public class OrdersController : BaseController
         [RequiredNonDefault] Guid orderId, 
         OrderEditDto order)
     {
-        return Ok(await Mediator.Send(new IdempotentRequest<ConfirmOrderCommand, Unit>
+        await Mediator.Send(new IdempotentRequest<ConfirmOrderCommand, Unit>
         (
             id: requestId,
             originalRequest: new(orderId, order)
-        )));
+        ));
+
+        return Ok();
     }
 }

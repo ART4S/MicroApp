@@ -11,6 +11,6 @@ static class AppConfiguration
         var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
         eventBus.Subscribe<CatalogItemPriceChangedIntegrationEvent, CatalogItemPriceChangedIntegrationEventHandler>();
-        eventBus.Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
+        eventBus.Subscribe<OrderCreatedIntegrationEvent, OrderCreatedIntegrationEventHandler>();
     }
 }

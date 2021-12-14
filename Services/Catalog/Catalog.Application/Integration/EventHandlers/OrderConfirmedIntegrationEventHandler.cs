@@ -1,6 +1,6 @@
 ﻿using Catalog.Application.Integration.Events;
-using Catalog.Application.Integration.Model;
-using Catalog.Application.Services.DataAccess;
+using Catalog.Application.Integration.Models;
+using Catalog.Application.Services;
 using EventBus.Abstractions;
 using IntegrationServices;
 using Microsoft.EntityFrameworkCore;

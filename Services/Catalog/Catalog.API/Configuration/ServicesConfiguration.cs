@@ -2,7 +2,7 @@
 using Catalog.API.Infrastructure.BackgroundTasks;
 using Catalog.Application.Integration.EventHandlers;
 using Catalog.Application.PipelineBehaviours;
-using Catalog.Application.Services.DataAccess;
+using Catalog.Application.Services;
 using Catalog.Infrastructure.DataAccess.Catalog;
 using Catalog.Infrastructure.DataAccess.Repositories;
 using EventBus.RabbitMQ.DependencyInjection;
@@ -81,6 +81,7 @@ static class ServicesConfiguration
     {
         services.AddScoped<CatalogItemRemovedIntegrationEventHandler>();
         services.AddScoped<OrderConfirmedIntegrationEventHandler>();
+        services.AddScoped<OrderPaidIntegrationEventHandler>();
     }
 
     public static void AddRepositories(this IServiceCollection services)

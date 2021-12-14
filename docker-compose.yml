@@ -30,3 +30,6 @@ services:
    depends_on:
     - ordering-data
     - rabbitmq
+
+  payment-api:
+   image: ${DOCKER_REGISTRY-}payment-api

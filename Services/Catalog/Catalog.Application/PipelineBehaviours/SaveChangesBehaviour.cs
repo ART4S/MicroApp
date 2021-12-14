@@ -1,5 +1,5 @@
 ﻿using Catalog.Application.Requests.Abstractions;
-using Catalog.Application.Services.DataAccess;
+using Catalog.Application.Services;
 using IntegrationServices.EF;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

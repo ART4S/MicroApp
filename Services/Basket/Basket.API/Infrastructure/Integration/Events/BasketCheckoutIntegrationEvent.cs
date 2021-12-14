@@ -1,5 +1,5 @@
-﻿using Basket.API.Model;
-using IntegrationServices.Model;
+﻿using Basket.API.Models;
+using IntegrationServices.Models;
 
 namespace Basket.API.Infrastructure.Integration.Events;
 

@@ -92,6 +92,25 @@ services:
      - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
      - RabbitMQSettings__Retries=3
    ports:
+    - "5002:80"
+
+  payment-api:
+   image: payment-api:dev
+   container_name: payment-api
+   build:
+    context: .
+    dockerfile: Services/Payment/Payment.API/Dockerfile
+    args:
+     BUILD_MODE: Debug
+   environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=http://+:80
+     - RabbitMQSettings__HostName=rabbitmq
+     - RabbitMQSettings__ClientName=Payment,
+     - RabbitMQSettings__UserName=${RABBITMQ_USER}
+     - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
+     - RabbitMQSettings__Retries=3
+   ports:
     - "5003:80"
 
   #basket-grpcui:

@@ -18,5 +18,7 @@ static class AppConfiguration
 
         eventBus.Subscribe<BasketCheckoutIntegrationEvent, BasketCheckoutIntegrationEventHandler>();
         eventBus.Subscribe<OrderInStockCheckedIntegrationEvent, OrderInStockCheckedIntegrationEventHandler>();
+        eventBus.Subscribe<PaymentSucceedIntegrationEvent, PaymentIntegrationEventHandler>();
+        eventBus.Subscribe<PaymentFailedIntegrationEvent, PaymentIntegrationEventHandler>();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Basket.API.Infrastructure.DataAccess;
 using Basket.API.Infrastructure.Integration.Events;
-using Basket.API.Model;
+using Basket.API.Models;
 using EventBus.Abstractions;
 
 namespace Basket.API.Infrastructure.Integration.EventHandlers;

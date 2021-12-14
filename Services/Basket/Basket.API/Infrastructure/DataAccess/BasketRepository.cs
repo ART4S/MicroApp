@@ -1,5 +1,5 @@
 ﻿using Basket.API.Infrastructure.Services;
-using Basket.API.Model;
+using Basket.API.Models;
 using StackExchange.Redis;
 using System.Text.Json;
 

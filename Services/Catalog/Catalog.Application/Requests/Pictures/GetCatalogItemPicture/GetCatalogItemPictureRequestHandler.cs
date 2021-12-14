@@ -1,6 +1,6 @@
 ﻿using Catalog.Application.Dto.Pictures;
 using Catalog.Application.Exceptions;
-using Catalog.Application.Services.DataAccess;
+using Catalog.Application.Services;
 using MediatR;
 
 namespace Catalog.Application.Requests.Pictures.GetCatalogItemPicture;

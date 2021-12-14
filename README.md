@@ -10,5 +10,8 @@
 
 **IdempotencyDbContext** dotnet ef migrations add Idempotency_Initial -s ./Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj -p ./Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj -c IdempotencyDbContext -o DataAccess/Idempotency/Migrations
 
+## Payment
+**IntegrationDbContext**: dotnet ef migrations add Integration_Initial -s ./Services/Payment/Payment.API/Payment.API.csproj -p ./Services/Payment/Payment.API/Payment.API.csproj -c IntegrationDbContext -o DataAccess/Integration/Migrations
+
 ## GRPCUI
 grpcui -plaintext localhost:5001

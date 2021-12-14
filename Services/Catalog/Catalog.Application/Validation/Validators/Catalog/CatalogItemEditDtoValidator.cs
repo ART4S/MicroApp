@@ -1,5 +1,5 @@
 ﻿using Catalog.Application.Dto.CatalogItem;
-using Catalog.Application.Services.DataAccess;
+using Catalog.Application.Services;
 using Catalog.Application.Validation.Common;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Basket.API.Model;
+using Basket.API.Models;
 using GrpcBasket;
 
 namespace Basket.API.Infrastructure.Mapper.Profiles;

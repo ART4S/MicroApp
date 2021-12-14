@@ -57,7 +57,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand>
 
         await _orderingDb.SaveChangesAsync();
 
-        await _integrationService.Save(new OrderStartedIntegrationEvent(order.BuyerId, order.Id));
+        await _integrationService.Save(new OrderCreatedIntegrationEvent(order.BuyerId, order.Id));
 
         return Unit.Value;
     }

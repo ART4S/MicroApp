@@ -1,4 +1,4 @@
-﻿using IntegrationServices.Model;
+﻿using IntegrationServices.Models;
 
 namespace IntegrationServices;
 

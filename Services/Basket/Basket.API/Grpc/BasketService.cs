@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Basket.API.Infrastructure.DataAccess;
 using Basket.API.Infrastructure.Integration.Events;
-using Basket.API.Model;
+using Basket.API.Models;
 using EventBus.Abstractions;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;

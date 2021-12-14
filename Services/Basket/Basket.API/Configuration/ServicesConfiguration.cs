@@ -40,7 +40,7 @@ static class ServicesConfiguration
 
     public static void AddEventHandlers(this IServiceCollection services)
     {
-        services.AddScoped<OrderStartedIntegrationEventHandler>();
+        services.AddScoped<OrderCreatedIntegrationEventHandler>();
     }
 
     public static void AddAutoMapper(this IServiceCollection services)

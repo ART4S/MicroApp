@@ -1,5 +1,5 @@
-﻿using Catalog.Application.Integration.Model;
-using IntegrationServices.Model;
+﻿using Catalog.Application.Integration.Models;
+using IntegrationServices.Models;
 
 namespace Catalog.Application.Integration.Events;
 

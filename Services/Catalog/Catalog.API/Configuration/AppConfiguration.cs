@@ -18,5 +18,6 @@ static class AppConfiguration
 
         eventBus.Subscribe<CatalogItemRemovedIntegrationEvent, CatalogItemRemovedIntegrationEventHandler>();
         eventBus.Subscribe<OrderConfirmedIntegrationEvent, OrderConfirmedIntegrationEventHandler>();
+        eventBus.Subscribe<OrderPaidIntegrationEvent, OrderPaidIntegrationEventHandler>();
     }
 }

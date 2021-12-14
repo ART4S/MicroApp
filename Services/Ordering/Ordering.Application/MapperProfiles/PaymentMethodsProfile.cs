@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Ordering.Application.Integration.Models;
 using Ordering.Application.Model.PaymentMethods;
 using Ordering.Domian.Entities;
 
@@ -10,5 +11,6 @@ public class PaymentMethodsProfile : Profile
     {
         CreateMap<PaymentMethodEditDto, PaymentMethod>(MemberList.Source);
         CreateMap<PaymentMethod, PaymentMethodInfoDto>(MemberList.Destination);
+        CreateMap<PaymentMethod, BuyerCardInfo>(MemberList.Destination);
     }
 }

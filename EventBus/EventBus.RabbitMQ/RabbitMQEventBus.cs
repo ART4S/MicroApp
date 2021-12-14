@@ -223,10 +223,17 @@ public class RabbitMQEventBus : IEventBus, IDisposable
         {
             var handler = scope.ServiceProvider.GetRequiredService(handlerInfo.EventHandlerType);
 
-            await (Task) handlerInfo.EventHandlerType
-                .GetMethod("Handle", BindingFlags.Instance | BindingFlags.Public)
-                .Invoke(handler, new object[] { @event });
+            await (Task) GetType().GetMethod("ExecuteEvent", BindingFlags.Static | BindingFlags.NonPublic)
+                .MakeGenericMethod(eventInfo.EventType, handlerInfo.EventHandlerType)
+                .Invoke(null, new object[] { @event, handler });
         }
+    }
+
+    private static Task ExecuteEvent<TEvent, TEventHandler>(TEvent @event, TEventHandler eventHandler)
+        where TEvent: IEvent
+        where TEventHandler : IEventHandler<TEvent>
+    {
+        return eventHandler.Handle(@event);
     }
 
     public void Unsubscribe<TEvent, TEventHandler>()

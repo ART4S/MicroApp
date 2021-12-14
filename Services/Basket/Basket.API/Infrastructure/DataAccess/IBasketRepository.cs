@@ -1,4 +1,4 @@
-﻿using Basket.API.Model;
+﻿using Basket.API.Models;
 
 namespace Basket.API.Infrastructure.DataAccess;
 

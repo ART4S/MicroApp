@@ -5,9 +5,9 @@ namespace Catalog.API.Infrastructure.Pagination;
 
 static class PaginationExtentions
 {
-    public static async Task<PagedResponse<TDto>> PaginateAsync<TDto>(
+    public static async Task<PaginationResponse<TDto>> PaginateAsync<TDto>(
         this IQueryable<TDto> source,
-        PagedRequest<TDto> request)
+        PaginationRequest<TDto> request)
     {
         if (request.PageNumber < 1)
             throw new InvalidRequestException("Page number must be greather than 0");

@@ -1,4 +1,4 @@
-﻿using IntegrationServices.Model;
+﻿using IntegrationServices.Models;
 using Ordering.Application.Integration.Models;
 using System.Text.Json.Serialization;
 

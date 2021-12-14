@@ -1,4 +1,4 @@
-﻿using Catalog.Application.Services.DataAccess;
+﻿using Catalog.Application.Services;
 using Catalog.Domian.Entities;
 using Microsoft.EntityFrameworkCore;
 

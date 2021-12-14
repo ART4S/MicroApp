@@ -1,4 +1,4 @@
-﻿using IntegrationServices.Model;
+﻿using IntegrationServices.Models;
 
 namespace Basket.API.Infrastructure.Integration.Events;
 

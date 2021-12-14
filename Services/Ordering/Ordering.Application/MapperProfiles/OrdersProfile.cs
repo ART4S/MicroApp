@@ -25,5 +25,11 @@ public class OrdersProfile : Profile
             .ForMember(dest => dest.Items, opt => opt.MapFrom(x => x.OrderItems));
 
         CreateMap<OrderItem, ConfirmedOrderItem>(MemberList.Destination);
+
+        CreateMap<Order, PaidOrder>(MemberList.Destination)
+            .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(x => x.OrderItems));
+
+        CreateMap<OrderItem, PaidOrderItem>(MemberList.Destination);
     }
 }

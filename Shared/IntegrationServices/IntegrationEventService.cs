@@ -1,5 +1,5 @@
 ﻿using IntegrationServices.EF;
-using IntegrationServices.Model;
+using IntegrationServices.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 

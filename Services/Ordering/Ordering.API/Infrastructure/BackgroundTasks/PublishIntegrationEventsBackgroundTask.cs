@@ -1,6 +1,6 @@
 ﻿using EventBus.Abstractions;
 using IntegrationServices;
-using IntegrationServices.Model;
+using IntegrationServices.Models;
 using TaskScheduling.Abstractions;
 
 namespace Ordering.API.Infrastructure.BackgroundTasks;

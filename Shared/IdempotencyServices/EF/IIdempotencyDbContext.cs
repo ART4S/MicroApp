@@ -1,4 +1,4 @@
-﻿using IdempotencyServices.Model;
+﻿using IdempotencyServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 

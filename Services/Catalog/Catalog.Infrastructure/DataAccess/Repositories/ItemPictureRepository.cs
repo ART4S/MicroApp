@@ -1,5 +1,5 @@
 ﻿using Catalog.Application.Dto.Pictures;
-using Catalog.Application.Services.DataAccess;
+using Catalog.Application.Services;
 using Catalog.Domian.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;

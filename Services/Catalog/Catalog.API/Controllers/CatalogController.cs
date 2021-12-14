@@ -19,8 +19,8 @@ namespace Catalog.API.Controllers;
 public class CatalogController : BaseController
 {
     [HttpGet]
-    [ProducesResponseType(typeof(PagedResponse<CatalogItemDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetItems([FromQuery] PagedRequest<CatalogItemDto> request)
+    [ProducesResponseType(typeof(PaginationResponse<CatalogItemDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetItems([FromQuery] PaginationRequest<CatalogItemDto> request)
     {
         var items = await Mediator.Send(new GetItemsRequest());
 
