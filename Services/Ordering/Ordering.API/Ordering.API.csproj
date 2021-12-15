@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\EventBus\EventBus.RabbitMQ.DependencyInjection\EventBus.RabbitMQ.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\..\Shared\HostConfiguration\HostConfiguration.csproj" />
-    <ProjectReference Include="..\..\..\Shared\IdempotencyServices\IdempotencyServices.csproj" />
-    <ProjectReference Include="..\..\..\Shared\TaskScheduling\TaskScheduling.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.RabbitMQ.DependencyInjection\EventBus.RabbitMQ.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\HostConfiguration\HostConfiguration.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\IdempotencyServices\IdempotencyServices.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\TaskScheduling\TaskScheduling.csproj" />
     <ProjectReference Include="..\Ordering.Application\Ordering.Application.csproj" />
     <ProjectReference Include="..\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
   </ItemGroup>

@@ -4,16 +4,16 @@ ENV BUILD_MODE=$BUILD_MODE
 EXPOSE 80
 
 WORKDIR /src
-COPY "Shared/HostConfiguration/HostConfiguration.csproj" "Shared/HostConfiguration/HostConfiguration.csproj"
-COPY "Shared/IntegrationServices/IntegrationServices.csproj" "Shared/IntegrationServices/IntegrationServices.csproj"
-COPY "Shared/TaskScheduling/TaskScheduling.csproj" "Shared/TaskScheduling/TaskScheduling.csproj"
+COPY "BuildingBlocks/HostConfiguration/HostConfiguration.csproj" "BuildingBlocks/HostConfiguration/HostConfiguration.csproj"
+COPY "BuildingBlocks/IntegrationServices/IntegrationServices.csproj" "BuildingBlocks/IntegrationServices/IntegrationServices.csproj"
+COPY "BuildingBlocks/TaskScheduling/TaskScheduling.csproj" "BuildingBlocks/TaskScheduling/TaskScheduling.csproj"
+COPY "BuildingBlocks/EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj" "BuildingBlocks/EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj"
+COPY "BuildingBlocks/EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj" "BuildingBlocks/EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj"
+COPY "BuildingBlocks/EventBus/EventBus.RabbitMQ.DependencyInjection/EventBus.RabbitMQ.DependencyInjection.csproj" "BuildingBlocks/EventBus/EventBus.RabbitMQ.DependencyInjection/EventBus.RabbitMQ.DependencyInjection.csproj"
 COPY "Services/Catalog/Catalog.Domian/Catalog.Domian.csproj" "Services/Catalog/Catalog.Domian/Catalog.Domian.csproj"
 COPY "Services/Catalog/Catalog.Application/Catalog.Application.csproj" "Services/Catalog/Catalog.Application/Catalog.Application.csproj"
 COPY "Services/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj" "Services/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj"
 COPY "Services/Catalog/Catalog.API/Catalog.API.csproj" "Services/Catalog/Catalog.API/Catalog.API.csproj"
-COPY "EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj" "EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj"
-COPY "EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj" "EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj"
-COPY "EventBus/EventBus.RabbitMQ.DependencyInjection/EventBus.RabbitMQ.DependencyInjection.csproj" "EventBus/EventBus.RabbitMQ.DependencyInjection/EventBus.RabbitMQ.DependencyInjection.csproj"
 RUN dotnet restore "Services/Catalog/Catalog.API/Catalog.API.csproj"
 COPY . .
 WORKDIR /src/Services/Catalog/Catalog.API

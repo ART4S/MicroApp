@@ -7,17 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\IdempotencyServices\IdempotencyServices.csproj" />
-    <ProjectReference Include="..\..\..\Shared\IntegrationServices\IntegrationServices.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\IdempotencyServices\IdempotencyServices.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\IntegrationServices\IntegrationServices.csproj" />
     <ProjectReference Include="..\Ordering.Domian\Ordering.Domian.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="FluentValidation" Version="10.3.5" />
+    <PackageReference Include="FluentValidation" Version="10.3.6" />
     <PackageReference Include="MediatR" Version="9.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
     <PackageReference Include="Polly" Version="7.2.2" />
   </ItemGroup>
 

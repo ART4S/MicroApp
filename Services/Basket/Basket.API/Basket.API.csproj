@@ -10,8 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
-    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.40.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.41.0" />
     <PackageReference Include="Grpc.Tools" Version="2.42.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,10 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\EventBus\EventBus.Abstractions\EventBus.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\EventBus\EventBus.RabbitMQ.DependencyInjection\EventBus.RabbitMQ.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\..\Shared\IntegrationServices\IntegrationServices.csproj" />
-    <ProjectReference Include="..\..\..\Shared\TaskScheduling\TaskScheduling.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.RabbitMQ.DependencyInjection\EventBus.RabbitMQ.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\IntegrationServices\IntegrationServices.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\TaskScheduling\TaskScheduling.csproj" />
   </ItemGroup>
 
   <ItemGroup>

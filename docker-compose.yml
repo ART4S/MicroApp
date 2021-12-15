@@ -33,3 +33,11 @@ services:
 
   payment-api:
    image: ${DOCKER_REGISTRY-}payment-api
+
+  web-api:
+   image: ${DOCKER_REGISTRY-}web-api
+   depends_on:
+    - catalog-api
+    - basket-api
+    - ordering-api
+    - payment-api

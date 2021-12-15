@@ -6,6 +6,20 @@ services:
    container_name: rabbitmq
    ports:
     - "15672:15672"
+  
+  web-api:
+   image: web-api:dev
+   container_name: web-api
+   build:
+    context: .
+    dockerfile: ApiGateways/Web.API/Dockerfile
+    args:
+     BUILD_MODE: Debug
+   environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=https://+:443;http://+:80
+   ports:
+    - 5000:80
 
   catalog-data:
    container_name: catalog-data
@@ -35,7 +49,7 @@ services:
       - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
       - RabbitMQSettings__Retries=3
     ports:
-      - "5000:80"
+      - "5001:80"
 
   basket-data:
    container_name: basket-data
@@ -62,7 +76,7 @@ services:
      - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
      - RabbitMQSettings__Retries=3
    ports:
-     - "5001:80"
+     - "5002:80"
 
   ordering-data:
    container_name: ordering-data
@@ -92,7 +106,7 @@ services:
      - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
      - RabbitMQSettings__Retries=3
    ports:
-    - "5002:80"
+    - "5003:80"
 
   payment-api:
    image: payment-api:dev
@@ -111,7 +125,7 @@ services:
      - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
      - RabbitMQSettings__Retries=3
    ports:
-    - "5003:80"
+    - "5004:80"
 
   #basket-grpcui:
   # image: fullstorydev/grpcui

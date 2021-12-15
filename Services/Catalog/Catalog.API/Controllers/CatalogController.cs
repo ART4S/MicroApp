@@ -11,11 +11,13 @@ using Catalog.Application.Requests.Catalog.GetItems;
 using Catalog.Application.Requests.Catalog.GetTypes;
 using Catalog.Application.Requests.Catalog.UpdateItem;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace Catalog.API.Controllers;
 
 [Route("api/v1/[controller]")]
 [ApiController]
+[Produces(MediaTypeNames.Application.Json)]
 public class CatalogController : BaseController
 {
     [HttpGet]
@@ -49,12 +51,10 @@ public class CatalogController : BaseController
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateItem(CatalogItemEditDto item)
     {
-        Guid id = await Mediator.Send(new CreateItemRequest(item));
-
-        return CreatedAtAction(actionName: nameof(GetItemInfo), routeValues: new { id }, null);
+        return Ok(await Mediator.Send(new CreateItemRequest(item)));
     }
 
     [HttpPut("{id:guid}")]
