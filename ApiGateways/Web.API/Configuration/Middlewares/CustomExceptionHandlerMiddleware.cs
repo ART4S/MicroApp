@@ -1,5 +1,8 @@
-﻿using System.Net.Mime;
+﻿using Grpc.Core;
+using System.Net.Mime;
+using System.Text.RegularExpressions;
 using Web.API.Exceptions;
+using Web.API.Utils;
 
 namespace Web.API.Configuration.Middlewares;
 
@@ -31,6 +34,18 @@ class CustomExceptionHandlerMiddleware
 
         switch (exception)
         {
+            case RpcException ex:
+                httpContext.Response.StatusCode = HttpUtils.ConvertRpcStatusCodeToHttp(ex.StatusCode);
+
+                if (!string.IsNullOrEmpty(ex.Message))
+                {
+                    Match math = Regex.Match(ex.Message, "Detail=\"(?'message'.+)\"");
+                    if (math is not null)
+                        await httpContext.Response.WriteAsync(math.Groups["message"].Value);
+                }
+
+                break;
+
             case InvalidRequestException ex:
                 httpContext.Response.StatusCode = ex.StatusCode;
                 httpContext.Response.ContentType = ex.ContentType;

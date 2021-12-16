@@ -7,7 +7,7 @@ namespace Catalog.API.Controllers;
 [ApiController]
 public class PicturesController : BaseController
 {
-    [HttpGet("api/v1/catalog/items/{itemId:guid}/picture")]
+    [HttpGet("api/v1/catalog/{itemId:guid}/picture")]
     public async Task<IActionResult> GetCatalogItemPicture(Guid itemId)
     {
         if (itemId == Guid.Empty) return BadRequest();

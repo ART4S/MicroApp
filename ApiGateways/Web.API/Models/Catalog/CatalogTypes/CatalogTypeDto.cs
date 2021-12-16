@@ -1,4 +1,4 @@
-﻿namespace Web.API.Models.Catalog.CatalogType;
+﻿namespace Web.API.Models.Catalog.CatalogTypes;
 
 public record CatalogTypeDto
 {

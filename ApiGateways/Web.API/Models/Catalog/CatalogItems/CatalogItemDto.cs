@@ -1,4 +1,4 @@
-﻿namespace Web.API.Models.Catalog.CatalogItem;
+﻿namespace Web.API.Models.Catalog.CatalogItems;
 
 public record CatalogItemDto
 {

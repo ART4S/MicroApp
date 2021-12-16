@@ -1,4 +1,4 @@
-﻿namespace Web.API.Models.Catalog.CatalogBrand;
+﻿namespace Web.API.Models.Catalog.CatalogBrands;
 
 public record CatalogBrandDto
 {

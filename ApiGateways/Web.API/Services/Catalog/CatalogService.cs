@@ -3,22 +3,29 @@ using System.Net;
 using System.Net.Mime;
 using System.Text.RegularExpressions;
 using Web.API.Exceptions;
-using Web.API.Models.Catalog.CatalogBrand;
-using Web.API.Models.Catalog.CatalogItem;
-using Web.API.Models.Catalog.CatalogType;
+using Web.API.Models.Catalog.CatalogBrands;
+using Web.API.Models.Catalog.CatalogItems;
+using Web.API.Models.Catalog.CatalogTypes;
+using Web.API.Models.Catalog.Pictures;
 using Web.API.Pagination;
 using Web.API.Settings;
+using Web.API.Utils;
 
 namespace Web.API.Services.Catalog;
 
 public class CatalogService : ICatalogService
 {
-    private readonly HttpClient _httpClient;
+    private readonly ILogger _logger;
+    private readonly HttpClient _catalogClient;
     private readonly CatalogUrls _urls;
 
-    public CatalogService(HttpClient httpClient, IOptions<CatalogUrls> urls)
+    public CatalogService(
+        ILogger<CatalogService> logger,
+        HttpClient catalogClient, 
+        IOptions<CatalogUrls> urls)
     {
-        _httpClient = httpClient;
+        _logger = logger;
+        _catalogClient = catalogClient;
         _urls = urls.Value;
     }
 
@@ -26,9 +33,9 @@ public class CatalogService : ICatalogService
     {
         string uri = Regex.Replace(_urls.GetItemUrl, "{id}", id.ToString());
 
-        HttpResponseMessage response = await _httpClient.GetAsync(uri);
+        HttpResponseMessage response = await _catalogClient.GetAsync(uri);
 
-        await HandleErrorStatusCodes(response);
+        await HttpUtils.HandleErrorStatusCodes(response);
 
         return await response.Content.ReadFromJsonAsync<CatalogItemInfoDto>();
     }
@@ -37,36 +44,59 @@ public class CatalogService : ICatalogService
     {
         string uri = _urls.GetItemsUrl + request.ToQueryString();
 
-        HttpResponseMessage response = await _httpClient.GetAsync(uri);
+        HttpResponseMessage response = await _catalogClient.GetAsync(uri);
 
-        await HandleErrorStatusCodes(response);
+        await HttpUtils.HandleErrorStatusCodes(response);
 
         return await response.Content.ReadFromJsonAsync<PaginationResponse<CatalogItemDto>>();
     }
 
     public async Task<ICollection<CatalogBrandDto>> GetBrands()
     {
-        HttpResponseMessage response = await _httpClient.GetAsync(_urls.GetBrandsUrl);
+        HttpResponseMessage response = await _catalogClient.GetAsync(_urls.GetBrandsUrl);
 
-        await HandleErrorStatusCodes(response);
+        await HttpUtils.HandleErrorStatusCodes(response);
 
         return await response.Content.ReadFromJsonAsync<ICollection<CatalogBrandDto>>();
     }
 
+    public async Task<PictureDto> GetPicture(Guid id)
+    {
+        string uri = Regex.Replace(_urls.GetPictureUrl, "{id}", id.ToString());
+
+        HttpResponseMessage response = await _catalogClient.GetAsync(uri);
+
+        await HttpUtils.HandleErrorStatusCodes(response);
+
+        string? contentType = response.Content.Headers.ContentType?.MediaType;
+
+        if (contentType is null)
+        {
+            contentType = "image/png";
+            _logger.LogInformation(""); // TODO: log
+        }
+
+        return new ()
+        {
+            ContentType = contentType,
+            Content = await response.Content.ReadAsStreamAsync()
+        };
+    }
+
     public async Task<ICollection<CatalogTypeDto>> GetTypes()
     {
-        HttpResponseMessage response = await _httpClient.GetAsync(_urls.GetTypesUrl);
+        HttpResponseMessage response = await _catalogClient.GetAsync(_urls.GetTypesUrl);
 
-        await HandleErrorStatusCodes(response);
+        await HttpUtils.HandleErrorStatusCodes(response);
 
         return await response.Content.ReadFromJsonAsync<ICollection<CatalogTypeDto>>();
     }
 
     public async Task<Guid> CreateItem(CatalogItemEditDto item)
     {
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync(_urls.CreateItemUrl, item);
+        HttpResponseMessage response = await _catalogClient.PostAsJsonAsync(_urls.CreateItemUrl, item);
 
-        await HandleErrorStatusCodes(response);
+        await HttpUtils.HandleErrorStatusCodes(response);
 
         return new Guid(await response.Content.ReadAsStringAsync());
     }
@@ -75,38 +105,17 @@ public class CatalogService : ICatalogService
     {
         string uri = Regex.Replace(_urls.UpdateItemUrl, "{id}", id.ToString());
 
-        HttpResponseMessage response = await _httpClient.PutAsJsonAsync(uri, item);
+        HttpResponseMessage response = await _catalogClient.PutAsJsonAsync(uri, item);
 
-        await HandleErrorStatusCodes(response);
+        await HttpUtils.HandleErrorStatusCodes(response);
     }
 
     public async Task DeleteItem(Guid id)
     {
         string uri = Regex.Replace(_urls.DeleteItemUrl, "{id}", id.ToString());
 
-        HttpResponseMessage response = await _httpClient.DeleteAsync(uri);
+        HttpResponseMessage response = await _catalogClient.DeleteAsync(uri);
 
-        await HandleErrorStatusCodes(response);
-    }
-
-    private static async Task HandleErrorStatusCodes(HttpResponseMessage response)
-    {
-        switch (response.StatusCode)
-        {
-            case HttpStatusCode.NoContent:
-            case HttpStatusCode.Created:
-            case HttpStatusCode.OK:
-                return;
-
-            default:
-                throw new InvalidRequestException
-                (
-                    statusCode: (int)response.StatusCode,
-                    content: await response.Content.ReadAsStreamAsync(),
-                    contentType: response.Headers.TryGetValues("Content-Type", out var values) && values.Any() 
-                        ? values.First() 
-                        : MediaTypeNames.Application.Json
-                );
-        }
+        await HttpUtils.HandleErrorStatusCodes(response);
     }
 }

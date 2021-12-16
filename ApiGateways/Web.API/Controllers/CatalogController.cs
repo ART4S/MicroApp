@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Web.API.Attributes;
-using Web.API.Models.Catalog.CatalogBrand;
-using Web.API.Models.Catalog.CatalogItem;
-using Web.API.Models.Catalog.CatalogType;
+using Web.API.Models.Catalog.CatalogBrands;
+using Web.API.Models.Catalog.CatalogItems;
+using Web.API.Models.Catalog.CatalogTypes;
 using Web.API.Pagination;
 using Web.API.Services.Catalog;
 
@@ -45,6 +45,14 @@ public class CatalogController : ControllerBase
     public async Task<IActionResult> GetBrands()
     {
         return Ok(await _catalogService.GetBrands());
+    }
+
+    [HttpGet("{id:guid}/picture")]
+    public async Task<IActionResult> GetPicture([RequiredNonDefault] Guid id)
+    {
+        var file = await _catalogService.GetPicture(id);
+
+        return File(file.Content, file.ContentType);
     }
 
     [HttpPost]

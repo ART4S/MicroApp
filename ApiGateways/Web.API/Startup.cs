@@ -14,12 +14,15 @@ class Startup
     {
         services.AddControllers();
         services.AddSwagger();
-        services.AddAppServices();
         services.AddAutoMapper();
-        services.AddValidation();
         services.ConfigureApi();
 
         services.AddCatalogService(Configuration);
+        services.AddBasketService(Configuration);
+        services.AddOrderingService(Configuration);
+        services.AddIdentityService(Configuration);
+
+        services.AddHttpContextAccessor();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

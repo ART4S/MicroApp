@@ -6,6 +6,7 @@ using Ordering.Application.Model.Orders;
 using Ordering.Application.Requests.Orders.ConfirmOrder;
 using Ordering.Application.Requests.Orders.GetById;
 using Ordering.Application.Requests.Orders.GetUserOrders;
+using Ordering.Application.Services.Identity;
 
 namespace Ordering.API.Controllers;
 
@@ -15,10 +16,11 @@ public class OrdersController : BaseController
 {
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<OrderSummaryDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetUserOrders(
-        [FromHeader(Name = "x-userId")][RequiredNonDefault] Guid userId)
+    public async Task<IActionResult> GetOrders([FromServices]IIdentityService identityService)
     {
-        return Ok(await Mediator.Send(new GetUserOrdersQuery(userId)));
+        var user = await identityService.GetCurrentUser();
+
+        return Ok(await Mediator.Send(new GetUserOrdersQuery(user.Id)));
     }
 
     [HttpGet("{orderId:guid}")]
@@ -29,7 +31,7 @@ public class OrdersController : BaseController
     }
 
     [HttpPut("{orderId:guid}")]
-    [ProducesResponseType(typeof(IEnumerable<OrderSummaryDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ConfirmOrder(
         [FromHeader(Name = "x-requestId")][RequiredNonDefault] Guid requestId, 
         [RequiredNonDefault] Guid orderId, 
