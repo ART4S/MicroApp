@@ -1,6 +1,10 @@
 ﻿using Google.Protobuf.Collections;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using System.IdentityModel.Tokens.Jwt;
+using Web.API.Configuration.Factories;
 using Web.API.Mapper.Converters;
 using Web.API.Services;
 using Web.API.Services.Basket;
@@ -21,7 +25,7 @@ static class ServicesConfiguration
         {
             var settings = sp.GetRequiredService<IOptions<CatalogUrls>>().Value;
             client.BaseAddress = new Uri(settings.BasePath);
-        });
+        }).AddDefaultPolicies();
     }
 
     public static void AddBasketService(this IServiceCollection services, IConfiguration configuration)
@@ -34,18 +38,27 @@ static class ServicesConfiguration
         {
             var settings = sp.GetRequiredService<IOptions<BasketUrls>>().Value;
             options.Address = new Uri(settings.BasePath);
-        });
+        }).AddDefaultPolicies();
     }
 
     public static void AddOrderingService(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<OrderingUrls>(configuration.GetSection("ExternalUrls:Ordering"));
 
-        services.AddHttpClient<IOrderingService, OrderingService>((sp, client) =>
+        services.AddHttpClient<IOrderingService, OrderingService>((services, client) =>
         {
-            var settings = sp.GetRequiredService<IOptions<OrderingUrls>>().Value;
+            var settings = services.GetRequiredService<IOptions<OrderingUrls>>().Value;
             client.BaseAddress = new Uri(settings.BasePath);
-        });
+
+            var httpContextAccessor = services.GetRequiredService<HttpContextAccessor>();
+            if (httpContextAccessor.HttpContext != null)
+            {
+                string token = httpContextAccessor.HttpContext.Request.Headers.Authorization[0];
+                if (token != null)
+                    client.DefaultRequestHeaders.Authorization = new("Bearer", token);
+            }
+
+        }).AddDefaultPolicies();
     }
 
     public static void AddIdentityService(this IServiceCollection services, IConfiguration configuration)
@@ -57,11 +70,7 @@ static class ServicesConfiguration
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new()
-            {
-                Title = "MicroShop - Web.API",
-                Version = "v1"
-            });
+            options.SwaggerDoc("Web.API", new() { Title = "MicroShop - Web.API" });
         });
     }
 
@@ -80,6 +89,26 @@ static class ServicesConfiguration
 
         services.AddSingleton(typeof(RepeatedFieldToListTypeConverter<,>));
         services.AddSingleton(typeof(ListToRepeatedFieldTypeConverter<,>));
+    }
+
+    public static void AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+        IdentityUrls settings = new();
+
+        configuration.GetSection("ExternalUrls:Identity").Bind(settings);
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Audience = settings.BasePath;
+
+                options.TokenValidationParameters = new()
+                {
+                    ValidateAudience = false
+                };
+            });
     }
 
     public static void ConfigureApi(this IServiceCollection services)

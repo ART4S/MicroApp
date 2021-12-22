@@ -7,11 +7,28 @@ using System.Data.Common;
 
 namespace HostConfiguration;
 
-public static class Migration
+public static class DbContextConfiguration
 {
     public static void MigrateDbContext<TDbContext>(
-        this IHost host, 
-        Action<IServiceProvider, TDbContext>? seedAction = null) 
+        this IHost host,
+        Action<IServiceProvider, TDbContext>? seedAction = null)
+        where TDbContext : DbContext
+    {
+        PerformMigration(host, seedAction);
+    }
+
+    public static void CreateDbContext<TDbContext>(
+        this IHost host,
+        Action<IServiceProvider, TDbContext>? seedAction = null)
+        where TDbContext : DbContext
+    {
+        PerformMigration(host, seedAction, create: true);
+    }
+
+    private static void PerformMigration<TDbContext>(
+        IHost host, 
+        Action<IServiceProvider, TDbContext>? seedAction = null,
+        bool create = false) 
         where TDbContext : DbContext
     {
         using IServiceScope scope = host.Services.CreateScope();
@@ -35,7 +52,7 @@ public static class Migration
 
             policy.Execute(() =>
             {
-                if (seedAction is not null) 
+                if (create) 
                     dbContext.Database.EnsureDeleted();
 
                 dbContext.Database.Migrate();

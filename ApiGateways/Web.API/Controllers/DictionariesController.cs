@@ -4,7 +4,7 @@ using Web.API.Services.Ordering;
 
 namespace Web.API.Controllers;
 
-[Route("/api/v1")]
+[Route("/api")]
 [ApiController]
 public class DictionariesController : ControllerBase
 {

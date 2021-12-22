@@ -25,6 +25,9 @@ using Ordering.Application.Requests.Orders.CreateOrder;
 using Ordering.API.Infrastructure.Attributes;
 using FluentValidation.AspNetCore;
 using Ordering.Application.Requests.Orders.ConfirmOrder;
+using System.IdentityModel.Tokens.Jwt;
+using Ordering.API.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Ordering.API.Configuration;
 
@@ -50,11 +53,7 @@ static class ServicesConfiguration
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new()
-            {
-                Title = "MicroShop - Ordering.API",
-                Version = "v1"
-            });
+            options.SwaggerDoc("Ordering.API", new() { Title = "MicroShop - Ordering.API" });
         });
     }
 
@@ -149,6 +148,26 @@ static class ServicesConfiguration
                 var logger = loggerFactory.CreateLogger(task.GetType());
 
                 logger.LogError(exception, "Error occured while executing task {TaskType}", task.GetType().Name);
+            });
+    }
+
+    public static void AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+        IdentityUrls settings = new();
+
+        configuration.GetSection("ExternalUrls:Identity").Bind(settings);
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Audience = settings.BasePath;
+
+                options.TokenValidationParameters = new()
+                {
+                    ValidateAudience = false
+                };
             });
     }
 

@@ -5,7 +5,7 @@ using Web.API.Services.Basket;
 
 namespace Web.API.Controllers;
 
-[Route("/api/v1/basket")]
+[Route("/api/basket")]
 [ApiController]
 public class BasketController : ControllerBase
 {

@@ -37,7 +37,7 @@ class Startup
         app.UseSwagger();
         app.UseSwaggerUI(setup =>
         {
-            setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog.API V1");
+            setup.SwaggerEndpoint("/swagger/swagger.json", "Catalog.API");
         });
 
         app.UseRouting();

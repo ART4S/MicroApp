@@ -65,6 +65,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ", "Buildi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ.DependencyInjection", "BuildingBlocks\EventBus\EventBus.RabbitMQ.DependencyInjection\EventBus.RabbitMQ.DependencyInjection.csproj", "{1C7E23C1-10B2-4F86-9E70-4A0B289DF012}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{5D972E35-EA58-4773-8F4A-39872CC9B8F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.API", "Services\Identity\Identity.API\Identity.API.csproj", "{14286260-1D3E-40B5-A014-9AA833AF9286}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +151,10 @@ Global
 		{1C7E23C1-10B2-4F86-9E70-4A0B289DF012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C7E23C1-10B2-4F86-9E70-4A0B289DF012}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C7E23C1-10B2-4F86-9E70-4A0B289DF012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14286260-1D3E-40B5-A014-9AA833AF9286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14286260-1D3E-40B5-A014-9AA833AF9286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14286260-1D3E-40B5-A014-9AA833AF9286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14286260-1D3E-40B5-A014-9AA833AF9286}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,6 +183,8 @@ Global
 		{9B3053AB-405F-4401-8FFD-75A3893031BF} = {08A4BD65-C150-4293-A01B-DA8F72E8AC27}
 		{F50C04E7-DB4B-4C59-AF44-D1784E869520} = {08A4BD65-C150-4293-A01B-DA8F72E8AC27}
 		{1C7E23C1-10B2-4F86-9E70-4A0B289DF012} = {08A4BD65-C150-4293-A01B-DA8F72E8AC27}
+		{5D972E35-EA58-4773-8F4A-39872CC9B8F1} = {4FF9D643-A267-471F-9BF5-3B10E2952D70}
+		{14286260-1D3E-40B5-A014-9AA833AF9286} = {5D972E35-EA58-4773-8F4A-39872CC9B8F1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0D7E1679-C2B2-48DF-B7EF-C2EA32DDEE8F}

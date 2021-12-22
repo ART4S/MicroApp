@@ -1,4 +1,5 @@
 ﻿using Web.API.Configuration;
+using Web.API.Configuration.Factories;
 using Web.API.Configuration.Middlewares;
 
 class Startup
@@ -12,6 +13,8 @@ class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        HttpPolicyFactory.InitSettings(Configuration);
+
         services.AddControllers();
         services.AddSwagger();
         services.AddAutoMapper();
@@ -21,6 +24,8 @@ class Startup
         services.AddBasketService(Configuration);
         services.AddOrderingService(Configuration);
         services.AddIdentityService(Configuration);
+
+        services.AddCustomAuthentication(Configuration);
 
         services.AddHttpContextAccessor();
     }
@@ -32,10 +37,13 @@ class Startup
         app.UseSwagger();
         app.UseSwaggerUI(setup =>
         {
-            setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Web.API V1");
+            setup.SwaggerEndpoint("/swagger/swagger.json", "Web.API");
         });
 
         app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {

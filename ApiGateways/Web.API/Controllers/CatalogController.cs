@@ -8,7 +8,7 @@ using Web.API.Services.Catalog;
 
 namespace Web.API.Controllers;
 
-[Route("/api/v1/catalog")]
+[Route("/api/catalog")]
 [ApiController]
 public class CatalogController : ControllerBase
 {

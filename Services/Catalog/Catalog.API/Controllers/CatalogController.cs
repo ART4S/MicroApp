@@ -15,7 +15,7 @@ using System.Net.Mime;
 
 namespace Catalog.API.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 [Produces(MediaTypeNames.Application.Json)]
 public class CatalogController : BaseController

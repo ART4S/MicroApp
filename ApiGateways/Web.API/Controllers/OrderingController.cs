@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Web.API.Attributes;
 using Web.API.Models.Identity;
 using Web.API.Models.Orders;
@@ -8,7 +9,8 @@ using Web.API.Services.Ordering;
 
 namespace Web.API.Controllers;
 
-[Route("/api/v1/ordering")]
+[Authorize]
+[Route("/api/ordering")]
 [ApiController]
 public class OrderingController : ControllerBase
 {
@@ -27,6 +29,8 @@ public class OrderingController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<OrderSummaryDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrders()
     {
+        var claims = HttpContext.User.Claims.ToList();
+        var user1 = HttpContext.User;
         var user = await _identityService.GetCurrentUser();
 
         return Ok(await _orderingService.GetUserOrders(user.Id));

@@ -25,6 +25,7 @@ class Startup
         services.AddValidation();
         services.ConfigureApi();
         services.AddTaskScheduling(Configuration);
+        services.AddCustomAuthentication(Configuration);
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
@@ -39,7 +40,7 @@ class Startup
         app.UseSwagger();
         app.UseSwaggerUI(setup =>
         {
-            setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Ordering.API V1");
+            setup.SwaggerEndpoint("/swagger/swagger.json", "Ordering.API");
         });
 
         app.UseRouting();

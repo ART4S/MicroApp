@@ -6,7 +6,7 @@ using Ordering.Application.Requests.Buyers.GetPaymentMethods;
 
 namespace Ordering.API.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class BuyersController : BaseController
 {

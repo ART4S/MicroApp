@@ -29,11 +29,7 @@ static class ServicesConfiguration
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new()
-            {
-                Title = "MicroShop - Catalog.API",
-                Version = "v1"
-            });
+            options.SwaggerDoc("Catalog.API", new() { Title = "MicroShop - Catalog.API" });
         });
     }
 

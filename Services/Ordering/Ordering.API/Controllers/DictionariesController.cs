@@ -5,7 +5,7 @@ using Ordering.Application.Requests.Dictionaries.GetOrderStatuses;
 
 namespace Ordering.API.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class DictionariesController : BaseController
 {

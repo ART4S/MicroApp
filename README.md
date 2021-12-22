@@ -13,5 +13,11 @@
 ## Payment
 **IntegrationDbContext**: dotnet ef migrations add Integration_Initial -s ./Services/Payment/Payment.API/Payment.API.csproj -p ./Services/Payment/Payment.API/Payment.API.csproj -c IntegrationDbContext -o DataAccess/Integration/Migrations
 
+
+## Identity
+**PersistedGrantDbContext** dotnet ef migrations add PersistedGrant_Initial -s ./Services/Identity/Identity.API/Identity.API.csproj -p ./Services/Identity/Identity.API/Identity.API.csproj -c PersistedGrantDbContext -o DataAccess/Migrations/PersistedGrant
+**ConfigurationDbContext** dotnet ef migrations add Configuration_Initial  -s ./Services/Identity/Identity.API/Identity.API.csproj -p ./Services/Identity/Identity.API/Identity.API.csproj -c ConfigurationDbContext -o DataAccess/Migrations/Configuration
+**AppDbContext** dotnet ef migrations add App_Initial -s ./Services/Identity/Identity.API/Identity.API.csproj -p ./Services/Identity/Identity.API/Identity.API.csproj -c AppDbContext -o DataAccess/Migrations/App
+
 ## GRPCUI
 grpcui -plaintext localhost:5001

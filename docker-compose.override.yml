@@ -6,6 +6,30 @@ services:
    container_name: rabbitmq
    ports:
     - "15672:15672"
+
+  identity-data:
+   container_name: identity-data
+   environment:
+    - ACCEPT_EULA=Y
+    - SA_PASSWORD=${SA_PASSWORD}
+   ports:
+    - "1435:1433"
+   volumes:
+    - microshop-identity-data:/var/opt/mssql
+
+  identity-api:
+   container_name: identity-api
+   build:
+    context: .
+    dockerfile: Services/Identity/Identity.API/Dockerfile
+    args:
+     BUILD_MODE: Debug
+   environment:
+    - ASPNETCORE_ENVIRONMENT=Development
+    - ASPNETCORE_URLS=http://+:80
+    - ConnectionStrings__DefaultConnection=Server=identity-data;Database=identity_db;User Id=sa;Password=${SA_PASSWORD};
+   ports:
+    - "4000:80"
   
   web-api:
    image: web-api:dev
@@ -144,4 +168,6 @@ volumes:
   microshop-basket-data:
    external: false
   microshop-ordering-data:
+   external: false
+  microshop-identity-data:
    external: false

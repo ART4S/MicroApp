@@ -31,8 +31,8 @@ public static class HttpUtils
         {
             StatusCode.OK => StatusCodes.Status200OK,
             StatusCode.NotFound => StatusCodes.Status404NotFound,
-            StatusCode.PermissionDenied => StatusCodes.Status401Unauthorized,
-            StatusCode.Unauthenticated => StatusCodes.Status403Forbidden,
+            StatusCode.Unauthenticated => StatusCodes.Status401Unauthorized,
+            StatusCode.PermissionDenied => StatusCodes.Status403Forbidden,
             _ => StatusCodes.Status500InternalServerError
         };
 }

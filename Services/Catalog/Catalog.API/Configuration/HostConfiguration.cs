@@ -13,7 +13,8 @@ static class HostConfiguration
         bool createDb = config.GetValue<bool>("CreateNewDb");
 
         if (createDb)
-            host.MigrateDbContext<CatalogDbContext>((services, db) => new CatalogDbContextSeed(services, db).Seed());
+            host.CreateDbContext<CatalogDbContext>((services, context) => 
+                new CatalogDbContextSeed(services, context).Seed());
         else
             host.MigrateDbContext<CatalogDbContext>();
 
@@ -23,7 +24,6 @@ static class HostConfiguration
     public static IHost MigrateIntegrationDbContext(this IHost host)
     {
         host.MigrateDbContext<IntegrationDbContext>();
-
         return host;
     }
 }

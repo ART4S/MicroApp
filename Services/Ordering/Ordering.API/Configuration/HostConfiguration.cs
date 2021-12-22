@@ -14,7 +14,8 @@ static class HostConfiguration
         bool createDb = config.GetValue<bool>("CreateNewDb");
 
         if (createDb)
-            host.MigrateDbContext<OrderingDbContext>((services, db) => new OrderingDbContextSeed(services, db).Seed());
+            host.CreateDbContext<OrderingDbContext>((services, context) => 
+                new OrderingDbContextSeed(services, context).Seed());
         else
             host.MigrateDbContext<OrderingDbContext>();
 

@@ -4,6 +4,14 @@ services:
   rabbitmq:
    image: rabbitmq:3.9-management
 
+  identity-data:
+   image: mcr.microsoft.com/mssql/server:latest
+
+  identity-api:
+   image: ${DOCKER_REGISTRY-}identity-api
+   depends_on:
+    - identity-data
+
   catalog-data:
    image: mcr.microsoft.com/mssql/server:latest
 
@@ -41,3 +49,4 @@ services:
     - basket-api
     - ordering-api
     - payment-api
+    - identity-api
