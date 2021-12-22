@@ -12,12 +12,12 @@ public class BasketService : IBasketService
 {
     private readonly IMapper _mapper;
     private readonly GrpcClient _basketClient;
-    private readonly IIdentityService _identityService;
+    private readonly IUserService _identityService;
 
     public BasketService(
         IMapper mapper, 
         GrpcClient basketClient, 
-        IIdentityService identityService)
+        IUserService identityService)
     {
         _mapper = mapper;
         _basketClient = basketClient;

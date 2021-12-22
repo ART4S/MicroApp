@@ -4,8 +4,8 @@ public class EntityNotFoundException : Exception
 {
     public string UserMessage { get; }
 
-    public EntityNotFoundException(string itemName)
+    public EntityNotFoundException(string entityName)
     {
-        UserMessage = $"{itemName} not found";
+        UserMessage = $"{entityName} not found";
     }
 }

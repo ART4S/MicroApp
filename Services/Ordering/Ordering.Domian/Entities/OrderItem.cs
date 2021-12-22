@@ -8,7 +8,7 @@ public class OrderItem : BaseEntity
 
     public int Quantity { get; set; }
 
-    public bool IsInStock { get; set; }
+    public bool IsInStock { get; set; } = true;
 
     public Guid ProductId { get; set; }
 

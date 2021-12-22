@@ -1,9 +1,4 @@
 ﻿using Identity.API.Models.Entities;
-using IdentityServer4;
-using IdentityServer4.Configuration;
-using IdentityServer4.Models;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
@@ -20,11 +15,6 @@ public class AuthService : IAuthService
         _signInManager = signInManager;
     }
 
-    public Task<User?> FindUserById(string userId)
-    {
-         return _userManager.FindByIdAsync(userId);
-    }
-
     public Task<User?> FindUserByName(string userName)
     {
         return _userManager.FindByNameAsync(userName);
@@ -35,19 +25,13 @@ public class AuthService : IAuthService
         return _userManager.CheckPasswordAsync(user, password);
     }
 
-    public async Task SignIn(User user, AuthenticationProperties authProps = null, string authMethod = null)
+    public Task SignIn(User user, AuthenticationProperties authProps)
     {
-        //// issue authentication cookie with subject ID and username
-        //IdentityServerUser identityUser = new(user.Id.ToString());
-
-        //await HttpContext.SignInAsync(identityUser, props);
-        //new IdentityUser() { }
-        //return _signInManager.SignInAsync();
-        await _signInManager.SignInAsync(user, isPersistent: true);
+        return _signInManager.SignInAsync(user, authProps);
     }
 
-    public Task SignOut(User user, string authScheme)
+    public Task SignOut()
     {
-        throw new NotImplementedException();
+        return _signInManager.SignOutAsync();
     }
 }

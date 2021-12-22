@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using System.Net;
-using System.Net.Mime;
-using System.Text.RegularExpressions;
-using Web.API.Exceptions;
+﻿using System.Text.RegularExpressions;
 using Web.API.Models.Catalog.CatalogBrands;
 using Web.API.Models.Catalog.CatalogItems;
 using Web.API.Models.Catalog.CatalogTypes;
@@ -21,12 +17,11 @@ public class CatalogService : ICatalogService
 
     public CatalogService(
         ILogger<CatalogService> logger,
-        HttpClient catalogClient, 
-        IOptions<CatalogUrls> urls)
+        HttpClient catalogClient, CatalogUrls urls)
     {
         _logger = logger;
         _catalogClient = catalogClient;
-        _urls = urls.Value;
+        _urls = urls;
     }
 
     public async Task<CatalogItemInfoDto> GetItem(Guid id)

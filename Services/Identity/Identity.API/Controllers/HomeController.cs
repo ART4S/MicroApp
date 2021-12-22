@@ -1,17 +1,15 @@
-﻿using IdentityServer4.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers;
 
-[Route("/api/home")]
-[ApiController]
+[Route("")]
+[ApiExplorerSettings(IgnoreApi = true)]
 public class HomeController : ControllerBase
 {
-    [HttpGet("error")]
-    public async Task<IActionResult> Error(string errorId, [FromServices] IIdentityServerInteractionService interaction)
+    [HttpGet]
+    public IActionResult Index()
     {
-        var ctx = await interaction.GetErrorContextAsync(errorId);
-
-        return Ok(ctx);
+        return Redirect("~/swagger");
     }
 }
+

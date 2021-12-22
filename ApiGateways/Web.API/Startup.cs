@@ -16,6 +16,7 @@ class Startup
         HttpPolicyFactory.InitSettings(Configuration);
 
         services.AddControllers();
+        services.AddHttpContextAccessor();
         services.AddSwagger();
         services.AddAutoMapper();
         services.ConfigureApi();
@@ -23,22 +24,23 @@ class Startup
         services.AddCatalogService(Configuration);
         services.AddBasketService(Configuration);
         services.AddOrderingService(Configuration);
-        services.AddIdentityService(Configuration);
+        services.AddUserService(Configuration);
 
         services.AddCustomAuthentication(Configuration);
-
-        services.AddHttpContextAccessor();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 
-        app.UseSwagger();
-        app.UseSwaggerUI(setup =>
+        if (env.IsDevelopment())
         {
-            setup.SwaggerEndpoint("/swagger/swagger.json", "Web.API");
-        });
+            app.UseSwagger();
+            app.UseSwaggerUI(setup =>
+            {
+                setup.SwaggerEndpoint("/swagger/swagger.json", "Web.API");
+            });
+        }
 
         app.UseRouting();
 

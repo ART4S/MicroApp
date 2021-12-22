@@ -1,12 +1,14 @@
 ﻿using IdempotencyServices.Mediator;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.API.Infrastructure.Attributes;
+using Ordering.API.Models;
+using Ordering.API.Services;
 using Ordering.Application.Model.Orders;
 using Ordering.Application.Requests.Orders.ConfirmOrder;
 using Ordering.Application.Requests.Orders.GetById;
 using Ordering.Application.Requests.Orders.GetUserOrders;
-using Ordering.Application.Services.Identity;
 
 namespace Ordering.API.Controllers;
 
@@ -16,11 +18,11 @@ public class OrdersController : BaseController
 {
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<OrderSummaryDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetOrders([FromServices]IIdentityService identityService)
+    public async Task<IActionResult> GetOrders([FromServices]IBuyerService buyerService)
     {
-        var user = await identityService.GetCurrentUser();
+        BuyerInfo buyer = await buyerService.GetCurrentBuyer();
 
-        return Ok(await Mediator.Send(new GetUserOrdersQuery(user.Id)));
+        return Ok(await Mediator.Send(new GetUserOrdersQuery(buyer.Id)));
     }
 
     [HttpGet("{orderId:guid}")]
@@ -32,7 +34,7 @@ public class OrdersController : BaseController
 
     [HttpPut("{orderId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> ConfirmOrder(
+    public async Task<IActionResult> CreateOrder(
         [FromHeader(Name = "x-requestId")][RequiredNonDefault] Guid requestId, 
         [RequiredNonDefault] Guid orderId, 
         OrderEditDto order)

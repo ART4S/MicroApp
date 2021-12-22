@@ -15,17 +15,12 @@ public class OrderingDbContextSeed
     private readonly ILogger _logger;
     private readonly OrderingDbContext _dbContext;
     private readonly string _contentRootPath;
-    private readonly string _webRootPath;
 
     public OrderingDbContextSeed(IServiceProvider services, OrderingDbContext dbContext)
     {
         _logger = services.GetRequiredService<ILogger<OrderingDbContextSeed>>();
         _dbContext = dbContext;
-
-        var env = services.GetRequiredService<IWebHostEnvironment>();
-
-        _contentRootPath = env.ContentRootPath;
-        _webRootPath = env.WebRootPath;
+        _contentRootPath = services.GetRequiredService<IWebHostEnvironment>().ContentRootPath;
     }
 
     public void Seed()
@@ -47,6 +42,7 @@ public class OrderingDbContextSeed
                 else _dbContext.SaveChanges();
             }
 
+            // TODO: seed in dev env
             SeedTestData();
 
             transaction.Commit();

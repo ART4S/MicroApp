@@ -2,7 +2,7 @@
 
 namespace Web.API.Services.Identity;
 
-public interface IIdentityService
+public interface IUserService
 {
     Task<UserDto> GetCurrentUser();
 }

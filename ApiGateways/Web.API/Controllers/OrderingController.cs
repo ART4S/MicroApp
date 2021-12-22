@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.API.Attributes;
-using Web.API.Models.Identity;
 using Web.API.Models.Orders;
 using Web.API.Models.PaymentMethods;
-using Web.API.Services.Identity;
 using Web.API.Services.Ordering;
 
 namespace Web.API.Controllers;
@@ -14,26 +12,18 @@ namespace Web.API.Controllers;
 [ApiController]
 public class OrderingController : ControllerBase
 {
-    private readonly IIdentityService _identityService;
     private readonly IOrderingService _orderingService;
 
-    public OrderingController(
-        IOrderingService orderingService, 
-        IIdentityService identityService)
+    public OrderingController(IOrderingService orderingService)
     {
         _orderingService = orderingService;
-        _identityService = identityService;
     }
 
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<OrderSummaryDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrders()
     {
-        var claims = HttpContext.User.Claims.ToList();
-        var user1 = HttpContext.User;
-        var user = await _identityService.GetCurrentUser();
-
-        return Ok(await _orderingService.GetUserOrders(user.Id));
+        return Ok(await _orderingService.GetOrders());
     }
 
     [HttpGet("{orderId:guid}")]
@@ -59,17 +49,13 @@ public class OrderingController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<PaymentMethodInfoDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPaymentMethods()
     {
-        UserDto user = await _identityService.GetCurrentUser();
-
-        return Ok(await _orderingService.GetUserPaymentMethods(user.Id));
+        return Ok(await _orderingService.GetPaymentMethods());
     }
 
     [HttpPost("paymentMethods")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreatePaymentMethod(PaymentMethodEditDto paymentMethod)
     {
-        UserDto user = await _identityService.GetCurrentUser();
-
-        return Ok(await _orderingService.CreateUserPaymentMethod(user.Id, paymentMethod));
+        return Ok(await _orderingService.CreatePaymentMethod(paymentMethod));
     }
 }

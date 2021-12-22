@@ -19,6 +19,7 @@ class Startup
         services.AddOrderingDbContext(Configuration);
         services.AddIntegrationServices(Configuration);
         services.AddIdempotencyServices(Configuration);
+        services.AddBuyerService();
         services.AddMediator();
         services.AddAutoMapper();
         services.AddEventHandlers();
@@ -37,13 +38,18 @@ class Startup
     {
         app.UseCustomExceptionHandler();
 
-        app.UseSwagger();
-        app.UseSwaggerUI(setup =>
+        if (env.IsDevelopment())
         {
-            setup.SwaggerEndpoint("/swagger/swagger.json", "Ordering.API");
-        });
+            app.UseSwagger();
+            app.UseSwaggerUI(setup =>
+            {
+                setup.SwaggerEndpoint("/swagger/swagger.json", "Ordering.API");
+            });
+        }
 
         app.UseRouting();
+
+        app.UseAuthentication();
 
         app.UseEndpoints(endpoints => 
         { 

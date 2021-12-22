@@ -5,13 +5,11 @@ namespace Identity.API.Services;
 
 public interface IAuthService
 {
-    Task<User?> FindUserById(string userId);
-
     Task<User?> FindUserByName(string userName);
 
     Task<bool> ValidateUserCredentials(User user, string password);
 
-    Task SignIn(User user, AuthenticationProperties authProps = null, string authMethod = null);
+    Task SignIn(User user, AuthenticationProperties authProps);
 
-    Task SignOut(User user, string authScheme);
+    Task SignOut();
 }

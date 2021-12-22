@@ -1,8 +1,6 @@
 ﻿using Google.Protobuf.Collections;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using Web.API.Configuration.Factories;
 using Web.API.Mapper.Converters;
@@ -19,51 +17,54 @@ static class ServicesConfiguration
 {
     public static void AddCatalogService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<CatalogUrls>(configuration.GetSection("ExternalUrls:Catalog"));
+        CatalogUrls settings = new();
+        configuration.GetSection("ExternalUrls:Catalog").Bind(settings);
+        services.AddSingleton(settings);
 
         services.AddHttpClient<ICatalogService, CatalogService>((sp, client) =>
         {
-            var settings = sp.GetRequiredService<IOptions<CatalogUrls>>().Value;
             client.BaseAddress = new Uri(settings.BasePath);
         }).AddDefaultPolicies();
     }
 
     public static void AddBasketService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<BasketUrls>(configuration.GetSection("ExternalUrls:Basket"));
+        BasketUrls settings = new();
+        configuration.GetSection("ExternalUrls:Basket").Bind(settings);
+        services.AddSingleton(settings);
 
-        services.AddScoped<IBasketService, BasketService>();
-
-        services.AddGrpcClient<GrpcBasket.Basket.BasketClient>((sp, options) =>
+        services.AddGrpcClient<GrpcBasket.Basket.BasketClient>(options =>
         {
-            var settings = sp.GetRequiredService<IOptions<BasketUrls>>().Value;
             options.Address = new Uri(settings.BasePath);
         }).AddDefaultPolicies();
+
+        services.AddScoped<IBasketService, BasketService>();
     }
 
     public static void AddOrderingService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<OrderingUrls>(configuration.GetSection("ExternalUrls:Ordering"));
+        OrderingUrls settings = new();
+        configuration.GetSection("ExternalUrls:Ordering").Bind(settings);
+        services.AddSingleton(settings);
 
         services.AddHttpClient<IOrderingService, OrderingService>((services, client) =>
         {
-            var settings = services.GetRequiredService<IOptions<OrderingUrls>>().Value;
             client.BaseAddress = new Uri(settings.BasePath);
 
-            var httpContextAccessor = services.GetRequiredService<HttpContextAccessor>();
+            var httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
             if (httpContextAccessor.HttpContext != null)
             {
-                string token = httpContextAccessor.HttpContext.Request.Headers.Authorization[0];
-                if (token != null)
-                    client.DefaultRequestHeaders.Authorization = new("Bearer", token);
+                string headerValue = httpContextAccessor.HttpContext.Request.Headers.Authorization[0];
+                if (headerValue != null)
+                    client.DefaultRequestHeaders.Authorization = new("Bearer", headerValue.Split(' ').Last());
             }
 
         }).AddDefaultPolicies();
     }
 
-    public static void AddIdentityService(this IServiceCollection services, IConfiguration configuration)
+    public static void AddUserService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IUserService, UserService>();
     }
 
     public static void AddSwagger(this IServiceCollection services)
@@ -102,8 +103,9 @@ static class ServicesConfiguration
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.Audience = settings.BasePath;
-
+                options.Authority = settings.BasePath;
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = false;
                 options.TokenValidationParameters = new()
                 {
                     ValidateAudience = false

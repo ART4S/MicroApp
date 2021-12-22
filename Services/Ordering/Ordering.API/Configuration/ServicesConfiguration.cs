@@ -9,13 +9,10 @@ using Ordering.Application.Services.DataAccess;
 using Ordering.Infrastructure.DataAccess.Ordering;
 using Microsoft.EntityFrameworkCore;
 using IntegrationServices;
-using System.Reflection;
 using TaskScheduling.Core;
 using Ordering.API.Infrastructure.BackgroundTasks;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
-using Ordering.Application.Services.Identity;
-using Ordering.Infrastructure.Identity;
 using IntegrationServices.EF;
 using IdempotencyServices.EF;
 using IdempotencyServices.Mediator;
@@ -28,32 +25,32 @@ using Ordering.Application.Requests.Orders.ConfirmOrder;
 using System.IdentityModel.Tokens.Jwt;
 using Ordering.API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Ordering.API.Services;
+using Ordering.API.Utils;
 
 namespace Ordering.API.Configuration;
 
 static class ServicesConfiguration
 {
-    private static Assembly ApplicationAssembly 
-        => typeof(IOrderingDbContext).Assembly;
-
-    private static Assembly InfrastructureAssembly
-        => typeof(OrderingDbContext).Assembly;
-
     public static void AddAppServices(this IServiceCollection services)
     {
         services.AddSingleton<ICurrentTime, CurrentTime>();
+        services.AddScoped<IBuyerService, BuyerService>();
     }
 
     public static void AddIdentityServices(this IServiceCollection services)
     {
-        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IBuyerService, BuyerService>();
     }
 
     public static void AddSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("Ordering.API", new() { Title = "MicroShop - Ordering.API" });
+            options.SwaggerDoc("Ordering.API", new() 
+            { 
+                Title = "MicroShop - Ordering.API" 
+            });
         });
     }
 
@@ -67,7 +64,7 @@ static class ServicesConfiguration
         {
             options.UseSqlServer(
                 connection: sp.GetRequiredService<DbConnection>(), 
-                sqlOptions => sqlOptions.MigrationsAssembly(InfrastructureAssembly.FullName));
+                sqlOptions => sqlOptions.MigrationsAssembly(ReflectionInfo.InfrastructureAssembly.FullName));
         });
 
         services.AddScoped<IOrderingDbContext, OrderingDbContext>();
@@ -88,13 +85,13 @@ static class ServicesConfiguration
         {
             options.UseSqlServer(
                 connection: sp.GetRequiredService<DbConnection>(),
-                sqlOptions => sqlOptions.MigrationsAssembly(InfrastructureAssembly.FullName));
+                sqlOptions => sqlOptions.MigrationsAssembly(ReflectionInfo.InfrastructureAssembly.FullName));
         });
 
         services.AddScoped<IIntegrationDbContext, IntegrationDbContext>();
 
         services.AddScoped<IIntegrationEventService, IntegrationEventService>(
-            (sp) => ActivatorUtilities.CreateInstance<IntegrationEventService>(sp, ApplicationAssembly));
+            (sp) => ActivatorUtilities.CreateInstance<IntegrationEventService>(sp, ReflectionInfo.ApplicationAssembly));
     }
 
     public static void AddEventHandlers(this IServiceCollection services)
@@ -106,7 +103,7 @@ static class ServicesConfiguration
 
     public static void AddMediator(this IServiceCollection services)
     {
-        services.AddMediatR(ApplicationAssembly);
+        services.AddMediatR(ReflectionInfo.ApplicationAssembly);
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(SaveChangesBehaviour<,>));
@@ -116,7 +113,7 @@ static class ServicesConfiguration
     {
         services.AddAutoMapper(config =>
         {
-            config.AddMaps(ApplicationAssembly);
+            config.AddMaps(ReflectionInfo.ApplicationAssembly);
         });
     }
 
@@ -127,7 +124,7 @@ static class ServicesConfiguration
             opt.Filters.Add<ValidationAttribute>();
         }).AddFluentValidation();
 
-        services.AddValidatorsFromAssembly(ApplicationAssembly);
+        services.AddValidatorsFromAssembly(ReflectionInfo.ApplicationAssembly);
     }
 
     public static void AddTaskScheduling(this IServiceCollection services, IConfiguration configuration)
@@ -162,8 +159,8 @@ static class ServicesConfiguration
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.Audience = settings.BasePath;
-
+                options.Authority = settings.BasePath;
+                options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new()
                 {
                     ValidateAudience = false
@@ -185,10 +182,9 @@ static class ServicesConfiguration
 
         services.AddDbContext<IdempotencyDbContext>(options =>
         {
-            options.UseSqlServer(connectionString, sqlOptions =>
-            {
-                sqlOptions.MigrationsAssembly(InfrastructureAssembly.FullName);
-            });
+            options.UseSqlServer(
+                connectionString, 
+                sqlOptions => sqlOptions.MigrationsAssembly(ReflectionInfo.InfrastructureAssembly.FullName));
         });
 
         services.AddScoped<IIdempotencyDbContext, IdempotencyDbContext>();
@@ -203,14 +199,20 @@ static class ServicesConfiguration
 
         services.AddScoped
         (
-            typeof(IRequestHandler<IdempotentRequest<CreateOrderCommand, Unit>, Unit>),
-            typeof(IdempotentRequestHandler<CreateOrderCommand, Unit>)
+            typeof(IRequestHandler<IdempotentRequest<Application.Requests.Orders.CreateOrder.CreateOrderCommand, Unit>, Unit>),
+            typeof(IdempotentRequestHandler<Application.Requests.Orders.CreateOrder.CreateOrderCommand, Unit>)
         );
 
         services.AddScoped
         (
-            typeof(IRequestHandler<IdempotentRequest<ConfirmOrderCommand, Unit>, Unit>),
-            typeof(IdempotentRequestHandler<ConfirmOrderCommand, Unit>)
+            typeof(IRequestHandler<IdempotentRequest<Application.Requests.Orders.ConfirmOrder.ConfirmOrderCommand, Unit>, Unit>),
+            typeof(IdempotentRequestHandler<Application.Requests.Orders.ConfirmOrder.ConfirmOrderCommand, Unit>)
         );
+    }
+
+    public static void AddBuyerService(this IServiceCollection services)
+    {
+        services.AddScoped<IBuyerService, BuyerService>();
+        services.AddHttpContextAccessor();
     }
 }

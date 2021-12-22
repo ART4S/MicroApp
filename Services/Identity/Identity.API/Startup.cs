@@ -1,42 +1,33 @@
 ﻿using Identity.API.Configuration;
-using Identity.API.Settings;
-using Microsoft.EntityFrameworkCore;
 
 class Startup
 {
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
         Configuration = configuration;
+        Environment = environment;
     }
 
+    public IWebHostEnvironment Environment { get; }
     public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
-
         services.AddSwagger();
-
-        string connectionString = Configuration.GetConnectionString("DefaultConnection");
-
-        services.AddCustomIdentity(connectionString);
-        services.AddCustomIdentityServer(connectionString);
-
-        JwtSettings settings = new();
-
-        Configuration.GetSection("JwtSettings").Bind(settings);
-
-        services.AddSingleton(settings);
+        services.AddAppServices();
+        services.AddCustomIdentity(Configuration, Environment);
+        services.AddCustomIdentityServer(Configuration);
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app)
     {
-        if (env.IsDevelopment())
+        if (Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI(setup =>
             {
-                setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity.API V1");
+                setup.SwaggerEndpoint("/swagger/swagger.json", "Identity.API");
             });
         }
 

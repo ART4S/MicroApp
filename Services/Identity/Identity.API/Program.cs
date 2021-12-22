@@ -3,7 +3,7 @@ using Identity.API.Configuration;
 CreateHostBuilder(args).Build()
     .MigrateAppDbContext()
     .MigrateIdentityDbContexts()
-    .AddDefaultUsers()
+    .SeedInitialData()
     .Run();
 
 static IHostBuilder CreateHostBuilder(string[] args) =>

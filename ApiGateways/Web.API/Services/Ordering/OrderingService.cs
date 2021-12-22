@@ -16,15 +16,14 @@ public class OrderingService : IOrderingService
 
     public OrderingService(
         ILogger<OrderingService> logger,
-        HttpClient orderingClient, 
-        IOptions<OrderingUrls> urls)
+        HttpClient orderingClient, OrderingUrls urls)
     {
         _logger = logger;
         _orderingClient = orderingClient;
-        _urls = urls.Value;
+        _urls = urls;
     }
 
-    public async Task<ICollection<OrderSummaryDto>> GetUserOrders(Guid userId)
+    public async Task<ICollection<OrderSummaryDto>> GetOrders()
     {
         HttpResponseMessage response = await _orderingClient.GetAsync(_urls.GetOrdersUrl);
 
@@ -59,22 +58,18 @@ public class OrderingService : IOrderingService
         await HttpUtils.HandleErrorStatusCodes(response);
     }
 
-    public async Task<ICollection<PaymentMethodInfoDto>> GetUserPaymentMethods(Guid userId)
+    public async Task<ICollection<PaymentMethodInfoDto>> GetPaymentMethods()
     {
-        string uri = Regex.Replace(_urls.GetPaymentMethodsUrl, "{id}", userId.ToString());
-
-        HttpResponseMessage response = await _orderingClient.GetAsync(uri);
+        HttpResponseMessage response = await _orderingClient.GetAsync(_urls.GetPaymentMethodsUrl);
 
         await HttpUtils.HandleErrorStatusCodes(response);
 
         return await response.Content.ReadFromJsonAsync<PaymentMethodInfoDto[]>();
     }
 
-    public async Task<Guid> CreateUserPaymentMethod(Guid userId, PaymentMethodEditDto paymentMethod)
+    public async Task<Guid> CreatePaymentMethod(PaymentMethodEditDto paymentMethod)
     {
-        string uri = Regex.Replace(_urls.CreatePaymentMethodUrl, "{id}", userId.ToString());
-
-        HttpResponseMessage response = await _orderingClient.PostAsJsonAsync(uri, paymentMethod);
+        HttpResponseMessage response = await _orderingClient.PostAsJsonAsync(_urls.CreatePaymentMethodUrl, paymentMethod);
 
         await HttpUtils.HandleErrorStatusCodes(response);
 
