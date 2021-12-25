@@ -10,9 +10,6 @@ COPY "BuildingBlocks/TaskScheduling/TaskScheduling.csproj" "BuildingBlocks/TaskS
 COPY "BuildingBlocks/EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj" "BuildingBlocks/EventBus/EventBus.Abstractions/EventBus.Abstractions.csproj"
 COPY "BuildingBlocks/EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj" "BuildingBlocks/EventBus/EventBus.RabbitMQ/EventBus.RabbitMQ.csproj"
 COPY "BuildingBlocks/EventBus/EventBus.RabbitMQ.DependencyInjection/EventBus.RabbitMQ.DependencyInjection.csproj" "BuildingBlocks/EventBus/EventBus.RabbitMQ.DependencyInjection/EventBus.RabbitMQ.DependencyInjection.csproj"
-COPY "Services/Catalog/Catalog.Domian/Catalog.Domian.csproj" "Services/Catalog/Catalog.Domian/Catalog.Domian.csproj"
-COPY "Services/Catalog/Catalog.Application/Catalog.Application.csproj" "Services/Catalog/Catalog.Application/Catalog.Application.csproj"
-COPY "Services/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj" "Services/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj"
 COPY "Services/Catalog/Catalog.API/Catalog.API.csproj" "Services/Catalog/Catalog.API/Catalog.API.csproj"
 RUN dotnet restore "Services/Catalog/Catalog.API/Catalog.API.csproj"
 COPY . .

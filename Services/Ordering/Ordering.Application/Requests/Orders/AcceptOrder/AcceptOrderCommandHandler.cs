@@ -2,9 +2,9 @@
 using IntegrationServices;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Ordering.Application.Integration.Events;
-using Ordering.Application.Integration.Models;
-using Ordering.Application.Services.DataAccess;
+using Ordering.Application.IntegrationEvents.Events;
+using Ordering.Application.IntegrationEvents.Models;
+using Ordering.Application.Services;
 using Ordering.Domian.Dictionaries;
 using Ordering.Domian.Entities;
 
@@ -42,11 +42,13 @@ public class AcceptOrderCommandHandler : IRequestHandler<AcceptOrderCommand>
             AcceptedOrder acceptedOrder = new()
             {
                 OrderId = order.Id,
+                BuyerId = order.BuyerId,
+                OrderStatusId = order.OrderStatusId,
                 Total = order.OrderItems.Sum(x => x.Quantity * x.UnitPrice),
                 PaymentCard = _mapper.Map<BuyerCardInfo>(order.PaymentMethod)
             };
 
-            await _integrationEvents.Save(new OrderAcceptedIntegrationEvent(acceptedOrder));
+            await _integrationEvents.Publish(new OrderAcceptedIntegrationEvent(acceptedOrder));
         }
         else
         {

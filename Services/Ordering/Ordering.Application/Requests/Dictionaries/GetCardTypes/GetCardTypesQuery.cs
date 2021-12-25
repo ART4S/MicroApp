@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Ordering.Application.Model.Dictionaries;
+using Ordering.Application.Models.Dictionaries;
 
 namespace Ordering.Application.Requests.Dictionaries.GetCardTypes;
 

@@ -1,4 +1,4 @@
-﻿using Ordering.Application.Integration.Models;
+﻿using Ordering.Application.IntegrationEvents.Models;
 using Ordering.Application.Requests.Abstractions;
 
 namespace Ordering.Application.Requests.Orders.UpdateItemsInStock;

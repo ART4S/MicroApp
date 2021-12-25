@@ -1,4 +1,4 @@
-﻿namespace Ordering.Application.Model.PaymentMethods;
+﻿namespace Ordering.Application.Models.PaymentMethods;
 
 public class PaymentMethodInfoDto
 {

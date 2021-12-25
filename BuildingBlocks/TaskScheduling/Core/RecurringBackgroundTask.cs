@@ -12,7 +12,7 @@ internal record RecurringBackgroundTask
         string cronSchedule, 
         Func<IServiceProvider, IBackgroundTask>? factory = null)
     {
-        _schedule = CrontabSchedule.Parse(cronSchedule);
+        _schedule = CrontabSchedule.Parse(cronSchedule, new() { IncludingSeconds = true });
         Type = type;
         Factory = factory;
         CalculateNextRunTime();

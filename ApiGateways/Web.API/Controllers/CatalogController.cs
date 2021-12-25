@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using Web.API.Attributes;
 using Web.API.Models.Catalog.CatalogBrands;
 using Web.API.Models.Catalog.CatalogItems;
 using Web.API.Models.Catalog.CatalogTypes;
 using Web.API.Pagination;
-using Web.API.Services.Catalog;
+using Web.API.Services;
 
 namespace Web.API.Controllers;
 
 [Route("/api/catalog")]
 [ApiController]
-public class CatalogController : ControllerBase
+public class CatalogController : BaseController
 {
     private readonly ICatalogService _catalogService;
 
@@ -20,8 +21,8 @@ public class CatalogController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(PaginationResponse<CatalogItemDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetItems([FromQuery] PaginationRequest request)
+    [ProducesResponseType(typeof(PagedResponse<CatalogItemDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetItems([FromQuery] PagedRequest request)
     {
         return Ok(await _catalogService.GetItems(request));
     }
@@ -47,21 +48,19 @@ public class CatalogController : ControllerBase
         return Ok(await _catalogService.GetBrands());
     }
 
-    [HttpGet("{id:guid}/picture")]
-    public async Task<IActionResult> GetPicture([RequiredNonDefault] Guid id)
+    [HttpGet("pictures/{pictureName}")]
+    public async Task<IActionResult> GetPicture([Required] string pictureName)
     {
-        var file = await _catalogService.GetPicture(id);
+        var file = await _catalogService.GetPicture(pictureName);
 
         return File(file.Content, file.ContentType);
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateItem(CatalogItemEditDto item)
     {
-        Guid id = await _catalogService.CreateItem(item);
-
-        return CreatedAtAction(nameof(GetItem), new { id }, null);
+        return Created(await _catalogService.CreateItem(item));
     }
 
     [HttpPut("{id:guid}")]

@@ -22,9 +22,10 @@ static class ServicesConfiguration
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("Identity.API", new()
+            options.SwaggerDoc("v1", new()
             {
                 Title = "MicroShop - Identity.API",
+                Version = "v1",
             });
         });
     }
@@ -89,5 +90,19 @@ static class ServicesConfiguration
         services.AddScoped<IAuthService, AuthService>();
 
         services.AddLocalApiAuthentication();
+    }
+
+    public static void AddCorsPolicies(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.SetIsOriginAllowed(_ => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
+        });
     }
 }

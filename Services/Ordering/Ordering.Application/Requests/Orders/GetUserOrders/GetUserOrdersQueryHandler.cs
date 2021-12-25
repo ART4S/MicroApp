@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.Data.Common;
 using Dapper;
-using Ordering.Application.Model.Orders;
+using Ordering.Application.Models.Orders;
 
 namespace Ordering.Application.Requests.Orders.GetUserOrders;
 

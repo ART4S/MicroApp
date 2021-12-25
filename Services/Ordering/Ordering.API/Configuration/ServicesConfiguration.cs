@@ -2,10 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Ordering.Application.Integration.EventHandlers;
 using Ordering.Application.PipelineBehaviours;
-using Ordering.Application.Services.Common;
-using Ordering.Application.Services.DataAccess;
 using Ordering.Infrastructure.DataAccess.Ordering;
 using Microsoft.EntityFrameworkCore;
 using IntegrationServices;
@@ -18,15 +15,18 @@ using IdempotencyServices.EF;
 using IdempotencyServices.Mediator;
 using Ordering.Infrastructure.Common;
 using IdempotencyServices;
-using Ordering.Application.Requests.Orders.CreateOrder;
 using Ordering.API.Infrastructure.Attributes;
 using FluentValidation.AspNetCore;
-using Ordering.Application.Requests.Orders.ConfirmOrder;
 using System.IdentityModel.Tokens.Jwt;
 using Ordering.API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Ordering.API.Services;
 using Ordering.API.Utils;
+using Ordering.Application.Services;
+using TaskScheduling.DependencyInjection;
+using Ordering.Application.IntegrationEvents.EventHandlers;
+using EventBus.RabbitMQ;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Ordering.API.Configuration;
 
@@ -35,6 +35,12 @@ static class ServicesConfiguration
     public static void AddAppServices(this IServiceCollection services)
     {
         services.AddSingleton<ICurrentTime, CurrentTime>();
+        services.AddSingleton<Func<DateTime>>(sp =>
+        {
+            var currentTime = sp.GetRequiredService<ICurrentTime>();
+            return () => currentTime.Now;
+        });
+
         services.AddScoped<IBuyerService, BuyerService>();
     }
 
@@ -47,9 +53,10 @@ static class ServicesConfiguration
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("Ordering.API", new() 
+            options.SwaggerDoc("v1", new() 
             { 
-                Title = "MicroShop - Ordering.API" 
+                Title = "MicroShop - Ordering.API",
+                Version = "v1",
             });
         });
     }
@@ -72,26 +79,21 @@ static class ServicesConfiguration
 
     public static void AddIntegrationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRabbitMQEventBus(settings: new
-        (
-            HostName: configuration.GetValue<string>("RabbitMQSettings:HostName"),
-            Retries: configuration.GetValue<int>("RabbitMQSettings:Retries"),
-            ClientName: configuration.GetValue<string>("RabbitMQSettings:ClientName"),
-            UserName: configuration.GetValue<string>("RabbitMQSettings:UserName"),
-            Password: configuration.GetValue<string>("RabbitMQSettings:Password")
-        ));
+        RabbitMQSettings settings = new();
+        configuration.GetSection("RabbitMQSettings").Bind(settings);
+        services.AddRabbitMQEventBus(settings);
 
-        services.AddDbContext<IntegrationDbContext>((sp, options) =>
+        services.AddDbContext<EFIntegrationDbContext>((sp, options) =>
         {
             options.UseSqlServer(
                 connection: sp.GetRequiredService<DbConnection>(),
                 sqlOptions => sqlOptions.MigrationsAssembly(ReflectionInfo.InfrastructureAssembly.FullName));
         });
 
-        services.AddScoped<IIntegrationDbContext, IntegrationDbContext>();
+        services.AddScoped<IEFIntegrationDbContext, EFIntegrationDbContext>();
 
-        services.AddScoped<IIntegrationEventService, IntegrationEventService>(
-            (sp) => ActivatorUtilities.CreateInstance<IntegrationEventService>(sp, ReflectionInfo.ApplicationAssembly));
+        services.AddScoped<IIntegrationEventService, EFIntegrationEventService>(
+            (sp) => ActivatorUtilities.CreateInstance<EFIntegrationEventService>(sp, ReflectionInfo.ApplicationAssembly));
     }
 
     public static void AddEventHandlers(this IServiceCollection services)
@@ -180,22 +182,16 @@ static class ServicesConfiguration
     {
         string connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddDbContext<IdempotencyDbContext>(options =>
+        services.AddDbContext<EFIdempotencyDbContext>(options =>
         {
             options.UseSqlServer(
                 connectionString, 
                 sqlOptions => sqlOptions.MigrationsAssembly(ReflectionInfo.InfrastructureAssembly.FullName));
         });
 
-        services.AddScoped<IIdempotencyDbContext, IdempotencyDbContext>();
+        services.AddScoped<IEFIdempotencyDbContext, EFIdempotencyDbContext>();
 
-        services.AddSingleton<Func<DateTime>>(sp =>
-        {
-            var currentTime = sp.GetRequiredService<ICurrentTime>();
-            return () => currentTime.Now;
-        });
-
-        services.AddScoped<IClientRequestService, ClientRequestService>();
+        services.AddScoped<IClientRequestService, EFClientRequestService>();
 
         services.AddScoped
         (
@@ -214,5 +210,19 @@ static class ServicesConfiguration
     {
         services.AddScoped<IBuyerService, BuyerService>();
         services.AddHttpContextAccessor();
+    }
+
+    public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks()
+            .AddCheck(name: "self", () => HealthCheckResult.Healthy())
+            .AddSqlServer(
+                connectionString: configuration.GetConnectionString("DefaultConnection"), 
+                name: "db-check", 
+                tags: new[] { "catalog-data" })
+            .AddRabbitMQ(
+                rabbitConnectionString: configuration.GetValue<string>("RabbitMQSettings:Uri"), 
+                name: "rabbitmq-check", 
+                tags: new [] { "rabbitmq" });
     }
 }

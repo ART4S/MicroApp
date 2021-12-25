@@ -1,4 +1,4 @@
-﻿using Catalog.Domian.Abstractions;
+﻿using Ordering.Domian.Abstractions;
 
 namespace Ordering.Domian.Entities;
 
@@ -8,7 +8,7 @@ public class OrderItem : BaseEntity
 
     public int Quantity { get; set; }
 
-    public bool IsInStock { get; set; } = true;
+    public bool IsInStock { get; set; }
 
     public Guid ProductId { get; set; }
 

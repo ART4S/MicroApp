@@ -1,15 +1,15 @@
-﻿using Catalog.API.Infrastructure.Attributes;
+﻿using Catalog.API.Application.Models.CatalogBrand;
+using Catalog.API.Application.Models.CatalogItem;
+using Catalog.API.Application.Models.CatalogType;
+using Catalog.API.Application.Requests.Catalog.CreateItem;
+using Catalog.API.Application.Requests.Catalog.DeleteItem;
+using Catalog.API.Application.Requests.Catalog.GetBrands;
+using Catalog.API.Application.Requests.Catalog.GetById;
+using Catalog.API.Application.Requests.Catalog.GetItems;
+using Catalog.API.Application.Requests.Catalog.GetTypes;
+using Catalog.API.Application.Requests.Catalog.UpdateItem;
+using Catalog.API.Infrastructure.Attributes;
 using Catalog.API.Infrastructure.Pagination;
-using Catalog.Application.Dto.CatalogBrand;
-using Catalog.Application.Dto.CatalogItem;
-using Catalog.Application.Dto.CatalogType;
-using Catalog.Application.Requests.Catalog.CreateItem;
-using Catalog.Application.Requests.Catalog.DeleteItem;
-using Catalog.Application.Requests.Catalog.GetBrands;
-using Catalog.Application.Requests.Catalog.GetItemInfo;
-using Catalog.Application.Requests.Catalog.GetItems;
-using Catalog.Application.Requests.Catalog.GetTypes;
-using Catalog.Application.Requests.Catalog.UpdateItem;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -21,19 +21,19 @@ namespace Catalog.API.Controllers;
 public class CatalogController : BaseController
 {
     [HttpGet]
-    [ProducesResponseType(typeof(PaginationResponse<CatalogItemDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetItems([FromQuery] PaginationRequest<CatalogItemDto> request)
+    [ProducesResponseType(typeof(PagedResponse<CatalogItemDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetItems([FromQuery] PagedRequest<CatalogItemDto> request)
     {
         var items = await Mediator.Send(new GetItemsRequest());
 
-        return Ok(await items.PaginateAsync(request));
+        return Ok(items.PaginateAsync(request));
     }
 
-    [HttpGet("{id:guid}/info")]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(CatalogItemInfoDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetItemInfo([RequiredNonDefault] Guid id)
+    public async Task<IActionResult> GetById([RequiredNonDefault] Guid id)
     {
-        return Ok(await Mediator.Send(new GetItemInfoRequest(id)));
+        return Ok(await Mediator.Send(new GetByIdRequest(id)));
     }
 
     [HttpGet("types")]

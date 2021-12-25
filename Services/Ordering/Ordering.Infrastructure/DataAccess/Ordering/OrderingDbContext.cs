@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ordering.Application.Services.DataAccess;
+using Ordering.Application.Services;
 using Ordering.Domian.Dictionaries;
 using Ordering.Domian.Entities;
 

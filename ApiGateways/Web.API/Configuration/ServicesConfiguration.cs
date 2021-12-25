@@ -1,14 +1,12 @@
 ﻿using Google.Protobuf.Collections;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using Web.API.Configuration.Factories;
+using Web.API.Exceptions;
 using Web.API.Mapper.Converters;
 using Web.API.Services;
-using Web.API.Services.Basket;
-using Web.API.Services.Catalog;
-using Web.API.Services.Identity;
-using Web.API.Services.Ordering;
 using Web.API.Settings;
 
 namespace Web.API.Configuration;
@@ -52,11 +50,14 @@ static class ServicesConfiguration
             client.BaseAddress = new Uri(settings.BasePath);
 
             var httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
+
             if (httpContextAccessor.HttpContext != null)
             {
-                string headerValue = httpContextAccessor.HttpContext.Request.Headers.Authorization[0];
-                if (headerValue != null)
-                    client.DefaultRequestHeaders.Authorization = new("Bearer", headerValue.Split(' ').Last());
+                var autorizationHeaders = httpContextAccessor.HttpContext.Request.Headers.Authorization;
+                if (autorizationHeaders.Count == 0 || !autorizationHeaders[0].StartsWith("Bearer"))
+                    throw InvalidRequestException.BadRequest("Bearer token is missing");
+
+                client.DefaultRequestHeaders.Authorization = new("Bearer", autorizationHeaders[0].Split(' ').Last());
             }
 
         }).AddDefaultPolicies();
@@ -71,7 +72,11 @@ static class ServicesConfiguration
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("Web.API", new() { Title = "MicroShop - Web.API" });
+            options.SwaggerDoc("v1", new()
+            {
+                Title = "MicroShop - Web.API",
+                Version = "v1",
+            });
         });
     }
 
@@ -111,6 +116,14 @@ static class ServicesConfiguration
                     ValidateAudience = false
                 };
             });
+
+        services.AddAuthorization(options =>
+        {
+            options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireClaim("sub")
+                .RequireClaim("name")
+                .Build();
+        });
     }
 
     public static void ConfigureApi(this IServiceCollection services)

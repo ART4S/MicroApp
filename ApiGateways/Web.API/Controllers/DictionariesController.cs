@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Web.API.Models.Dictionaries;
-using Web.API.Services.Ordering;
+using Web.API.Services;
 
 namespace Web.API.Controllers;
 
 [Route("/api")]
 [ApiController]
-public class DictionariesController : ControllerBase
+public class DictionariesController : BaseController
 {
     private readonly IOrderingService _orderingService;
 

@@ -1,18 +1,17 @@
-﻿using Catalog.Application.Dto.Pictures;
-using Catalog.Application.Requests.Pictures.GetCatalogItemPicture;
+﻿using Catalog.API.Application.Models.Pictures;
+using Catalog.API.Application.Requests.Pictures.GetPicture;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers;
 
 [ApiController]
+[Route("/api/[controller]")]
 public class PicturesController : BaseController
 {
-    [HttpGet("api/catalog/{itemId:guid}/picture")]
-    public async Task<IActionResult> GetCatalogItemPicture(Guid itemId)
+    [HttpGet("{pictureName}")]
+    public async Task<IActionResult> GetPicture(string pictureName)
     {
-        if (itemId == Guid.Empty) return BadRequest();
-
-        PictureDto pic = await Mediator.Send(new GetCatalogItemPictureRequest(itemId));
+        PictureDto pic = await Mediator.Send(new GetPictureRequest(pictureName));
 
         string contentType = GetContentTypeByFileExtension(pic.Name);
 

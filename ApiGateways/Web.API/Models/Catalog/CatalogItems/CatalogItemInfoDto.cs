@@ -8,6 +8,8 @@ public record CatalogItemInfoDto
 
     public string Description { get; init; }
 
+    public string? PictureName { get; init; }
+
     public decimal? Price { get; init; }
 
     public Guid BrandId { get; init; }

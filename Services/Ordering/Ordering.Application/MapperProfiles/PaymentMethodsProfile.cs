@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Ordering.Application.Integration.Models;
-using Ordering.Application.Model.PaymentMethods;
+using Ordering.Application.IntegrationEvents.Models;
+using Ordering.Application.Models.PaymentMethods;
 using Ordering.Domian.Entities;
 
 namespace Ordering.Application.MapperProfiles;

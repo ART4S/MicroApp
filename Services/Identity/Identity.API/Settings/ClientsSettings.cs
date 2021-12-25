@@ -11,4 +11,5 @@ public record SpaClientSetting
     public string ClientSecret { get; set; }
     public string[] RedirectUris { get; set; }
     public string[] AllowedScopes { get; set; }
+    public int IdTokenLifetimeSec { get; set; }
 }

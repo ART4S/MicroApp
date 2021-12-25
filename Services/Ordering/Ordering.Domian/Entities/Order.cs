@@ -1,6 +1,6 @@
-﻿using Catalog.Domian.Abstractions;
-using Microsoft.eShopOnContainers.Services.Ordering.Domain.AggregatesModel.OrderAggregate;
+﻿using Ordering.Domian.Abstractions;
 using Ordering.Domian.Dictionaries;
+using Ordering.Domian.ValueObjects;
 
 namespace Ordering.Domian.Entities;
 

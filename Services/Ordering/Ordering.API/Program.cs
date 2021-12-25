@@ -1,12 +1,11 @@
 using Autofac.Extensions.DependencyInjection;
 using Ordering.API.Configuration;
 
-IHost host = CreateHostBuilder(args).Build()
+CreateHostBuilder(args).Build()
     .MigrateOrderingDbContext()
     .MigrateIntegrationDbContext()
-    .MigrateIdempotencyDbContext();
-
-host.Run();
+    .MigrateIdempotencyDbContext()
+    .Run();
 
 static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)

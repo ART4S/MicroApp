@@ -1,10 +1,11 @@
-﻿using Catalog.API.Infrastructure.Attributes;
+﻿using Catalog.API.Application.IntegrationEvents.EventHandlers;
+using Catalog.API.Application.PipelineBehaviours;
+using Catalog.API.DataAccess;
+using Catalog.API.DataAccess.Repositories;
+using Catalog.API.Infrastructure.Attributes;
 using Catalog.API.Infrastructure.BackgroundTasks;
-using Catalog.Application.Integration.EventHandlers;
-using Catalog.Application.PipelineBehaviours;
-using Catalog.Application.Services;
-using Catalog.Infrastructure.DataAccess.Catalog;
-using Catalog.Infrastructure.DataAccess.Repositories;
+using Catalog.API.Settings;
+using EventBus.RabbitMQ;
 using EventBus.RabbitMQ.DependencyInjection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -12,65 +13,62 @@ using IntegrationServices;
 using IntegrationServices.EF;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
-using System.Reflection;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using TaskScheduling.Core;
+using TaskScheduling.DependencyInjection;
 
 namespace Catalog.API.Configuration;
 
 static class ServicesConfiguration
 {
-    private static Assembly ApplicationAssebly => typeof(ICatalogDbContext).Assembly;
-    private static Assembly InfrastructureAssebly => typeof(CatalogDbContext).Assembly;
-
     public static void AddSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("Catalog.API", new() { Title = "MicroShop - Catalog.API" });
+            options.SwaggerDoc("v1", new()
+            {
+                Title = "MicroShop - Catalog.API",
+                Version = "v1",
+            });
         });
     }
 
     public static void AddCatalogDbContext(this IServiceCollection services, IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("DefaultConnection");
+        services.Configure<CatalogDbSettings>(configuration.GetSection("CatalogDbSettings"));
 
-        services.AddScoped<DbConnection>((sp) => new SqlConnection(connectionString));
-
-        services.AddDbContext<CatalogDbContext>((sp, options) =>
+        services.AddScoped<ICatalogDbContext>(sp =>
         {
-            options.UseSqlServer(
-                connection: sp.GetRequiredService<DbConnection>(),
-                sqlOptions => sqlOptions.MigrationsAssembly(InfrastructureAssebly.FullName));
+            CatalogDbSettings settings = sp.GetRequiredService<IOptions<CatalogDbSettings>>().Value;
+            MongoClient client = new(settings.ConnectionString);
+            IMongoDatabase db = client.GetDatabase(settings.DatabaseName);
+            return new CatalogDbContext(db);
         });
-
-        services.AddScoped<ICatalogDbContext, CatalogDbContext>();
     }
 
     public static void AddIntegrationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRabbitMQEventBus(settings: new
-        (
-            HostName: configuration.GetValue<string>("RabbitMQSettings:HostName"),
-            Retries: configuration.GetValue<int>("RabbitMQSettings:Retries"),
-            ClientName: configuration.GetValue<string>("RabbitMQSettings:ClientName"),
-            UserName: configuration.GetValue<string>("RabbitMQSettings:UserName"),
-            Password: configuration.GetValue<string>("RabbitMQSettings:Password")
-        ));
+        RabbitMQSettings rabbitSettings = new();
+        configuration.GetSection("RabbitMQSettings").Bind(rabbitSettings);
 
-        services.AddDbContext<IntegrationDbContext>((sp, options) =>
+        services.AddRabbitMQEventBus(rabbitSettings);
+
+        IntegrationDbSettings integrationSettings = new();
+        configuration.GetSection("IntegrationDbSettings").Bind(integrationSettings);
+
+        services.AddDbContext<EFIntegrationDbContext>((sp, options) =>
         {
             options.UseSqlServer(
-                connection: sp.GetRequiredService<DbConnection>(), 
-                sqlOptions => sqlOptions.MigrationsAssembly(InfrastructureAssebly.FullName));
+                integrationSettings.ConnectionString, 
+                sqlOptions => sqlOptions.MigrationsAssembly(typeof(Startup).Assembly.FullName));
         });
 
-        services.AddScoped<IIntegrationDbContext, IntegrationDbContext>();
+        services.AddScoped<IEFIntegrationDbContext, EFIntegrationDbContext>();
 
-        services.AddScoped<IIntegrationEventService, IntegrationEventService>(
-            (sp) => ActivatorUtilities.CreateInstance<IntegrationEventService>(sp, ApplicationAssebly));
+        services.AddScoped<IIntegrationEventService, EFIntegrationEventService>(
+            (sp) => ActivatorUtilities.CreateInstance<EFIntegrationEventService>(sp, typeof(Startup).Assembly));
     }
 
     public static void AddEventHandlers(this IServiceCollection services)
@@ -82,12 +80,12 @@ static class ServicesConfiguration
 
     public static void AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IItemPictureRepository, ItemPictureRepository>();
+        services.AddScoped<IPictureRepository, PictureRepository>();
     }
 
     public static void AddMediator(this IServiceCollection services)
     {
-        services.AddMediatR(typeof(ICatalogDbContext));
+        services.AddMediatR(typeof(Startup));
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CommandValidationBehaviour<,>));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(SaveChangesBehaviour<,>));
@@ -97,7 +95,7 @@ static class ServicesConfiguration
     {
         services.AddAutoMapper(config =>
         {
-            config.AddMaps(ApplicationAssebly);
+            config.AddMaps(typeof(Startup).Assembly);
         });
     }
 
@@ -108,7 +106,7 @@ static class ServicesConfiguration
             opt.Filters.Add<ValidationAttribute>();
         }).AddFluentValidation();
 
-        services.AddValidatorsFromAssembly(ApplicationAssebly);
+        services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
     }
 
     public static void ConfigureApi(this IServiceCollection services)

@@ -4,9 +4,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Exceptions;
-using Ordering.Application.Integration.Events;
-using Ordering.Application.Integration.Models;
-using Ordering.Application.Services.DataAccess;
+using Ordering.Application.IntegrationEvents.Events;
+using Ordering.Application.IntegrationEvents.Models;
+using Ordering.Application.Services;
 using Ordering.Domian.Dictionaries;
 using Ordering.Domian.Entities;
 
@@ -46,7 +46,7 @@ public class SetOrderStatusToPaidCommandHandler : IRequestHandler<SetOrderStatus
 
             PaidOrder paidOrder = _mapper.Map<PaidOrder>(order);
 
-            await _integrationEvents.Save(new OrderPaidIntegrationEvent(paidOrder));
+            await _integrationEvents.Publish(new OrderPaidIntegrationEvent(paidOrder));
         }
         else
         {

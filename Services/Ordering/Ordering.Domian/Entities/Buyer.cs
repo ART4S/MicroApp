@@ -1,4 +1,4 @@
-﻿using Catalog.Domian.Abstractions;
+﻿using Ordering.Domian.Abstractions;
 
 namespace Ordering.Domian.Entities;
 

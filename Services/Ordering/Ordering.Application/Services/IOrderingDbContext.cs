@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Ordering.Domian.Dictionaries;
 using Ordering.Domian.Entities;
 
-namespace Ordering.Application.Services.DataAccess;
+namespace Ordering.Application.Services;
 
 public interface IOrderingDbContext
 {

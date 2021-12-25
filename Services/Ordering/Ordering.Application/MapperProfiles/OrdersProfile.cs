@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Ordering.Application.Integration.Models;
-using Ordering.Application.Model.Orders;
+using Ordering.Application.IntegrationEvents.Models;
+using Ordering.Application.Models.Orders;
 using Ordering.Domian.Entities;
 
 namespace Ordering.Application.MapperProfiles;
@@ -20,6 +20,9 @@ public class OrdersProfile : Profile
             .ForMember(dest => dest.ZipCode, opt => opt.MapFrom(src => src.Address.ZipCode))
             .ReverseMap();
 
+        CreateMap<Order, CreatedOrder>(MemberList.Destination)
+            .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id));
+
         CreateMap<Order, ConfirmedOrder>(MemberList.Destination)
             .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Items, opt => opt.MapFrom(x => x.OrderItems));
@@ -31,5 +34,8 @@ public class OrdersProfile : Profile
             .ForMember(dest => dest.Items, opt => opt.MapFrom(x => x.OrderItems));
 
         CreateMap<OrderItem, PaidOrderItem>(MemberList.Destination);
+
+        CreateMap<Order, CancelledOrder>(MemberList.Destination)
+            .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id));
     }
 }

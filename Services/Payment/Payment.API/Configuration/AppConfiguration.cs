@@ -1,6 +1,6 @@
 ﻿using EventBus.Abstractions;
-using Payment.API.Integration.EventHandlers;
-using Payment.API.Integration.Events;
+using Payment.API.IntegrationEvents.EventHandlers;
+using Payment.API.IntegrationEvents.Events;
 
 namespace Payment.API.Configuration;
 

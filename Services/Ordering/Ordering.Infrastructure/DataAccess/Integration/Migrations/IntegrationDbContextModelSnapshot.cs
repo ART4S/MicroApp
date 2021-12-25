@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Ordering.Infrastructure.DataAccess.Integration.Migrations
 {
-    [DbContext(typeof(IntegrationDbContext))]
+    [DbContext(typeof(EFIntegrationDbContext))]
     partial class IntegrationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

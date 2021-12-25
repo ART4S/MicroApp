@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Ordering.Application.Services.DataAccess;
+using Ordering.Application.Services;
 using Ordering.Domian.Entities;
 
 namespace Ordering.Application.Requests.Orders.UpdateItemsInStock;

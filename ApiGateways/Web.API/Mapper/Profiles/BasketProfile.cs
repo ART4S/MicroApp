@@ -2,7 +2,7 @@
 using GrpcBasket;
 using Web.API.Models.Basket;
 
-namespace Basket.API.Infrastructure.Mapper.Profiles;
+namespace Web.API.Mapper.Profiles;
 
 public class BasketProfile : Profile
 {

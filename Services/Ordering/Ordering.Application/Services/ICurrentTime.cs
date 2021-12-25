@@ -1,4 +1,4 @@
-﻿namespace Ordering.Application.Services.Common;
+﻿namespace Ordering.Application.Services;
 
 public interface ICurrentTime
 {

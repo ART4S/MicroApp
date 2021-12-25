@@ -4,7 +4,7 @@ namespace Web.API.Controllers;
 
 [Route("")]
 [ApiExplorerSettings(IgnoreApi = true)]
-public class HomeController : ControllerBase
+public class HomeController : BaseController
 {
     [HttpGet]
     public IActionResult Index()

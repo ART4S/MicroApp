@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Ordering.Application.Model.PaymentMethods;
+using Ordering.Application.Models.PaymentMethods;
 
 namespace Ordering.Application.Requests.Buyers.GetPaymentMethods;
 

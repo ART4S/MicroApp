@@ -1,4 +1,4 @@
-﻿namespace Catalog.Domian.Abstractions;
+﻿namespace Ordering.Domian.Abstractions;
 
 public abstract class BaseEntity : IComparable
 {

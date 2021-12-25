@@ -1,4 +1,4 @@
-﻿using Catalog.Application.Exceptions;
+﻿using Catalog.API.Application.Exceptions;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;

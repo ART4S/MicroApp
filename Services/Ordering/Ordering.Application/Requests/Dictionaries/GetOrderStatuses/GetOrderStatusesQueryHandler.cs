@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Ordering.Application.Model.Dictionaries;
 using System.Data.Common;
 using Dapper;
+using Ordering.Application.Models.Dictionaries;
 
 namespace Ordering.Application.Requests.Dictionaries.GetOrderStatuses;
 

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Ordering.API.Infrastructure.Attributes;
 using Ordering.API.Models;
 using Ordering.API.Services;
-using Ordering.Application.Model.Orders;
+using Ordering.Application.Models.Orders;
 using Ordering.Application.Requests.Orders.ConfirmOrder;
 using Ordering.Application.Requests.Orders.GetById;
 using Ordering.Application.Requests.Orders.GetUserOrders;

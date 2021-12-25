@@ -1,7 +1,7 @@
 ﻿using EventBus.Abstractions;
 using Ordering.API.Configuration.Middlewares;
-using Ordering.Application.Integration.EventHandlers;
-using Ordering.Application.Integration.Events;
+using Ordering.Application.IntegrationEvents.EventHandlers;
+using Ordering.Application.IntegrationEvents.Events;
 
 namespace Ordering.API.Configuration;
 

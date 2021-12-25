@@ -1,4 +1,4 @@
-﻿namespace Ordering.Application.Model.Dictionaries;
+﻿namespace Ordering.Application.Models.Dictionaries;
 
 public class CardTypeDictDto
 {

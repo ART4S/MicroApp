@@ -34,12 +34,10 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
     private IConnection CreateConnection()
     {
-        ConnectionFactory factory = new() 
-        { 
-            HostName = _settings.HostName, 
-            UserName = _settings.UserName, 
-            Password = _settings.Password,
+        ConnectionFactory factory = new()
+        {
             ClientProvidedName = _settings.ClientName,
+            Uri = new Uri(_settings.Uri),
             DispatchConsumersAsync = true,
         };
 

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Microsoft.eShopOnContainers.Services.Ordering.Domain.AggregatesModel.OrderAggregate
+namespace Ordering.Domian.ValueObjects
 {
     public class Address : ValueObject
     {

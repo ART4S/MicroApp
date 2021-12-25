@@ -1,5 +1,8 @@
 ﻿namespace EventBus.RabbitMQ;
 
-public record RabbitMQSettings(
-    string ClientName, string HostName, 
-    string UserName, string Password, int Retries);
+public class RabbitMQSettings
+{
+    public string Uri { get; set; }
+    public string ClientName { get; set; }
+    public int Retries { get; set; }
+}

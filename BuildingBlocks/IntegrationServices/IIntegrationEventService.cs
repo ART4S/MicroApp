@@ -8,5 +8,5 @@ public interface IIntegrationEventService
 
     Task MarkEventAsCompleted(Guid eventId);
 
-    Task Save(IntegrationEvent @event);
+    Task Publish(IntegrationEvent @event);
 }

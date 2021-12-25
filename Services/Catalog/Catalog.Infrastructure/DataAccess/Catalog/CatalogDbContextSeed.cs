@@ -129,7 +129,7 @@ public class CatalogDbContextSeed
     private void AddPictures()
     {
         string sourcePath = Path.Combine(_contentRootPath, INITIALDATA_FOLDER_NAME, "ItemPictures.zip");
-        string destinationPath = Path.Combine(_webRootPath, ItemPictureRepository.PICTURES_FOLDER_NAME);
+        string destinationPath = Path.Combine(_webRootPath, PicturesRepository.PICTURES_FOLDER_NAME);
 
         _logger.LogInformation("Extracting pictures from {SourcePath} to {DestinationPath}", sourcePath, destinationPath);
 

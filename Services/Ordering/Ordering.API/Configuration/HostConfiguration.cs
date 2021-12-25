@@ -11,9 +11,9 @@ static class HostConfiguration
     {
         var config = host.Services.GetRequiredService<IConfiguration>();
 
-        bool createDb = config.GetValue<bool>("CreateNewDb");
+        bool clearDb = config.GetValue<bool>("ClearDatabase");
 
-        if (createDb)
+        if (clearDb)
             host.CreateDbContext<OrderingDbContext>((services, context) => 
                 new OrderingDbContextSeed(services, context).Seed());
         else
@@ -24,13 +24,13 @@ static class HostConfiguration
 
     public static IHost MigrateIntegrationDbContext(this IHost host)
     {
-        host.MigrateDbContext<IntegrationDbContext>();
+        host.MigrateDbContext<EFIntegrationDbContext>();
         return host;
     }
 
     public static IHost MigrateIdempotencyDbContext(this IHost host)
     {
-        host.MigrateDbContext<IdempotencyDbContext>();
+        host.MigrateDbContext<EFIdempotencyDbContext>();
         return host;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Ordering.API.Models;
 using Ordering.API.Services;
-using Ordering.Application.Model.PaymentMethods;
+using Ordering.Application.Models.PaymentMethods;
 using Ordering.Application.Requests.Buyers.CreatePaymentMethod;
 using Ordering.Application.Requests.Buyers.GetPaymentMethods;
 

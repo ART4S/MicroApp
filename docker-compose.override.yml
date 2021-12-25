@@ -28,6 +28,7 @@ services:
     - ASPNETCORE_ENVIRONMENT=Development
     - ASPNETCORE_URLS=http://+:80
     - ConnectionStrings__DefaultConnection=Server=identity-data;Database=identity_db;User Id=sa;Password=${SA_PASSWORD};
+    - ClearDatabase=${CLEAR_DATABASE}
    ports:
     - "4000:80"
   
@@ -46,14 +47,23 @@ services:
     - 5000:80
 
   catalog-data:
-   container_name: catalog-data
+    container_name: catalog-data
+    #command: --replSet catalog --bind_ip_all
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+     - microshop-catalog-data:/data/db
+
+  catalog-integration-data:
+   container_name: catalog-integration-data
    environment:
     - ACCEPT_EULA=Y
     - SA_PASSWORD=${SA_PASSWORD}
    ports:
-    - "1433:1433"
+    - "1436:1433"
    volumes:
-    - microshop-catalog-data:/var/opt/mssql
+    - microshop-catalog-integration-data:/var/opt/mssql
 
   catalog-api:
     image: catalog-api:dev
@@ -66,12 +76,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=catalog-data;Database=catalog_db;User Id=sa;Password=${SA_PASSWORD};Persist Security Info=true;
-      - RabbitMQSettings__HostName=rabbitmq
+      - CatalogDbSettings__ConnectionString=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@catalog-data:27017
+      - CatalogDbSettings__DatabaseName=catalog_db
+      - IntegrationDbSettings__ConnectionString=Server=catalog-integration-data;Database=integration_db;User Id=sa;Password=${SA_PASSWORD};
       - RabbitMQSettings__ClientName=Catalog,
-      - RabbitMQSettings__UserName=${RABBITMQ_USER}
-      - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
+      - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
       - RabbitMQSettings__Retries=3
+      - ClearDatabase=${CLEAR_DATABASE}
     ports:
       - "5001:80"
 
@@ -93,12 +104,11 @@ services:
    environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=http://+:80
-     - ConnectionStrings__RedisConnection=basket-data
-     - RabbitMQSettings__HostName=rabbitmq
+     - ConnectionStrings__RedisConnection=basket-data,allowAdmin=true
      - RabbitMQSettings__ClientName=Basket,
-     - RabbitMQSettings__UserName=${RABBITMQ_USER}
-     - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
+     - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
      - RabbitMQSettings__Retries=3
+     - ClearDatabase=${CLEAR_DATABASE}
    ports:
      - "5002:80"
 
@@ -124,13 +134,29 @@ services:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=http://+:80
      - ConnectionStrings__DefaultConnection=Server=ordering-data;Database=ordering_db;User Id=sa;Password=${SA_PASSWORD};Persist Security Info=true;
-     - RabbitMQSettings__HostName=rabbitmq
      - RabbitMQSettings__ClientName=Ordering,
-     - RabbitMQSettings__UserName=${RABBITMQ_USER}
-     - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
+     - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
      - RabbitMQSettings__Retries=3
+     - ClearDatabase=${CLEAR_DATABASE}
    ports:
     - "5003:80"
+
+  ordering-signalr:
+   image: ordering-signalr:dev
+   container_name: ordering-signalr
+   build:
+    context: .
+    dockerfile: Services/Ordering/Ordering.SignalR/Dockerfile
+    args:
+     BUILD_MODE: Debug
+   environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=http://+:80
+     - RabbitMQSettings__ClientName=Ordering.SignalR,
+     - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
+     - RabbitMQSettings__Retries=3
+   ports:
+    - "5004:80"
 
   payment-api:
    image: payment-api:dev
@@ -143,13 +169,11 @@ services:
    environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=http://+:80
-     - RabbitMQSettings__HostName=rabbitmq
      - RabbitMQSettings__ClientName=Payment,
-     - RabbitMQSettings__UserName=${RABBITMQ_USER}
-     - RabbitMQSettings__Password=${RABBITMQ_PASSWORD}
+     - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
      - RabbitMQSettings__Retries=3
    ports:
-    - "5004:80"
+    - "5005:80"
 
   #basket-grpcui:
   # image: fullstorydev/grpcui
@@ -162,8 +186,22 @@ services:
   # depends_on:
   #   - basket-api
 
+  mongo-express:
+   image: mongo-express
+   container_name: mongo-express
+   ports:
+    - 8081:8081
+   environment:
+    ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
+    ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+    ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@catalog-data:27017
+   depends_on:
+    - catalog-data
+
 volumes:
   microshop-catalog-data:
+   external: false
+  microshop-catalog-integration-data:
    external: false
   microshop-basket-data:
    external: false

@@ -1,4 +1,4 @@
-﻿using Ordering.Application.Services.Common;
+﻿using Ordering.Application.Services;
 
 namespace Ordering.Infrastructure.Common;
 

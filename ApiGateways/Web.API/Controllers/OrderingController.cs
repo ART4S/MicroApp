@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Web.API.Attributes;
 using Web.API.Models.Orders;
 using Web.API.Models.PaymentMethods;
-using Web.API.Services.Ordering;
+using Web.API.Services;
 
 namespace Web.API.Controllers;
 
 [Authorize]
 [Route("/api/ordering")]
 [ApiController]
-public class OrderingController : ControllerBase
+public class OrderingController : BaseController
 {
     private readonly IOrderingService _orderingService;
 

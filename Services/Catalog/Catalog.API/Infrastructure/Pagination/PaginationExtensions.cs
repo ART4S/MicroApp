@@ -1,13 +1,12 @@
-﻿using Catalog.Application.Exceptions;
-using Microsoft.EntityFrameworkCore;
+﻿using Catalog.API.Application.Exceptions;
 
 namespace Catalog.API.Infrastructure.Pagination;
 
 static class PaginationExtentions
 {
-    public static async Task<PaginationResponse<TDto>> PaginateAsync<TDto>(
-        this IQueryable<TDto> source,
-        PaginationRequest<TDto> request)
+    public static PagedResponse<TDto> PaginateAsync<TDto>(
+        this IEnumerable<TDto> source,
+        PagedRequest<TDto> request)
     {
         if (request.PageNumber < 1)
             throw new InvalidRequestException("Page number must be greather than 0");
@@ -16,13 +15,13 @@ static class PaginationExtentions
         if (request.PageNumber > Constants.Pagination.MAX_PAGE_SIZE)
             throw new InvalidRequestException($"Max page must be less or equal {Constants.Pagination.MAX_PAGE_SIZE}");
 
-        int totalItemsCount = await source.CountAsync();
+        int totalItemsCount = source.Count();
         int totalPages = (int)Math.Ceiling(totalItemsCount / (double)request.PageSize);
         int currentPage = Math.Min(request.PageNumber, totalPages);
-        IList<TDto> data = await source
+        IList<TDto> data = source
             .Skip((currentPage - 1) * request.PageSize)
             .Take(request.PageSize)
-            .ToListAsync();
+            .ToList();
         int pageSize = data.Count;
 
         return new(pageSize, currentPage, totalPages, totalItemsCount, data);

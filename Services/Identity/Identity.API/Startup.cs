@@ -18,6 +18,7 @@ class Startup
         services.AddAppServices();
         services.AddCustomIdentity(Configuration, Environment);
         services.AddCustomIdentityServer(Configuration);
+        services.AddCorsPolicies();
     }
 
     public void Configure(IApplicationBuilder app)
@@ -27,13 +28,16 @@ class Startup
             app.UseSwagger();
             app.UseSwaggerUI(setup =>
             {
-                setup.SwaggerEndpoint("/swagger/swagger.json", "Identity.API");
+                setup.RoutePrefix = "";
+                setup.SwaggerEndpoint("swagger/v1/swagger.json", "Identity.API");
             });
         }
 
         app.UseIdentityServer();
 
         app.UseRouting();
+
+        app.UseCors("CorsPolicy");
 
         app.UseAuthentication();
         app.UseAuthorization();

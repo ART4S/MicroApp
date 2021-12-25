@@ -1,4 +1,4 @@
-﻿namespace Ordering.Application.Model.Orders;
+﻿namespace Ordering.Application.Models.Orders;
 
 public class OrderItemDto
 {
@@ -6,7 +6,7 @@ public class OrderItemDto
 
     public int Quantity { get; set; }
 
-    public bool IsInStock { get; set; }
+    public bool IsInStock { get; set; } = true;
 
     public Guid ProductId { get; set; }
 }

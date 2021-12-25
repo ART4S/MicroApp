@@ -1,14 +1,15 @@
-﻿using TaskScheduling.Abstractions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using TaskScheduling.Abstractions;
 using TaskScheduling.Core;
 using TaskScheduling.Hosting;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace TaskScheduling.DependencyInjection;
 
 public static class ServicesConfiguration
 {
     public static void AddScheduler(
-        this IServiceCollection services, 
-        SchedulerSettings settings, 
+        this IServiceCollection services,
+        SchedulerSettings settings,
         IEnumerable<BackgroundTaskSettings> taskSettings,
         Action<Exception, IBackgroundTask, IServiceProvider> exceptionHandler)
     {

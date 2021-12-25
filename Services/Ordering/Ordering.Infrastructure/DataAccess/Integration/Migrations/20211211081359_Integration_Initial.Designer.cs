@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Ordering.Infrastructure.DataAccess.Integration.Migrations
 {
-    [DbContext(typeof(IntegrationDbContext))]
+    [DbContext(typeof(EFIntegrationDbContext))]
     [Migration("20211211081359_Integration_Initial")]
     partial class Integration_Initial
     {

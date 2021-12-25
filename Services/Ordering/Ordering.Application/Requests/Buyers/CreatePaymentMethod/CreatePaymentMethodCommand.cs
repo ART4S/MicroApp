@@ -1,4 +1,4 @@
-﻿using Ordering.Application.Model.PaymentMethods;
+﻿using Ordering.Application.Models.PaymentMethods;
 using Ordering.Application.Requests.Abstractions;
 
 namespace Ordering.Application.Requests.Buyers.CreatePaymentMethod;

@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Web.API.Attributes;
 using Web.API.Models.Basket;
-using Web.API.Services.Basket;
+using Web.API.Services;
 
 namespace Web.API.Controllers;
 
+[Authorize]
 [Route("/api/basket")]
 [ApiController]
-public class BasketController : ControllerBase
+public class BasketController : BaseController
 {
     private readonly IBasketService _basketService;
 

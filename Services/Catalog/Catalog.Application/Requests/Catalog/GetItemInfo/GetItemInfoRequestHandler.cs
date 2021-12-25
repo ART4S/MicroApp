@@ -4,6 +4,7 @@ using Catalog.Application.Exceptions;
 using Catalog.Application.Services;
 using Catalog.Domian.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.Requests.Catalog.GetItemInfo;
 
@@ -20,8 +21,12 @@ public class GetItemInfoRequestHandler : IRequestHandler<GetItemInfoRequest, Cat
 
     public async Task<CatalogItemInfoDto> Handle(GetItemInfoRequest request, CancellationToken cancellationToken)
     {
-        CatalogItem item = await _catalogDb.CatalogItems.FindAsync(request.Id) ??
-            throw new EntityNotFoundException(nameof(CatalogItem));
+        CatalogItem item = await _catalogDb.CatalogItems
+            .Include(x => x.Brand)
+            .Include(x => x.Type)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == request.Id) ??
+        throw new EntityNotFoundException(nameof(CatalogItem));
 
         return _mapper.Map<CatalogItemInfoDto>(item);
     }

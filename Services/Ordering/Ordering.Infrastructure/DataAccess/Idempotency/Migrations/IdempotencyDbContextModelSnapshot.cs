@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Ordering.Infrastructure.DataAccess.Idempotency.Migrations
 {
-    [DbContext(typeof(IdempotencyDbContext))]
+    [DbContext(typeof(EFIdempotencyDbContext))]
     partial class IdempotencyDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -4,17 +4,17 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Ordering.Infrastructure.DataAccess.Integration;
 
-internal class IntegrationDbContextDesignTimeFactory : IDesignTimeDbContextFactory<IntegrationDbContext>
+internal class IntegrationDbContextDesignTimeFactory : IDesignTimeDbContextFactory<EFIntegrationDbContext>
 {
-    public IntegrationDbContext CreateDbContext(string[] args)
+    public EFIntegrationDbContext CreateDbContext(string[] args)
     {
-        DbContextOptionsBuilder<IntegrationDbContext> builder = new();
+        DbContextOptionsBuilder<EFIntegrationDbContext> builder = new();
 
         builder.UseSqlServer("Server=.;Port=1433;Database=ordering_db;User Id=sa;Password=Qwerty123", options =>
         {
             options.MigrationsAssembly(GetType().Assembly.FullName);
         });
 
-        return new IntegrationDbContext(builder.Options);
+        return new EFIntegrationDbContext(builder.Options);
     }
 }

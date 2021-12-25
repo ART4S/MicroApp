@@ -38,7 +38,8 @@ class Startup
             app.UseSwagger();
             app.UseSwaggerUI(setup =>
             {
-                setup.SwaggerEndpoint("/swagger/swagger.json", "Web.API");
+                setup.RoutePrefix = "";
+                setup.SwaggerEndpoint("swagger/v1/swagger.json", "Web.API");
             });
         }
 

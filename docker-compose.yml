@@ -13,6 +13,9 @@ services:
     - identity-data
 
   catalog-data:
+    image: mongo:latest
+
+  catalog-integration-data:
    image: mcr.microsoft.com/mssql/server:latest
 
   catalog-api:
@@ -37,6 +40,11 @@ services:
    image: ${DOCKER_REGISTRY-}ordering-api
    depends_on:
     - ordering-data
+    - rabbitmq
+
+  ordering-signalr:
+   image: ${DOCKER_REGISTRY-}ordering-signalr
+   depends_on:
     - rabbitmq
 
   payment-api:

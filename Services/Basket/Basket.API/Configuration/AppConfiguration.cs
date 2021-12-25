@@ -1,5 +1,5 @@
-﻿using Basket.API.Infrastructure.Integration.EventHandlers;
-using Basket.API.Infrastructure.Integration.Events;
+﻿using Basket.API.Infrastructure.IntegrationEvents.EventHandlers;
+using Basket.API.Infrastructure.IntegrationEvents.Events;
 using EventBus.Abstractions;
 
 namespace Basket.API.Configuration;

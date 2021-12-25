@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.Data.Common;
 using Dapper;
-using Ordering.Application.Model.PaymentMethods;
+using Ordering.Application.Models.PaymentMethods;
 
 namespace Ordering.Application.Requests.Buyers.GetPaymentMethods;
 

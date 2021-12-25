@@ -1,12 +1,14 @@
 ﻿using Basket.API.Infrastructure.BackgroundTasks;
 using Basket.API.Infrastructure.DataAccess;
-using Basket.API.Infrastructure.Integration.EventHandlers;
+using Basket.API.Infrastructure.IntegrationEvents.EventHandlers;
 using Basket.API.Infrastructure.Mapper.Converters;
 using Basket.API.Infrastructure.Services;
+using EventBus.RabbitMQ;
 using EventBus.RabbitMQ.DependencyInjection;
 using Google.Protobuf.Collections;
 using StackExchange.Redis;
 using TaskScheduling.Core;
+using TaskScheduling.DependencyInjection;
 
 namespace Basket.API.Configuration;
 
@@ -28,14 +30,9 @@ static class ServicesConfiguration
 
     public static void AddIntegrationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRabbitMQEventBus(settings: new
-        (
-            HostName: configuration.GetValue<string>("RabbitMQSettings:HostName"),
-            Retries: configuration.GetValue<int>("RabbitMQSettings:Retries"),
-            ClientName: configuration.GetValue<string>("RabbitMQSettings:ClientName"),
-            UserName: configuration.GetValue<string>("RabbitMQSettings:UserName"),
-            Password: configuration.GetValue<string>("RabbitMQSettings:Password")
-        ));
+        RabbitMQSettings settings = new();
+        configuration.GetSection("RabbitMQSettings").Bind(settings);
+        services.AddRabbitMQEventBus(settings);
     }
 
     public static void AddEventHandlers(this IServiceCollection services)

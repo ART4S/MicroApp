@@ -22,5 +22,5 @@ public class OrderInfoDto
 
     public string ZipCode { get; set; }
 
-    public ICollection<OrderItemDto> OrderItems { get; } = new HashSet<OrderItemDto>();
+    public List<OrderItemDto> OrderItems { get; set; }
 }

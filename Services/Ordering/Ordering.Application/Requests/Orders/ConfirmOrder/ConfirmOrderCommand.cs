@@ -1,4 +1,4 @@
-﻿using Ordering.Application.Model.Orders;
+﻿using Ordering.Application.Models.Orders;
 using Ordering.Application.Requests.Abstractions;
 
 namespace Ordering.Application.Requests.Orders.ConfirmOrder;

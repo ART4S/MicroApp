@@ -1,4 +1,7 @@
-﻿namespace Web.API.Exceptions;
+﻿using System.Net.Mime;
+using System.Text;
+
+namespace Web.API.Exceptions;
 
 public class InvalidRequestException : Exception
 {
@@ -12,4 +15,12 @@ public class InvalidRequestException : Exception
     public int StatusCode { get; }
     public string ContentType { get; }
     public Stream Content { get; }
+
+    public static InvalidRequestException BadRequest(string message)
+    {
+        MemoryStream ms = new();
+        ms.Write(Encoding.UTF8.GetBytes(message));
+        ms.Position = 0;
+        return new InvalidRequestException(StatusCodes.Status400BadRequest, ms, MediaTypeNames.Text.Plain);
+    }
 }

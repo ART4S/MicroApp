@@ -1,11 +1,10 @@
 using Autofac.Extensions.DependencyInjection;
 using Catalog.API.Configuration;
 
-IHost host = CreateHostBuilder(args).Build()
-    .MigrateCatalogDbContext()
-    .MigrateIntegrationDbContext();
-
-host.Run();
+CreateHostBuilder(args).Build()
+    .InitCatalogDb()
+    .InitIntegrationDb()
+    .Run();
 
 static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)

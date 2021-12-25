@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Ordering.Infrastructure.DataAccess.Idempotency.Migrations
 {
-    [DbContext(typeof(IdempotencyDbContext))]
+    [DbContext(typeof(EFIdempotencyDbContext))]
     [Migration("20211212162648_Idempotency_Initial")]
     partial class Idempotency_Initial
     {

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Ordering.Application.Model.Orders;
+using Ordering.Application.Models.Orders;
 
 namespace Ordering.Application.Requests.Orders.GetUserOrders;
 

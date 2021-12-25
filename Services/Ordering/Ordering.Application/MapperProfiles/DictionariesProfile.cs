@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ordering.Application.Model.Dictionaries;
+using Ordering.Application.Models.Dictionaries;
 using Ordering.Domian.Dictionaries;
 
 namespace Ordering.Application.MapperProfiles;

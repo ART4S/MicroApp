@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Ordering.Application.Model.Dictionaries;
+using Ordering.Application.Models.Dictionaries;
 using Ordering.Application.Requests.Dictionaries.GetCardTypes;
 using Ordering.Application.Requests.Dictionaries.GetOrderStatuses;
 

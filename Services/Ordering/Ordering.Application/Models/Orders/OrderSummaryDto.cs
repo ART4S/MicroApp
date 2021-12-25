@@ -1,4 +1,4 @@
-﻿namespace Ordering.Application.Model.Orders;
+﻿namespace Ordering.Application.Models.Orders;
 
 public class OrderSummaryDto
 {

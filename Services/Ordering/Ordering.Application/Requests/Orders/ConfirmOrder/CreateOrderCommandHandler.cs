@@ -2,9 +2,9 @@
 using IntegrationServices;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Ordering.Application.Integration.Events;
-using Ordering.Application.Integration.Models;
-using Ordering.Application.Services.DataAccess;
+using Ordering.Application.IntegrationEvents.Events;
+using Ordering.Application.IntegrationEvents.Models;
+using Ordering.Application.Services;
 using Ordering.Domian.Dictionaries;
 using Ordering.Domian.Entities;
 
@@ -39,7 +39,7 @@ public class ConfirmOrderCommandHandler : IRequestHandler<ConfirmOrderCommand>
 
         await _orderingDb.SaveChangesAsync();
 
-        await _integrationEvents.Save(new OrderConfirmedIntegrationEvent(Order: _mapper.Map<ConfirmedOrder>(order)));
+        await _integrationEvents.Publish(new OrderConfirmedIntegrationEvent(Order: _mapper.Map<ConfirmedOrder>(order)));
 
         return Unit.Value;
     }

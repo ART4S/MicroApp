@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Requests.Abstractions;
-using Ordering.Application.Services.DataAccess;
+using Ordering.Application.Services;
 using Polly;
 using System.Data.Common;
 
@@ -15,12 +15,12 @@ public class SaveChangesBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 {
     private readonly ILogger _logger;
     private readonly IOrderingDbContext _orderingDb;
-    private readonly IIntegrationDbContext _integrationDb;
+    private readonly IEFIntegrationDbContext _integrationDb;
 
     public SaveChangesBehaviour(
         ILogger<SaveChangesBehaviour<TRequest, TResponse>> logger,
         IOrderingDbContext orderingDb,
-        IIntegrationDbContext integrationDb)
+        IEFIntegrationDbContext integrationDb)
     {
         _logger = logger;
         _orderingDb = orderingDb;

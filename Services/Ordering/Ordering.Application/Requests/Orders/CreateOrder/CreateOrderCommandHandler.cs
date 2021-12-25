@@ -2,10 +2,9 @@
 using IntegrationServices;
 using MediatR;
 using Ordering.Application.Exceptions;
-using Ordering.Application.Integration.Events;
-using Ordering.Application.Integration.Models;
-using Ordering.Application.Services.Common;
-using Ordering.Application.Services.DataAccess;
+using Ordering.Application.IntegrationEvents.Events;
+using Ordering.Application.IntegrationEvents.Models;
+using Ordering.Application.Services;
 using Ordering.Domian.Dictionaries;
 using Ordering.Domian.Entities;
 
@@ -49,7 +48,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand>
 
         await _orderingDb.SaveChangesAsync();
 
-        await _integrationService.Save(new OrderCreatedIntegrationEvent(order.BuyerId, order.Id));
+        await _integrationService.Publish(new OrderCreatedIntegrationEvent(_mapper.Map<CreatedOrder>(order)));
 
         return Unit.Value;
     }

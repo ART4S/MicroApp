@@ -34,11 +34,15 @@ class Startup
     {
         app.UseCustomExceptionHandler();
 
-        app.UseSwagger();
-        app.UseSwaggerUI(setup =>
+        if (env.IsDevelopment())
         {
-            setup.SwaggerEndpoint("/swagger/swagger.json", "Catalog.API");
-        });
+            app.UseSwagger();
+            app.UseSwaggerUI(setup =>
+            {
+                setup.RoutePrefix = "";
+                setup.SwaggerEndpoint("swagger/v1/swagger.json", "Catalog.API");
+            });
+        }
 
         app.UseRouting();
 

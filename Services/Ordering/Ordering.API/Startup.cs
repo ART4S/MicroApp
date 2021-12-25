@@ -27,6 +27,7 @@ class Startup
         services.ConfigureApi();
         services.AddTaskScheduling(Configuration);
         services.AddCustomAuthentication(Configuration);
+        services.AddCustomHealthChecks(Configuration);
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
@@ -43,7 +44,8 @@ class Startup
             app.UseSwagger();
             app.UseSwaggerUI(setup =>
             {
-                setup.SwaggerEndpoint("/swagger/swagger.json", "Ordering.API");
+                setup.RoutePrefix = "";
+                setup.SwaggerEndpoint("swagger/v1/swagger.json", "Ordering.API");
             });
         }
 
@@ -54,6 +56,17 @@ class Startup
         app.UseEndpoints(endpoints => 
         { 
             endpoints.MapControllers();
+
+            endpoints.MapHealthChecks("/liveness", new()
+            {
+                Predicate = x => x.Name == "self"
+            });
+
+            endpoints.MapHealthChecks("/readiness", new()
+            {
+                Predicate = _ => true,
+                AllowCachingResponses = false,
+            });
         });
 
         app.SubscribeToEvents();
