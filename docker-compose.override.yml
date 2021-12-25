@@ -175,12 +175,12 @@ services:
    ports:
     - "5005:80"
 
-  web-monitoring:
-   image: web-monitoring:dev
-   container_name: web-monitoring
+  health-monitor:
+   image: health-monitor:dev
+   container_name: health-monitor
    build:
     context: .
-    dockerfile: Clients/WebMonitoring/Dockerfile
+    dockerfile: Clients/WebHealthMonitor/Dockerfile
     args:
      BUILD_MODE: Debug
    environment:

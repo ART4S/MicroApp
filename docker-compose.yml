@@ -59,7 +59,7 @@ services:
     - payment-api
     - identity-api
 
-  web-monitoring:
-   image: ${DOCKER_REGISTRY-}web-monitoring
+  health-monitor:
+   image: ${DOCKER_REGISTRY-}health-monitor
    depends_on:
     - web-api

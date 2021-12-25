@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <!--<ImplicitUsings>enable</ImplicitUsings>-->
-    <UserSecretsId>2d35686a-5e38-489d-b420-2732bad2faa0</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
