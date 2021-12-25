@@ -16,6 +16,7 @@ class Startup
     {
         services.AddIntegrationServices(Configuration);
         services.AddEventHandlers();
+        services.AddHealthChecks(Configuration);
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
@@ -29,6 +30,7 @@ class Startup
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapHealthChecks();
         });
 
         app.SubscribeToEvents();

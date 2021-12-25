@@ -212,17 +212,19 @@ static class ServicesConfiguration
         services.AddHttpContextAccessor();
     }
 
-    public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    public static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHealthChecks()
-            .AddCheck(name: "self", () => HealthCheckResult.Healthy())
+            .AddCheck(
+                name: "self", 
+                check: () => HealthCheckResult.Healthy())
             .AddSqlServer(
                 connectionString: configuration.GetConnectionString("DefaultConnection"), 
-                name: "db-check", 
-                tags: new[] { "catalog-data" })
+                name: "Database", 
+                tags: new[] { "db", "sql" })
             .AddRabbitMQ(
                 rabbitConnectionString: configuration.GetValue<string>("RabbitMQSettings:Uri"), 
-                name: "rabbitmq-check", 
+                name: "RabbitMQ", 
                 tags: new [] { "rabbitmq" });
     }
 }

@@ -175,6 +175,24 @@ services:
    ports:
     - "5005:80"
 
+  web-monitoring:
+   image: web-monitoring:dev
+   container_name: web-monitoring
+   build:
+    context: .
+    dockerfile: Clients/WebMonitoring/Dockerfile
+    args:
+     BUILD_MODE: Debug
+   environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=http://+:80
+     - HealthChecksUI__HealthChecks__0__Name=Ordering API
+     - HealthChecksUI__HealthChecks__0__Uri=http://ordering-api/hc
+     - HealthChecksUI__HealthChecks__1__Name=Payment API
+     - HealthChecksUI__HealthChecks__1__Uri=http://payment-api/hc
+   ports:
+    - "5006:80"
+
   #basket-grpcui:
   # image: fullstorydev/grpcui
   # container_name: basket-grpcui

@@ -1,4 +1,5 @@
 ﻿using EventBus.Abstractions;
+using HealthChecks.UI.Client;
 using Ordering.API.Configuration.Middlewares;
 using Ordering.Application.IntegrationEvents.EventHandlers;
 using Ordering.Application.IntegrationEvents.Events;
@@ -20,5 +21,20 @@ static class AppConfiguration
         eventBus.Subscribe<OrderInStockCheckedIntegrationEvent, OrderInStockCheckedIntegrationEventHandler>();
         eventBus.Subscribe<PaymentSucceedIntegrationEvent, PaymentIntegrationEventHandler>();
         eventBus.Subscribe<PaymentFailedIntegrationEvent, PaymentIntegrationEventHandler>();
+    }
+
+    public static void MapHealthChecks(this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapHealthChecks("/liveness", new()
+        {
+            Predicate = x => x.Name == "self"
+        });
+
+        endpoints.MapHealthChecks("/hc", new()
+        {
+            Predicate = x => x.Name != "self",
+            AllowCachingResponses = false,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
     }
 }

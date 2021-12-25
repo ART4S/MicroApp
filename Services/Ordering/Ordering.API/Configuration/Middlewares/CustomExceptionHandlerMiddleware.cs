@@ -41,7 +41,8 @@ class CustomExceptionHandlerMiddleware
                 {
                     Message = ex.UserMessage,
                     Errors = ex.Errors
-                }, new JsonSerializerOptions()
+                }, 
+                new JsonSerializerOptions()
                 {
                     WriteIndented = true,
                     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull

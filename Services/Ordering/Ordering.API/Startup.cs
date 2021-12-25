@@ -27,7 +27,7 @@ class Startup
         services.ConfigureApi();
         services.AddTaskScheduling(Configuration);
         services.AddCustomAuthentication(Configuration);
-        services.AddCustomHealthChecks(Configuration);
+        services.AddHealthChecks(Configuration);
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
@@ -56,17 +56,7 @@ class Startup
         app.UseEndpoints(endpoints => 
         { 
             endpoints.MapControllers();
-
-            endpoints.MapHealthChecks("/liveness", new()
-            {
-                Predicate = x => x.Name == "self"
-            });
-
-            endpoints.MapHealthChecks("/readiness", new()
-            {
-                Predicate = _ => true,
-                AllowCachingResponses = false,
-            });
+            endpoints.MapHealthChecks();
         });
 
         app.SubscribeToEvents();

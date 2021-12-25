@@ -58,3 +58,8 @@ services:
     - ordering-api
     - payment-api
     - identity-api
+
+  web-monitoring:
+   image: ${DOCKER_REGISTRY-}web-monitoring
+   depends_on:
+    - web-api
