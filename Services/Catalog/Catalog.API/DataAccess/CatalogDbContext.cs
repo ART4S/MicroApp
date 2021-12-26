@@ -25,16 +25,19 @@ public class CatalogDbContext : ICatalogDbContext, IDisposable
     private CatalogTypeRepository? _types;
     public ICatalogTypeRepository CatalogTypes => _types ??= new CatalogTypeRepository(_db.GetCollection<CatalogType>("CatalogTypes"), _session);
 
-    public async Task SaveChangesAsync()
+    public async Task SaveChanges()
     {
-        //try
+        //if (_session.IsInTransaction)
         //{
-        //    await _session.CommitTransactionAsync();
-        //}
-        //catch
-        //{
-        //    await _session.AbortTransactionAsync();
-        //    throw;
+        //    try
+        //    {
+        //        await _session.CommitTransactionAsync();
+        //    }
+        //    catch
+        //    {
+        //        await _session.AbortTransactionAsync();
+        //        throw;
+        //    }
         //}
 
         //_session.StartTransaction();

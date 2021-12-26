@@ -1,14 +1,31 @@
 using Autofac.Extensions.DependencyInjection;
 using Catalog.API.Configuration;
+using Serilog;
 
-CreateHostBuilder(args).Build()
-    .InitCatalogDb()
-    .InitIntegrationDb()
-    .Run();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
+try
+{
+    CreateHostBuilder(args).Build().InitCatalogDb().Run();
+}
+catch(Exception ex)
+{
+    Log.Logger.Fatal(ex, "Unexpected error occured while initializing host");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 
 static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)
         .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+        .UseSerilog((host, services, logConfig) => logConfig
+            .ReadFrom.Configuration(host.Configuration)
+            .Enrich.FromLogContext()
+            .WriteTo.Console())
         .ConfigureWebHostDefaults(webBuilder =>
         {
             webBuilder.UseWebRoot("WebContent")

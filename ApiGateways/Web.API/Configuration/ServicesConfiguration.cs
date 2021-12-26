@@ -55,7 +55,7 @@ static class ServicesConfiguration
             {
                 var autorizationHeaders = httpContextAccessor.HttpContext.Request.Headers.Authorization;
                 if (autorizationHeaders.Count == 0 || !autorizationHeaders[0].StartsWith("Bearer"))
-                    throw InvalidRequestException.BadRequest("Bearer token is missing");
+                    throw InvalidRequestException.BadRequest("Authorization token is missing");
 
                 client.DefaultRequestHeaders.Authorization = new("Bearer", autorizationHeaders[0].Split(' ').Last());
             }
@@ -110,16 +110,19 @@ static class ServicesConfiguration
             {
                 options.Authority = settings.BasePath;
                 options.RequireHttpsMetadata = false;
-                options.SaveToken = false;
                 options.TokenValidationParameters = new()
                 {
                     ValidateAudience = false
                 };
             });
+    }
 
+    public static void AddCustomAuthorization(this IServiceCollection services)
+    {
         services.AddAuthorization(options =>
         {
             options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
                 .RequireClaim("sub")
                 .RequireClaim("name")
                 .Build();

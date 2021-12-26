@@ -4,8 +4,8 @@ namespace Basket.API.Infrastructure.DataAccess;
 
 public interface IBasketRepository
 {
-    Task<string[]> GetBuyers();
-    Task<BasketEntry?> Get(string buyerId);
+    Task<string[]> GetUsers();
+    Task<BasketEntry?> Get(string userId);
     Task Update(BasketEntry basket);
-    Task Remove(string buyerId);
+    Task Remove(string userId);
 }

@@ -17,8 +17,6 @@ using Ordering.Infrastructure.Common;
 using IdempotencyServices;
 using Ordering.API.Infrastructure.Attributes;
 using FluentValidation.AspNetCore;
-using System.IdentityModel.Tokens.Jwt;
-using Ordering.API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Ordering.API.Services;
 using Ordering.API.Utils;
@@ -27,6 +25,7 @@ using TaskScheduling.DependencyInjection;
 using Ordering.Application.IntegrationEvents.EventHandlers;
 using EventBus.RabbitMQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ordering.API.Configuration;
 
@@ -92,8 +91,13 @@ static class ServicesConfiguration
 
         services.AddScoped<IEFIntegrationDbContext, EFIntegrationDbContext>();
 
-        services.AddScoped<IIntegrationEventService, EFIntegrationEventService>(
-            (sp) => ActivatorUtilities.CreateInstance<EFIntegrationEventService>(sp, ReflectionInfo.ApplicationAssembly));
+        services.AddScoped<IIntegrationEventService>(
+            (sp) =>
+            {
+                return new EFIntegrationEventService(
+                    integrationDb: sp.GetRequiredService<IEFIntegrationDbContext>(), 
+                    integrationEventsAssembly: ReflectionInfo.ApplicationAssembly);
+            });
     }
 
     public static void AddEventHandlers(this IServiceCollection services)
@@ -152,22 +156,28 @@ static class ServicesConfiguration
 
     public static void AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-        IdentityUrls settings = new();
-
-        configuration.GetSection("ExternalUrls:Identity").Bind(settings);
-
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.Authority = settings.BasePath;
+                options.Authority = configuration.GetValue<string>("IdentityUrl");
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new()
                 {
                     ValidateAudience = false
                 };
             });
+    }
+
+    public static void AddCustomAuthorization(this IServiceCollection services)
+    {
+        services.AddAuthorization(options =>
+        {
+            options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireClaim("sub")
+                .RequireClaim("name")
+                .Build();
+        });
     }
 
     public static void ConfigureApi(this IServiceCollection services)

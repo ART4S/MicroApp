@@ -12,6 +12,7 @@ using Ordering.Application.Requests.Orders.GetUserOrders;
 
 namespace Ordering.API.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class OrdersController : BaseController

@@ -1,25 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Ordering.Application.IntegrationEvents.Models;
 
-namespace Ordering.Application.IntegrationEvents.Models;
+public record CustomerBasket(List<BasketItem> Items);
 
-public record CustomerBasket
-{
-    [JsonInclude]
-    public Guid BuyerId { get; private set; }
-
-    [JsonInclude]
-    public List<BasketItem> Items { get; private set; }
-}
-
-public record BasketItem
-{
-    [JsonInclude]
-    public Guid ProductId { get; private set; }
-
-    [JsonInclude]
-    public decimal UnitPrice { get; private set; }
-
-    [JsonInclude]
-    public int Quantity { get; private set; }
-}
+public record BasketItem(Guid ProductId, decimal UnitPrice, int Quantity);
 

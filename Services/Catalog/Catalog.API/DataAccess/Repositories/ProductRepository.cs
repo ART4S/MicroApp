@@ -36,6 +36,11 @@ public class ProductRepository : IProductsRepository
         return _collection.InsertOneAsync(_session, product);
     }
 
+    public Task CreateMany(IEnumerable<CatalogItem> products)
+    {
+        return _collection.InsertManyAsync(products);
+    }
+
     public async Task Update(CatalogItem product)
     {
         await _collection.ReplaceOneAsync(_session, x => x.Id == product.Id, product);

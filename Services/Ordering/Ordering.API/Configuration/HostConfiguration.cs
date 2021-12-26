@@ -14,8 +14,11 @@ static class HostConfiguration
         bool clearDb = config.GetValue<bool>("ClearDatabase");
 
         if (clearDb)
-            host.CreateDbContext<OrderingDbContext>((services, context) => 
-                new OrderingDbContextSeed(services, context).Seed());
+            host.CreateDbContext<OrderingDbContext>((services, context) =>
+            {
+                var seeder = ActivatorUtilities.CreateInstance<OrderingDbContextSeed>(services);
+                seeder.Seed();
+            });
         else
             host.MigrateDbContext<OrderingDbContext>();
 

@@ -43,6 +43,6 @@ public class OrderPaidIntegrationEventHandler : IEventHandler<OrderPaidIntegrati
             }
         }
 
-        await _catalogDb.SaveChangesAsync();
+        await _catalogDb.SaveChanges();
     }
 }

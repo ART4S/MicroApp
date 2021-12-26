@@ -1,4 +1,5 @@
 ﻿using Grpc.Core;
+using Polly.CircuitBreaker;
 using System.Net.Mime;
 using System.Text.RegularExpressions;
 using Web.API.Exceptions;
@@ -34,31 +35,50 @@ class CustomExceptionHandlerMiddleware
 
         switch (exception)
         {
-            case RpcException ex:
-                httpContext.Response.StatusCode = HttpUtils.ConvertRpcStatusCodeToHttp(ex.StatusCode);
-
-                if (!string.IsNullOrEmpty(ex.Message))
+            case BrokenCircuitException ex:
                 {
-                    Match math = Regex.Match(ex.Message, "Detail=\"(?'message'.+)\"");
-                    if (math is not null)
-                        await httpContext.Response.WriteAsync(math.Groups["message"].Value);
+                    var logger = httpContext.RequestServices
+                        .GetRequiredService<ILogger<CustomExceptionHandlerMiddleware>>();
+
+                    logger.LogError(ex, "Internal error occured in service");
+
+                    httpContext.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+
+                    await httpContext.Response.WriteAsync("Service temporary unavaliable");
+                    break;
                 }
 
-                break;
+            case RpcException ex:
+                {
+                    httpContext.Response.StatusCode = HttpUtils.ConvertRpcStatusCodeToHttp(ex.StatusCode);
+
+                    if (!string.IsNullOrEmpty(ex.Message))
+                    {
+                        Match math = Regex.Match(ex.Message, "Detail=\"(?'message'.+)\"");
+                        if (math is not null)
+                            await httpContext.Response.WriteAsync(math.Groups["message"].Value);
+                    }
+
+                    break;
+                }
 
             case InvalidRequestException ex:
-                httpContext.Response.StatusCode = ex.StatusCode;
-                httpContext.Response.ContentType = ex.ContentType;
-                await ex.Content.CopyToAsync(httpContext.Response.Body);
-                break;
+                {
+                    httpContext.Response.StatusCode = ex.StatusCode;
+                    httpContext.Response.ContentType = ex.ContentType;
+                    await ex.Content.CopyToAsync(httpContext.Response.Body);
+                    break;
+                }
 
             default:
-                var logger = httpContext.RequestServices
-                    .GetRequiredService<ILogger<CustomExceptionHandlerMiddleware>>();
+                {
+                    var logger = httpContext.RequestServices
+                        .GetRequiredService<ILogger<CustomExceptionHandlerMiddleware>>();
 
-                logger.LogError(exception, "Unknown type of exception '{ExceptionType}'", exception.GetType().Name);
+                    logger.LogError(exception, "Unknown type of exception '{ExceptionType}'", exception.GetType().Name);
 
-                break;
+                    break;
+                }
         }
     }
 }

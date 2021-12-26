@@ -26,7 +26,7 @@ public class BasketService : IBasketService
     {
         User user = await _userService.GetCurrentUser();
 
-        BasketReply response = await _basketClient.GetBasketAsync(new() { BuyerId = user.Id.ToString() });
+        BasketReply response = await _basketClient.GetBasketAsync(new() { UserId = user.Id.ToString() });
 
         return _mapper.Map<BasketDto>(response);
     }
@@ -37,7 +37,7 @@ public class BasketService : IBasketService
 
         User user = await _userService.GetCurrentUser();
 
-        request.BuyerId = user.Id.ToString();
+        request.UserId = user.Id.ToString();
 
         BasketReply response = await _basketClient.UpdateBasketAsync(request);
 
@@ -50,7 +50,8 @@ public class BasketService : IBasketService
 
         CheckoutBasketRequest request = new()
         {
-            BuyerId = user.Id.ToString(),
+            UserId = user.Id.ToString(),
+            UserName = user.Name,
             RequestId = requestId.ToString(),
         };
 

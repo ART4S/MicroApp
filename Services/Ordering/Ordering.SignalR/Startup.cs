@@ -26,7 +26,7 @@ class Startup
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.Authority = Configuration.GetValue<string>("IdentityUrl");
+                options.Authority = Configuration["IdentityUrl"];
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new()
                 {

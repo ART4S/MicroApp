@@ -10,10 +10,9 @@ using EventBus.RabbitMQ.DependencyInjection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using IntegrationServices;
-using IntegrationServices.EF;
+using IntegrationServices.Mongo;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using TaskScheduling.Core;
@@ -39,13 +38,14 @@ static class ServicesConfiguration
     {
         services.Configure<CatalogDbSettings>(configuration.GetSection("CatalogDbSettings"));
 
-        services.AddScoped<ICatalogDbContext>(sp =>
+        services.AddScoped<IMongoDatabase>(sp =>
         {
             CatalogDbSettings settings = sp.GetRequiredService<IOptions<CatalogDbSettings>>().Value;
             MongoClient client = new(settings.ConnectionString);
-            IMongoDatabase db = client.GetDatabase(settings.DatabaseName);
-            return new CatalogDbContext(db);
+            return client.GetDatabase(settings.DatabaseName);
         });
+
+        services.AddScoped<ICatalogDbContext, CatalogDbContext>();
     }
 
     public static void AddIntegrationServices(this IServiceCollection services, IConfiguration configuration)
@@ -55,20 +55,13 @@ static class ServicesConfiguration
 
         services.AddRabbitMQEventBus(rabbitSettings);
 
-        IntegrationDbSettings integrationSettings = new();
-        configuration.GetSection("IntegrationDbSettings").Bind(integrationSettings);
+        services.AddScoped<IMongoIntegrationDbContext, MongoIntegrationDbContext>();
 
-        services.AddDbContext<EFIntegrationDbContext>((sp, options) =>
+        services.AddScoped<IIntegrationEventService, MongoIntegrationEventService>(sp =>
         {
-            options.UseSqlServer(
-                integrationSettings.ConnectionString, 
-                sqlOptions => sqlOptions.MigrationsAssembly(typeof(Startup).Assembly.FullName));
+            var itegrationDb = sp.GetRequiredService<IMongoIntegrationDbContext>();
+            return new(itegrationDb, typeof(Startup).Assembly);
         });
-
-        services.AddScoped<IEFIntegrationDbContext, EFIntegrationDbContext>();
-
-        services.AddScoped<IIntegrationEventService, EFIntegrationEventService>(
-            (sp) => ActivatorUtilities.CreateInstance<EFIntegrationEventService>(sp, typeof(Startup).Assembly));
     }
 
     public static void AddEventHandlers(this IServiceCollection services)

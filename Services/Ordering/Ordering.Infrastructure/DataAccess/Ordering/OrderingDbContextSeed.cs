@@ -10,40 +10,40 @@ namespace Ordering.Infrastructure.DataAccess.Ordering;
 
 public class OrderingDbContextSeed
 {
-    private const string INITIALDATA_FOLDER_NAME = "SeedData";
+    private const string DATA_FOLDER_NAME = "SeedData";
 
     private readonly ILogger _logger;
-    private readonly OrderingDbContext _dbContext;
+    private readonly OrderingDbContext _orderingDb;
     private readonly string _contentRootPath;
 
-    public OrderingDbContextSeed(IServiceProvider services, OrderingDbContext dbContext)
+    public OrderingDbContextSeed(
+        ILogger<OrderingDbContextSeed> logger,
+        IWebHostEnvironment environment,
+        OrderingDbContext orderingDb)
     {
-        _logger = services.GetRequiredService<ILogger<OrderingDbContextSeed>>();
-        _dbContext = dbContext;
-        _contentRootPath = services.GetRequiredService<IWebHostEnvironment>().ContentRootPath;
+        _logger = logger;
+        _orderingDb = orderingDb;
+        _contentRootPath = environment.ContentRootPath;
     }
 
     public void Seed()
     {
-        using var transaction = _dbContext.Database.BeginTransaction();
+        using var transaction = _orderingDb.Database.BeginTransaction();
 
         try
         {
             foreach (var entry in LoadEntitiesFromXml())
             {
-                _dbContext.AddRange(entry.Entities);
+                _orderingDb.AddRange(entry.Entities);
 
                 if (HasIdInt32(entry.EntityType))
                 {
-                    _dbContext.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT [dbo].[{entry.TableName}] ON;");
-                    _dbContext.SaveChanges();
-                    _dbContext.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT [dbo].[{entry.TableName}] OFF;");
+                    _orderingDb.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT [dbo].[{entry.TableName}] ON;");
+                    _orderingDb.SaveChanges();
+                    _orderingDb.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT [dbo].[{entry.TableName}] OFF;");
                 }
-                else _dbContext.SaveChanges();
+                else _orderingDb.SaveChanges();
             }
-
-            // TODO: seed in dev env
-            SeedTestData();
 
             transaction.Commit();
         }
@@ -57,47 +57,6 @@ public class OrderingDbContextSeed
         }
     }
 
-    private void SeedTestData()
-    {
-        _dbContext.Buyers.Add(new() { Id = new Guid("7f6e4cf9-ac94-4a91-bbe5-e88dcf7a3980"), Name = "Test User" });
-
-        _dbContext.PaymentMethods.Add(new()
-        {
-            Id = new Guid("43d978fd-2a32-497e-9d29-121111e742d3"),
-            Alias = "Alias",
-            BuyerId = new Guid("7f6e4cf9-ac94-4a91-bbe5-e88dcf7a3980"),
-            CardHolderName = "TEST USER",
-            CardNumber = "2324 2345 2342 3534",
-            CardTypeId = 1,
-            Expiration = DateTime.Now.AddYears(3),
-            SecurityNumber = "123"
-        });
-
-        _dbContext.Orders.Add(new()
-        {
-            Id = new Guid("bf6f8d9e-ab2c-44ad-a40a-ffe253fdf72c"),
-            BuyerId = new Guid("7f6e4cf9-ac94-4a91-bbe5-e88dcf7a3980"),
-            Address = new("street", "city", "state", "country", "12345"),
-            Description = "Desc",
-            OrderDate = DateTime.Now,
-            OrderStatusId = 2,
-            PaymentMethodId = new Guid("43d978fd-2a32-497e-9d29-121111e742d3"),
-            OrderItems = 
-            { 
-                new() 
-                { 
-                    Id = Guid.NewGuid(), 
-                    IsInStock = true, 
-                    ProductId = new Guid("269b7ee2-6baf-4707-9ffa-baaab0569f09"),
-                    Quantity = 2,
-                    UnitPrice = 15
-                } 
-            }
-        });
-
-        _dbContext.SaveChanges();
-    }
-
     private List<(string TableName, Type EntityType, List<object> Entities)> LoadEntitiesFromXml()
     {
         List<(string TableName, Type EntityType, List<object> Entities)> result = new();
@@ -106,13 +65,13 @@ public class OrderingDbContextSeed
 
         _logger.LogInformation($"OrderingDbContext entity types:{Environment.NewLine}{string.Join(Environment.NewLine, entityTypes.Keys)}");
 
-        string dataFolderPath = Path.Combine(_contentRootPath, INITIALDATA_FOLDER_NAME);
+        string dataFolderPath = Path.Combine(_contentRootPath, DATA_FOLDER_NAME);
 
         if (!Directory.Exists(dataFolderPath))
         {
-            _logger.LogError("Folder not found {Folder}", dataFolderPath);
+            _logger.LogError("Folder {Folder} not found", dataFolderPath);
 
-            throw new Exception("Folder not found");
+            throw new Exception($"Folder '{dataFolderPath}' not found");
         }
 
         string[] files = Directory.GetFiles(dataFolderPath, "*.xml", SearchOption.AllDirectories);

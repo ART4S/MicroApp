@@ -27,7 +27,7 @@ public class BasketCheckoutIntegrationEventHandler : IEventHandler<BasketCheckou
             var command = new IdempotentRequest<CreateOrderCommand, Unit>
             (
                 id: @event.RequestId,
-                originalRequest: new(@event.Basket.BuyerId, @event.Basket.Items)
+                originalRequest: new(@event.UserId, @event.UserName, @event.Basket)
             );
 
             await _mediator.Send(command);

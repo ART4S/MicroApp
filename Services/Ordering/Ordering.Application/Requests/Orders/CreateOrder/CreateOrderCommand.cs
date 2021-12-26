@@ -5,13 +5,16 @@ namespace Ordering.Application.Requests.Orders.CreateOrder;
 
 public record CreateOrderCommand : Command
 {
-    public CreateOrderCommand(Guid buyerId, List<BasketItem> items)
+    public CreateOrderCommand(Guid buyerId, string buyerName, CustomerBasket basket)
     {
         BuyerId = buyerId;
-        Items = items.AsReadOnly();
+        BuyerName = buyerName;
+        Basket = basket;
     }
 
     public Guid BuyerId { get; private init; }
 
-    public IReadOnlyCollection<BasketItem> Items { get; private init; }
+    public string BuyerName { get; private init; }
+
+    public CustomerBasket Basket { get; private init; }
 }

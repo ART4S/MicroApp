@@ -26,8 +26,9 @@ class Startup
         services.AddValidation();
         services.ConfigureApi();
         services.AddTaskScheduling(Configuration);
-        services.AddCustomAuthentication(Configuration);
         services.AddHealthChecks(Configuration);
+        services.AddCustomAuthentication(Configuration);
+        services.AddCustomAuthorization();
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
@@ -52,6 +53,7 @@ class Startup
         app.UseRouting();
 
         app.UseAuthentication();
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints => 
         { 

@@ -1,66 +1,44 @@
-﻿using System.IO.Compression;
+﻿using Identity.API.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 using System.Xml;
 using System.Xml.Serialization;
-using Catalog.API.Models;
-using Catalog.API.DataAccess.Repositories;
 
-namespace Catalog.API.DataAccess;
+namespace Identity.API.DataAccess;
 
-public class CatalogDbContextSeed
+class AppDbContextSeed
 {
     private const string DATA_FOLDER_NAME = "SeedData";
 
     private readonly ILogger _logger;
-    private readonly ICatalogDbContext _catalogDb;
     private readonly string _contentRootPath;
-    private readonly string _webRootPath;
+    private readonly UserManager<User> _userManager;
 
-    public CatalogDbContextSeed(
-        ILogger<CatalogDbContextSeed> logger,
+    public AppDbContextSeed(
+        ILogger<AppDbContextSeed> logger,
         IWebHostEnvironment environment,
-        ICatalogDbContext catalogDb)
+        UserManager<User> userManager)
     {
         _logger = logger;
-        _catalogDb = catalogDb;
+        _userManager = userManager;
         _contentRootPath = environment.ContentRootPath;
-        _webRootPath = environment.WebRootPath;
     }
 
     public async Task Seed()
     {
-        await AddBrands();
-        await AddTypes();
-        await AddProducts();
-        AddPictures();
+        var users = await LoadEntitiesFromXml<UserXml>("Users.xml");
 
-        await _catalogDb.SaveChanges();
-    }
-
-    private async Task AddBrands()
-    {
-        var items = await LoadEntitiesFromXml<CatalogBrand>("CatalogBrands.xml");
-
-        await _catalogDb.CatalogBrands.CreateMany(items);
-    }
-
-    private async Task AddTypes()
-    {
-        var items = await LoadEntitiesFromXml<CatalogType>("CatalogTypes.xml");
-
-        await _catalogDb.CatalogTypes.CreateMany(items);
-    }
-
-    private async Task AddProducts()
-    {
-        var items = await LoadEntitiesFromXml<CatalogItem>("CatalogItems.xml");
-
-        await _catalogDb.Products.CreateMany(items);
+        foreach (var user in users)
+            await _userManager.CreateAsync(new()
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+            }, user.Password);
     }
 
     private async Task<List<TEntity>> LoadEntitiesFromXml<TEntity>(string fileName)
         where TEntity : class
     {
-        string filePath = Path.Combine(DATA_FOLDER_NAME, fileName);
+        string filePath = Path.Combine(_contentRootPath, DATA_FOLDER_NAME, fileName);
 
         if (!File.Exists(filePath))
         {
@@ -118,19 +96,12 @@ public class CatalogDbContextSeed
 
         return entities;
     }
+}
 
-    private void AddPictures()
-    {
-        string sourcePath = Path.Combine(_contentRootPath, DATA_FOLDER_NAME, "ItemPictures.zip");
-        string destinationPath = Path.Combine(_webRootPath, PictureRepository.PICTURES_FOLDER_NAME);
-
-        _logger.LogInformation("Extracting pictures from {SourcePath} to {DestinationPath}", sourcePath, destinationPath);
-
-        if (Directory.Exists(destinationPath))
-            Directory.Delete(path: destinationPath, recursive: true);
-
-        ZipFile.ExtractToDirectory(sourcePath, destinationPath);
-
-        _logger.LogInformation("Extracting pictures succeed");
-    }
+[XmlRoot("User")]
+public class UserXml
+{
+    public Guid Id { get; set; }
+    public string UserName { get; set; }
+    public string Password { get; set; }
 }

@@ -8,4 +8,5 @@ public interface ICatalogTypeRepository
     Task<CatalogType?> GetById(Guid typeId);
     Task<bool> Exists(Guid typeId);
     Task Create(CatalogType type);
+    Task CreateMany(IEnumerable<CatalogType> types);
 }

@@ -27,6 +27,7 @@ class Startup
         services.AddUserService(Configuration);
 
         services.AddCustomAuthentication(Configuration);
+        services.AddCustomAuthorization();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

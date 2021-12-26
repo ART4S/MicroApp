@@ -7,5 +7,5 @@ public interface ICatalogDbContext
     IProductsRepository Products { get; }
     ICatalogBrandRepository CatalogBrands { get; }
     ICatalogTypeRepository CatalogTypes { get; }
-    Task SaveChangesAsync();
+    Task SaveChanges();
 }

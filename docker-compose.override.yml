@@ -29,6 +29,8 @@ services:
     - ASPNETCORE_URLS=http://+:80
     - ConnectionStrings__DefaultConnection=Server=identity-data;Database=identity_db;User Id=sa;Password=${SA_PASSWORD};
     - ClearDatabase=${CLEAR_DATABASE}
+    - AuthSettings__IssuerUri=http://identity-api
+    - ClientsSettings__Spa__RedirectUris__0=http://localhost:4000/api/auth/callback
    ports:
     - "4000:80"
   
@@ -43,12 +45,15 @@ services:
    environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=https://+:443;http://+:80
+     - ExternalUrls__Catalog__BasePath=http://catalog-api
+     - ExternalUrls__Basket__BasePath=http://basket-api
+     - ExternalUrls__Ordering__BasePath=http://ordering-api
+     - ExternalUrls__Identity__BasePath=http://identity-api
    ports:
     - 5000:80
 
   catalog-data:
     container_name: catalog-data
-    #command: --replSet catalog --bind_ip_all
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
@@ -78,7 +83,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - CatalogDbSettings__ConnectionString=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@catalog-data:27017
       - CatalogDbSettings__DatabaseName=catalog_db
-      - IntegrationDbSettings__ConnectionString=Server=catalog-integration-data;Database=integration_db;User Id=sa;Password=${SA_PASSWORD};
       - RabbitMQSettings__ClientName=Catalog,
       - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
       - RabbitMQSettings__Retries=3
@@ -138,6 +142,7 @@ services:
      - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
      - RabbitMQSettings__Retries=3
      - ClearDatabase=${CLEAR_DATABASE}
+     - IdentityUrl=http://identity-api
    ports:
     - "5003:80"
 
@@ -155,6 +160,7 @@ services:
      - RabbitMQSettings__ClientName=Ordering.SignalR,
      - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
      - RabbitMQSettings__Retries=3
+     - IdentityUrl=http://identity-api
    ports:
     - "5004:80"
 
@@ -192,17 +198,6 @@ services:
      - HealthChecksUI__HealthChecks__1__Uri=http://payment-api/hc
    ports:
     - "5006:80"
-
-  #basket-grpcui:
-  # image: fullstorydev/grpcui
-  # container_name: basket-grpcui
-  # command:
-  #  - "-plaintext"
-  #  - "basket-api:80"
-  # ports:
-  #   - "8080:8080"
-  # depends_on:
-  #   - basket-api
 
   mongo-express:
    image: mongo-express

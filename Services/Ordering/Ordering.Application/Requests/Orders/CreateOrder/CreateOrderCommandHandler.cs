@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using IntegrationServices;
 using MediatR;
-using Ordering.Application.Exceptions;
 using Ordering.Application.IntegrationEvents.Events;
 using Ordering.Application.IntegrationEvents.Models;
 using Ordering.Application.Services;
@@ -31,9 +30,9 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand>
 
     public async Task<Unit> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        Buyer buyer = await _orderingDb.Buyers.FindAsync(request.BuyerId) ??
-            throw new EntityNotFoundException(nameof(Buyer));
-
+        Buyer buyer = await _orderingDb.Buyers.FindAsync(request.BuyerId) ?? 
+            await CreateBuyer(request.BuyerId, request.BuyerName);
+        
         Order order = new()
         {
             BuyerId = buyer.Id,
@@ -41,8 +40,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand>
             OrderStatusId = OrderStatusDict.Submitted.Id,
         };
 
-        foreach (BasketItem basketItem in request.Items)
-            order.OrderItems.Add(_mapper.Map<OrderItem>(basketItem));
+        foreach (BasketItem basketItem in request.Basket.Items)
+        {
+            var orderItem = _mapper.Map<OrderItem>(basketItem);
+            orderItem.IsInStock = true;
+            order.OrderItems.Add(orderItem);
+        }
 
         await _orderingDb.Orders.AddAsync(order);
 
@@ -51,5 +54,18 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand>
         await _integrationService.Publish(new OrderCreatedIntegrationEvent(_mapper.Map<CreatedOrder>(order)));
 
         return Unit.Value;
+    }
+
+    private async Task<Buyer> CreateBuyer(Guid buyerId, string buyerName)
+    {
+        Buyer buyer = new()
+        {
+            Id = buyerId,
+            Name = buyerName
+        };
+
+        await _orderingDb.Buyers.AddAsync(buyer);
+
+        return buyer;
     }
 }

@@ -23,14 +23,17 @@ class BasketRepository : IBasketRepository
         _database = connection.GetDatabase();
     }
 
-    public async Task<string[]> GetBuyers()
+    public async Task<string[]> GetUsers()
     {
-        return GetServer().Keys().Select(x => x.ToString()).ToArray();
+        var endpoint = _connection.GetEndPoints().First();
+        var server = _connection.GetServer(endpoint);
+
+        return server.Keys().Select(x => x.ToString()).ToArray();
     }
 
-    public async Task<BasketEntry?> Get(string buyerId)
+    public async Task<BasketEntry?> Get(string userId)
     {
-        var basket = await _database.StringGetAsync(buyerId);
+        var basket = await _database.StringGetAsync(userId);
 
         if (basket.IsNull)
             return null;
@@ -44,19 +47,11 @@ class BasketRepository : IBasketRepository
     {
         basket.LastUpdate = _currentTime.Now;
 
-        return _database.StringSetAsync(basket.Basket.BuyerId, JsonSerializer.Serialize(basket));
+        return _database.StringSetAsync(basket.UserId, JsonSerializer.Serialize(basket));
     }
 
     public async Task Remove(string buyerId)
     {
         await _database.KeyDeleteAsync(buyerId);
-    }
-
-    private IServer GetServer()
-    {
-        var endpoint = _connection.GetEndPoints().First();
-        var server = _connection.GetServer(endpoint);
-
-        return server;
     }
 }

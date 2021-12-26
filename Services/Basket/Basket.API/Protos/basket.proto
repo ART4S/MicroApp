@@ -14,29 +14,29 @@ service Basket{
 }
 
 message GetBasketRequest {
-	string buyerId = 1;
+	string userId = 1;
 }
 
 message UpdateBasketRequest{
-	string buyerId = 1;
+	string userId = 1;
 	repeated BasketItemReply items = 2;
 }
 
 message BasketReply {
-	string buyerId = 1;
-	repeated BasketItemReply items = 2;
+	repeated BasketItemReply items = 1;
 }
 
 message BasketItemReply {
-	string productId = 2;
-	string productName = 3;
-	google.protobuf.DoubleValue unitPrice = 4;
-	google.protobuf.DoubleValue oldUnitPrice = 5;
-	int32 quantity = 6;
-	string pictureUrl = 7;
+	string productId = 1;
+	string productName = 2;
+	google.protobuf.DoubleValue unitPrice = 3;
+	google.protobuf.DoubleValue oldUnitPrice = 4;
+	int32 quantity = 5;
+	string pictureUrl = 6;
 }
 
 message CheckoutBasketRequest {
 	string requestId = 1;
-	string buyerId = 2;
+	string userId = 2;
+	string userName = 3;
 }

@@ -35,4 +35,9 @@ public class CatalogTypeRepository : ICatalogTypeRepository
     {
         return _collection.InsertOneAsync(type);
     }
+
+    public Task CreateMany(IEnumerable<CatalogType> types)
+    {
+        return _collection.InsertManyAsync(types);
+    }
 }

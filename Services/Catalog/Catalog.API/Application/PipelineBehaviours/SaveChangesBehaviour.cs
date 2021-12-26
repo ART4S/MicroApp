@@ -1,6 +1,6 @@
 ﻿using Catalog.API.Application.Requests.Abstractions;
 using Catalog.API.DataAccess;
-using IntegrationServices.EF;
+using IntegrationServices.Mongo;
 using MediatR;
 using Polly;
 using System.Data.Common;
@@ -12,12 +12,12 @@ public class SaveChangesBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 {
     private readonly ILogger _logger;
     private readonly ICatalogDbContext _catalogDb;
-    private readonly IEFIntegrationDbContext _integrationDb;
+    private readonly IMongoIntegrationDbContext _integrationDb;
 
     public SaveChangesBehaviour(
         ILogger<SaveChangesBehaviour<TRequest, TResponse>> logger,
         ICatalogDbContext catalogDb,
-        IEFIntegrationDbContext integrationDb)
+        IMongoIntegrationDbContext integrationDb)
     {
         _logger = logger;
         _catalogDb = catalogDb;
@@ -38,9 +38,9 @@ public class SaveChangesBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 
         try
         {
-            // TODO: Not safe
-            await policy.ExecuteAsync(() => _catalogDb.SaveChangesAsync());
-            await policy.ExecuteAsync(() => _integrationDb.SaveChangesAsync());
+            // TODO: Use transaction. Current implementaion not safe
+            await policy.ExecuteAsync(() => _catalogDb.SaveChanges());
+            await policy.ExecuteAsync(() => _integrationDb.SaveChanges());
         }
         catch (Exception ex)
         {

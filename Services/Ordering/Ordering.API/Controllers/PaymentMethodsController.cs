@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Ordering.API.Models;
 using Ordering.API.Services;
 using Ordering.Application.Models.PaymentMethods;
@@ -7,6 +8,7 @@ using Ordering.Application.Requests.Buyers.GetPaymentMethods;
 
 namespace Ordering.API.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class PaymentMethodsController : BaseController

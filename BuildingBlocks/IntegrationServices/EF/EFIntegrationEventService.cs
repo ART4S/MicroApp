@@ -1,4 +1,5 @@
 ﻿using IntegrationServices.Models;
+using IntegrationServices.Utils;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -7,15 +8,12 @@ namespace IntegrationServices.EF;
 public class EFIntegrationEventService : IIntegrationEventService
 {
     private readonly IEFIntegrationDbContext _integrationDb;
-    private readonly Dictionary<string, Type> _integrationEventTypes;
+    private readonly EventTypeProvider _eventTypes;
 
     public EFIntegrationEventService(IEFIntegrationDbContext integrationDb, Assembly integrationEventsAssembly)
     {
         _integrationDb = integrationDb;
-        _integrationEventTypes = integrationEventsAssembly
-            .GetExportedTypes()
-            .Where(x => x.IsSubclassOf(typeof(IntegrationEvent)))
-            .ToDictionary(x => x.FullName);
+        _eventTypes = new(integrationEventsAssembly);
     }
 
     public async Task<ICollection<IntegrationEvent>> GetPendingEvents()
@@ -25,7 +23,7 @@ public class EFIntegrationEventService : IIntegrationEventService
             .OrderBy(x => x.CreationDate)
             .ToListAsync();
 
-        events.ForEach(x => x.DeserializeEvent(toType: _integrationEventTypes[x.EventType]));
+        events.ForEach(x => x.DeserializeEvent(toType: _eventTypes.GetEventType(x.EventType)));
 
         return events.Select(x => x.IntegrationEvent).ToList();
     }

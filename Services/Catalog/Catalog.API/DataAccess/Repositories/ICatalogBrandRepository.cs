@@ -8,4 +8,5 @@ public interface ICatalogBrandRepository
     Task<CatalogBrand?> GetById(Guid brandId); 
     Task<bool> Exists(Guid brandId);
     Task Create(CatalogBrand brand);
+    Task CreateMany(IEnumerable<CatalogBrand> brands);
 }

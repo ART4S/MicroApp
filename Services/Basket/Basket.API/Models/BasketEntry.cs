@@ -7,6 +7,8 @@ public class BasketEntry
         Basket = basket;
     }
 
+    public string UserId { get; set; }
+
     public DateTime LastUpdate { get; set; }
 
     public CustomerBasket Basket { get; private set; }

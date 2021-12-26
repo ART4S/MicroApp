@@ -25,14 +25,14 @@ public class DeleteExpiredBasketsBackgroundTask : IBackgroundTask
     {        
         DateTime now = _currentTime.Now;
 
-        string[] buyers = await _basketRepo.GetBuyers();
+        string[] users = await _basketRepo.GetUsers();
 
-        foreach (string buyerId in buyers)
+        foreach (string userId in users)
         {
-            BasketEntry? basket = await _basketRepo.Get(buyerId);
+            BasketEntry? basket = await _basketRepo.Get(userId);
 
             if (basket is not null && now - basket.LastUpdate > _expiration)
-                await _basketRepo.Remove(buyerId);
+                await _basketRepo.Remove(userId);
         }
     }
 }

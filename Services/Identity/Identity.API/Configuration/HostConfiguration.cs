@@ -1,11 +1,9 @@
 ﻿using HostConfiguration;
 using Identity.API.DataAccess;
-using Identity.API.Models.Entities;
 using Identity.API.Settings;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace Identity.API.Configuration;
 
@@ -20,14 +18,8 @@ static class HostConfiguration
         {
             host.CreateDbContext<AppDbContext>((services, context) =>
             {
-                var userManager = services.GetRequiredService<UserManager<User>>();
-
-                // TODO: seed from xml
-                var res = userManager.CreateAsync(new()
-                {
-                    Id = new Guid("7f6e4cf9-ac94-4a91-bbe5-e88dcf7a3980"),
-                    UserName = "Test"
-                }, "test").Result;
+                var seeder = ActivatorUtilities.CreateInstance<AppDbContextSeed>(services);
+                seeder.Seed().Wait();
             });
         }
         else

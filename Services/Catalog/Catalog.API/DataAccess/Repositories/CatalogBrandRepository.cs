@@ -35,4 +35,9 @@ public class CatalogBrandRepository : ICatalogBrandRepository
     {
         return _collection.InsertOneAsync(_session, brand);
     }
+
+    public Task CreateMany(IEnumerable<CatalogBrand> brands)
+    {
+        return _collection.InsertManyAsync(brands);
+    }
 }

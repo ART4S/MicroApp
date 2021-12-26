@@ -1,7 +1,5 @@
 ﻿using Catalog.API.DataAccess;
 using Catalog.API.Settings;
-using HostConfiguration;
-using IntegrationServices.EF;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -13,9 +11,9 @@ static class HostConfiguration
     {
         var config = host.Services.GetRequiredService<IConfiguration>();
 
-        bool createDb = config.GetValue<bool>("ClearDatabase");
+        bool clearDb = config.GetValue<bool>("ClearDatabase");
 
-        if (createDb)
+        if (clearDb)
         {
             var settings = host.Services.GetRequiredService<IOptions<CatalogDbSettings>>().Value;
 
@@ -27,20 +25,6 @@ static class HostConfiguration
             var seeder = ActivatorUtilities.CreateInstance<CatalogDbContextSeed>(scope.ServiceProvider);
             seeder.Seed().Wait();
         }
-
-        return host;
-    }
-
-    public static IHost InitIntegrationDb(this IHost host)
-    {
-        var config = host.Services.GetRequiredService<IConfiguration>();
-
-        bool createDb = config.GetValue<bool>("ClearDatabase");
-
-        if (createDb)
-            host.CreateDbContext<EFIntegrationDbContext>();
-        else
-            host.MigrateDbContext<EFIntegrationDbContext>();
 
         return host;
     }
