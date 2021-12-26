@@ -26,6 +26,7 @@ using Ordering.Application.IntegrationEvents.EventHandlers;
 using EventBus.RabbitMQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Ordering.API.Configuration;
 
@@ -156,10 +157,12 @@ static class ServicesConfiguration
 
     public static void AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.Authority = configuration.GetValue<string>("IdentityUrl");
+                options.Authority = configuration["IdentityUrl"];
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new()
                 {

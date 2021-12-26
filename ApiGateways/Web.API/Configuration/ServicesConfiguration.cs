@@ -102,7 +102,6 @@ static class ServicesConfiguration
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         IdentityUrls settings = new();
-
         configuration.GetSection("ExternalUrls:Identity").Bind(settings);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
