@@ -9,7 +9,9 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
-    CreateHostBuilder(args).Build().InitDatabase().Run();
+    IConfiguration envConfig = GetEnvironmentConfig();
+
+    CreateHostBuilder(envConfig, args).Build().InitDatabase().Run();
 }
 catch (Exception ex)
 {
@@ -20,7 +22,7 @@ finally
     Log.CloseAndFlush();
 }
 
-static IHostBuilder CreateHostBuilder(string[] args) =>
+static IHostBuilder CreateHostBuilder(IConfiguration envConfig, string[] args) =>
     Host.CreateDefaultBuilder(args)
         .UseSerilog((host, services, logConfig) => logConfig
             .ReadFrom.Configuration(host.Configuration)
@@ -31,15 +33,20 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             webBuilder
                 .ConfigureKestrel(options =>
                 {
-                    options.Listen(IPAddress.Any, 80, listenOptions =>
+                    options.Listen(IPAddress.Any, envConfig.GetValue<int>("HttpPort"), listenOptions =>
                     {
                         listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
                     });
 
-                    options.Listen(IPAddress.Any, 5003, listenOptions =>
+                    options.Listen(IPAddress.Any, envConfig.GetValue<int>("GrpcPort"), listenOptions =>
                     {
                         listenOptions.Protocols = HttpProtocols.Http2;
                     });
                 })
                 .UseStartup<Startup>();
         });
+
+static IConfiguration GetEnvironmentConfig() =>
+    new ConfigurationBuilder()
+        .AddEnvironmentVariables()
+        .Build();
