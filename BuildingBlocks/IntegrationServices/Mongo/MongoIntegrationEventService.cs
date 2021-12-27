@@ -1,5 +1,5 @@
-﻿using IntegrationServices.Models;
-using IntegrationServices.Utils;
+﻿using IntegrationServices.Common;
+using IntegrationServices.Models;
 using System.Reflection;
 
 namespace IntegrationServices.Mongo;

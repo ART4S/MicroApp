@@ -43,15 +43,16 @@ public class SaveChangesBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
                     (attempt) => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
                     (exception, _, attempt, _) =>
                     {
-                        // TODO: log
+                        _logger.LogError(exception, "Error occured while saving changes on attempt {Attempt}", attempt);
                     })
                 .ExecuteAsync(() => transaction.CommitAsync(cancellationToken));
         }
         catch (Exception ex)
         {
-            // TODO: log
+            _logger.LogError(ex, "Saving changes failed. Rolling back transaction...");
 
             await transaction.RollbackAsync();
+
             throw;
         }
 

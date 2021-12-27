@@ -18,6 +18,8 @@ public class OrderAcceptedIntegrationEventHandler : IEventHandler<OrderAcceptedI
 
     public async Task Handle(OrderAcceptedIntegrationEvent @event)
     {
+        _logger.LogInformation("Start processing event {@Event}", @event);
+
         try
         {
             IEvent integrationEvent;
@@ -32,8 +34,10 @@ public class OrderAcceptedIntegrationEventHandler : IEventHandler<OrderAcceptedI
         }
         catch (Exception ex)
         {
-            // TODO: log
-            _logger.LogError("", ex);
+            _logger.LogError(ex, "Error occured while processing event {@Event}", @event.Id);
+            return;
         }
+
+        _logger.LogInformation("Processing event {@Event} succeed", @event.Id);
     }
 }

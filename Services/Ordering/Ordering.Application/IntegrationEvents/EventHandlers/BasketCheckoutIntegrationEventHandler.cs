@@ -22,6 +22,8 @@ public class BasketCheckoutIntegrationEventHandler : IEventHandler<BasketCheckou
 
     public async Task Handle(BasketCheckoutIntegrationEvent @event)
     {
+        _logger.LogInformation("Start processing event {@Event}", @event);
+
         try
         {
             var command = new IdempotentRequest<CreateOrderCommand, Unit>
@@ -34,8 +36,10 @@ public class BasketCheckoutIntegrationEventHandler : IEventHandler<BasketCheckou
         }
         catch (Exception ex)
         {
-            // TODO: log
-            _logger.LogError("", ex);
+            _logger.LogError(ex, "Error occured while processing event {@Event}", @event.Id);
+            return;
         }
+
+        _logger.LogInformation("Processing event {@Event} succeed", @event.Id);
     }
 }

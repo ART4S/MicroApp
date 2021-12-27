@@ -1,7 +1,7 @@
 ﻿using IntegrationServices.Models;
 using System.Reflection;
 
-namespace IntegrationServices.Utils;
+namespace IntegrationServices.Common;
 
 internal class EventTypeProvider
 {

@@ -32,14 +32,14 @@ public class OrderPaidIntegrationEventHandler : IEventHandler<OrderPaidIntegrati
             {
                 if (itemInDb.AvailableInStock < item.Quantity)
                 {
-                    // TODO: log
+                    _logger.LogWarning("AvailableInStock cannot be less than requested Quantity");
                 }
 
                 itemInDb.AvailableInStock -= Math.Min(itemInDb.AvailableInStock, item.Quantity);
             }
             else
             {
-                // TODO: log
+                _logger.LogError("Product {ProductId} not found", item.ProductId);
             }
         }
 

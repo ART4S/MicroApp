@@ -1,16 +1,6 @@
 ﻿namespace Catalog.API.Application.IntegrationEvents.Models;
 
-public record OrderInStock
-{
-    public Guid OrderId { get; set; }
+public record OrderInStock(Guid OrderId, List<OrderItemInStock> Items);
 
-    public List<OrderItemInStock> Items { get; set; } = new List<OrderItemInStock>();
-}
-
-public record OrderItemInStock
-{
-    public Guid ProductId { get; set; }
-
-    public bool IsInStock { get; set; }
-}
+public record OrderItemInStock(Guid ProductId, bool IsInStock);
 

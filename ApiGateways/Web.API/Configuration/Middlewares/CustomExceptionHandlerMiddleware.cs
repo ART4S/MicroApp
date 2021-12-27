@@ -70,6 +70,13 @@ class CustomExceptionHandlerMiddleware
                     break;
                 }
 
+            case InvalidOperationException ex when ex.Message.Contains("IDX20803: Unable to obtain configuration"):
+                {
+                    httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    await httpContext.Response.WriteAsync("Invalid token");
+                    break;
+                }
+
             default:
                 {
                     var logger = httpContext.RequestServices

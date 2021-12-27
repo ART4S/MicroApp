@@ -43,7 +43,7 @@ public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand>
 
         if (order.OrderStatusId == OrderStatusDict.Paid.Id)
         {
-            // TODO: return money
+            // Return money
         }
 
         order.OrderStatusId = OrderStatusDict.Cancelled.Id;

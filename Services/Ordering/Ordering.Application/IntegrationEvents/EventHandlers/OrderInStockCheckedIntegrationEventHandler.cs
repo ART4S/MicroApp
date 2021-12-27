@@ -23,6 +23,8 @@ public class OrderInStockCheckedIntegrationEventHandler : IEventHandler<OrderInS
 
     public async Task Handle(OrderInStockCheckedIntegrationEvent @event)
     {
+        _logger.LogInformation("Start processing event {@Event}", @event);
+
         try
         {
             Command command;
@@ -35,8 +37,10 @@ public class OrderInStockCheckedIntegrationEventHandler : IEventHandler<OrderInS
         }
         catch (Exception ex)
         {
-            // TODO: log
-            _logger.LogError("", ex);
+            _logger.LogError(ex, "Error occured while processing event {@Event}", @event.Id);
+            return;
         }
+
+        _logger.LogInformation("Processing event {@Event} succeed", @event.Id);
     }
 }

@@ -43,12 +43,12 @@ public static class DbContextConfiguration
             sleepDurationProvider: (attempt) => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
             onRetry: (exception, _, attempt, _) =>
             {
-                // TODO: log
+                logger.LogError(exception, "Error occured while performing migrations on attempt {Attempt}", attempt);
             });
 
         try
         {
-            // TODO: log
+            logger.LogInformation("Start performing migrations");
 
             policy.Execute(() =>
             {
@@ -63,7 +63,7 @@ public static class DbContextConfiguration
         }
         catch (Exception ex)
         {
-            // TODO: log
+            logger.LogCritical(ex, "Performing migrations failed");
             throw;
         }
     }

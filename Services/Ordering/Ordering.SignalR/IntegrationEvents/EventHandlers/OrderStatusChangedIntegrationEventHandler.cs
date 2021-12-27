@@ -1,7 +1,7 @@
 ﻿using EventBus.Abstractions;
 using Microsoft.AspNetCore.SignalR;
-using Ordering.Application.IntegrationEvents.Models;
 using Ordering.SignalR.IntegrationEvents.Events;
+using Ordering.SignalR.IntegrationEvents.Models;
 
 namespace Ordering.SignalR.IntegrationEvents.EventHandlers;
 

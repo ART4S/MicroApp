@@ -1,4 +1,5 @@
 ﻿using EventBus.Abstractions;
+using IntegrationServices.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.IntegrationEvents.Events;
@@ -22,43 +23,31 @@ public class PaymentIntegrationEventHandler :
         _mediator = mediator;
     }
 
-    public async Task Handle(PaymentSucceedIntegrationEvent @event)
+    public Task Handle(PaymentSucceedIntegrationEvent @event)
     {
-        // TODO: log
+        return ProcessPaymentEvent(@event, () => _mediator.Send(new SetOrderStatusToPaidCommand(@event.OrderId)));
+    }
+
+    public Task Handle(PaymentFailedIntegrationEvent @event)
+    {
+        return ProcessPaymentEvent(@event, () => _mediator.Send(new CancelOrderCommand(@event.OrderId)));
+    }
+
+    private async Task ProcessPaymentEvent<TEvent>(TEvent @event, Func<Task> processingAction) 
+        where TEvent : IntegrationEvent
+    {
+        _logger.LogInformation("Start processing event {@Event}", @event);
 
         try
         {
-            await _mediator.Send(new SetOrderStatusToPaidCommand(@event.OrderId));
+            await processingAction();
         }
         catch (Exception ex)
         {
-            HandlePaymentException(ex);
+            _logger.LogError(ex, "Error occured while processing event {@EventId}", @event.Id);
             return;
         }
 
-        // TODO: log
-    }
-
-    public async Task Handle(PaymentFailedIntegrationEvent @event)
-    {
-        // TODO: log
-
-        try
-        {
-            await _mediator.Send(new CancelOrderCommand(@event.OrderId));
-        }
-        catch (Exception ex)
-        {
-            HandlePaymentException(ex);
-            return;
-        }
-
-        // TODO: log
-    }
-
-    private void HandlePaymentException(Exception ex)
-    {
-        // TODO: log
-        _logger.LogError("", ex);
+        _logger.LogInformation("Processing event {@EventId} succeed", @event.Id);
     }
 }

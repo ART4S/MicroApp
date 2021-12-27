@@ -26,7 +26,7 @@ public class OrderConfirmedIntegrationEventHandler : IEventHandler<OrderConfirme
         Dictionary<Guid, int> productsQuantityInDb = (await _catalogDb.Products.GetByIds(productIds))
             .ToDictionary(x => x.Id, x => x.AvailableInStock);
 
-        OrderInStock checkedOrder = new() { OrderId = @event.Order.OrderId };
+        List<OrderItemInStock> checkedItems = new();
 
         foreach (var item in @event.Order.Items)
         {
@@ -34,8 +34,10 @@ public class OrderConfirmedIntegrationEventHandler : IEventHandler<OrderConfirme
             if (productsQuantityInDb.TryGetValue(item.ProductId, out int availableInStock))
                 isInStock = item.Quantity <= availableInStock;
 
-            checkedOrder.Items.Add(new() { ProductId = item.ProductId, IsInStock = isInStock });
+            checkedItems.Add(new(item.ProductId, isInStock));
         }
+
+        OrderInStock checkedOrder = new(@event.Order.OrderId, checkedItems);
 
         await _integrationEvents.Publish(new OrderInStockCheckedIntegrationEvent(checkedOrder));
     }

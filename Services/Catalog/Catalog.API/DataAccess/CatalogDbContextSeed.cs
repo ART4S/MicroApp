@@ -64,8 +64,9 @@ public class CatalogDbContextSeed
 
         if (!File.Exists(filePath))
         {
-            // TODO: log
-            throw new Exception($"File {filePath} is missing");
+            _logger.LogError("File not found {FilePath}", filePath);
+
+            throw new Exception($"File {filePath} not found");
         }
 
         List<TEntity> entities = new();

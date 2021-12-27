@@ -1,6 +1,6 @@
 ﻿namespace Ordering.Application.IntegrationEvents.Models;
 
-public class CancelledOrder
+public record CancelledOrder
 {
     public Guid OrderId { get; set; }
     public Guid BuyerId { get; set; }

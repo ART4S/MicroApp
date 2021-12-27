@@ -33,18 +33,21 @@ public class SaveChangesBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
             (attempt) => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
             (exception, _, attempt, _) =>
             {
-                // TODO: log
+                _logger.LogError(
+                    exception, 
+                    "Error occured while saving changes for command {@Command} on {Attempt}", 
+                    request, attempt);
             });
 
         try
         {
-            // TODO: Use transaction. Current implementaion not safe
+            // TODO: Use transaction. Current implementaion is not safe
             await policy.ExecuteAsync(() => _catalogDb.SaveChanges());
             await policy.ExecuteAsync(() => _integrationDb.SaveChanges());
         }
         catch (Exception ex)
         {
-            // TODO: log
+            _logger.LogError(ex, "Saving request {@Command} failed", request);
             throw;
         }
 

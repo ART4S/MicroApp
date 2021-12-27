@@ -1,0 +1,1246 @@
+{
+	"info": {
+		"_postman_id": "bda6d5e8-956d-4082-ab98-12c73898861f",
+		"name": "MicroShop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Monitoring",
+			"item": [
+				{
+					"name": "Web Api HC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/hc",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"hc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Identity Api HC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{identity_api_url}}/hc",
+							"host": [
+								"{{identity_api_url}}"
+							],
+							"path": [
+								"hc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Catalog Api HC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_api_url}}/hc",
+							"host": [
+								"{{catalog_api_url}}"
+							],
+							"path": [
+								"hc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Basket Api HC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basket_api_url}}/hc",
+							"host": [
+								"{{basket_api_url}}"
+							],
+							"path": [
+								"hc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ordering Api HC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ordering_api_url}}/hc",
+							"host": [
+								"{{ordering_api_url}}"
+							],
+							"path": [
+								"hc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ordering Signalr HC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ordering_signalr_url}}/hc",
+							"host": [
+								"{{ordering_signalr_url}}"
+							],
+							"path": [
+								"hc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payment Api HC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{payment_api_url}}/hc",
+							"host": [
+								"{{payment_api_url}}"
+							],
+							"path": [
+								"hc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Get openid-configuration",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{identity_api_url}}/.well-known/openid-configuration",
+									"host": [
+										"{{identity_api_url}}"
+									],
+									"path": [
+										".well-known",
+										"openid-configuration"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"UserName\":\"admin\",\r\n    \"Password\": \"admin\",\r\n    \"RememberMe\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{identity_api_url}}/api/auth/login",
+									"host": [
+										"{{identity_api_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get autorization code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+											"\r",
+											"const response = JSON.parse(responseBody);\r",
+											"\r",
+											"pm.test(\"Code is present\", () => pm.expect(response.code).not.be.eq(undefined));\r",
+											"\r",
+											"pm.environment.set(\"code\", response.code);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{identity_api_url}}/connect/authorize?client_id=spa&client_secret=secret&response_type=code&redirect_uri=http://localhost:4000/api/auth/callback&nonce=nonce&state=state&scope=openid&code_challenge=PyQ9HYLtm6MF1IQAR_4uePKIIhAXUtI57TRefKeu2Go&code_challenge_method=S256",
+									"host": [
+										"{{identity_api_url}}"
+									],
+									"path": [
+										"connect",
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "spa"
+										},
+										{
+											"key": "client_secret",
+											"value": "secret"
+										},
+										{
+											"key": "response_type",
+											"value": "code"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "http://localhost:4000/api/auth/callback"
+										},
+										{
+											"key": "nonce",
+											"value": "nonce"
+										},
+										{
+											"key": "state",
+											"value": "state"
+										},
+										{
+											"key": "scope",
+											"value": "openid"
+										},
+										{
+											"key": "code_challenge",
+											"value": "PyQ9HYLtm6MF1IQAR_4uePKIIhAXUtI57TRefKeu2Go"
+										},
+										{
+											"key": "code_challenge_method",
+											"value": "S256"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+											"\r",
+											"const response = JSON.parse(responseBody);\r",
+											"\r",
+											"pm.test(\"Token is present\", () => pm.expect(response.id_token).not.be.eq(undefined));\r",
+											"\r",
+											"pm.environment.set(\"id_token\", response.id_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "client_id",
+											"value": "spa",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "secret",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "openid",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "http://localhost:4000/api/auth/callback",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "{{code}}",
+											"type": "text"
+										},
+										{
+											"key": "code_verifier",
+											"value": "u2pgrvuFwowIE_6MKUrNLQF8NDr5_nExmH5cDMrnTH80sI2YJe6p_UPhnUnj83ax9rvf66yvmDybLEbXtT9q8uIfz_UNHEgy6z9X5gIWonod8Dbfv1PMDxZn.Mthajy0",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{identity_api_url}}/connect/token",
+									"host": [
+										"{{identity_api_url}}"
+									],
+									"path": [
+										"connect",
+										"token"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Dictionaries",
+			"item": [
+				{
+					"name": "Get order statuses",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"pm.test(\"Should have at least one element\", () => {\r",
+									"    pm.expect(response.length > 0).to.be.eq(true);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/ordering/dictionaries/orderStatuses",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"ordering",
+								"dictionaries",
+								"orderStatuses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get card types",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"pm.test(\"Should have at least one element\", () => {\r",
+									"    pm.expect(response.length > 0).to.be.eq(true);\r",
+									"})\r",
+									"\r",
+									"if (response.length > 0){\r",
+									"    pm.environment.set(\"card_type_id\", response[0].id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/ordering/dictionaries/cardTypes",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"ordering",
+								"dictionaries",
+								"cardTypes"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{id_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Catalog",
+			"item": [
+				{
+					"name": "Get products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"const response = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.test(\"Data is present\", () => {\r",
+									"    pm.expect(response.data.length > 0).to.eq(true);\r",
+									"});\r",
+									"\r",
+									"if (response.data.length > 0){\r",
+									"    const product = response.data[0];\r",
+									"    pm.environment.set(\"product_id\", product.id);\r",
+									"    pm.environment.set(\"product_name\", product.name);\r",
+									"    pm.environment.set(\"product_description\", product.description);\r",
+									"    pm.environment.set(\"product_price\", product.price);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/catalog?page_number=1&page_size=90",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"catalog"
+							],
+							"query": [
+								{
+									"key": "page_number",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "90"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"pm.test(\"Ids are equal\", () => {\r",
+									"    pm.expect(response.id).to.be.eq(pm.environment.get(\"product_id\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"pictureName not empty\", () => {\r",
+									"    pm.expect(response.pictureName).not.be.empty;\r",
+									"});\r",
+									"\r",
+									"if (response.pictureName) {\r",
+									"    pm.environment.set(\"picture_name\", response.pictureName);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/catalog/{{product_id}}",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"catalog",
+								"{{product_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get types",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"At least one element is present\", () => {\r",
+									"    pm.expect(response.length > 0).to.eq(true);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"type_id\", response[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/catalog/types",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"catalog",
+								"types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get brands",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"At least one element is present\", () => {\r",
+									"    pm.expect(response.length > 0).to.eq(true);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"brand_id\", response[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/catalog/brands",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"catalog",
+								"brands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get picture",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/catalog/pictures/{{picture_name}}",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"catalog",
+								"pictures",
+								"{{picture_name}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));\r",
+									"\r",
+									"pm.environment.set(\"new_product_id\", pm.response.json());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"name\",\r\n    \"Description\": \"description\",\r\n    \"Price\": 1.25,\r\n    \"BrandId\": \"{{brand_id}}\",\r\n    \"TypeId\":\"{{type_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{web_api_url}}/api/catalog",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"catalog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", () => pm.response.to.have.status(204));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"updated name\",\r\n    \"Description\": \"updated description\",\r\n    \"Price\": 1.26,\r\n    \"BrandId\": \"{{brand_id}}\",\r\n    \"TypeId\":\"{{type_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{web_api_url}}/api/catalog/{{new_product_id}}",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"catalog",
+								"{{new_product_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{id_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Basket",
+			"item": [
+				{
+					"name": "Get basket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/basket",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"basket"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update basket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"items\":[\r\n        {\r\n            \"productId\":\"{{product_id}}\",\r\n            \"productName\":\"{{product_name}}\",\r\n            \"unitPrice\":\"{{product_price}}\",\r\n            \"oldUnitPrice\":\"{{product_price}}\",\r\n            \"quantity\":\"5\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{web_api_url}}/api/basket",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"basket"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout basket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"if (pm.response.code == 200){\r",
+									"    pm.environment.set(\"basket_checkout_request_id\", uuid.v4());\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-requestId",
+								"value": "{{basket_checkout_request_id}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{web_api_url}}/api/basket/checkout",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"basket",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{id_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Ordering",
+			"item": [
+				{
+					"name": "Get orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"pm.test(\"Should have at least one element\", () => {\r",
+									"    pm.expect(response.length > 0).to.be.eq(true);\r",
+									"})\r",
+									"\r",
+									"if (response.length){\r",
+									"    response.sort((a, b) => new Date(b.date) - new Date(a.date));\r",
+									"    pm.environment.set(\"order_id\", response[0].id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/ordering",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"ordering"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/ordering/{{order_id}}",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"ordering",
+								"{{order_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create payment method",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"pm.environment.set(\"payment_method_id\", response);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"alias\":\"alias\",\r\n    \"cardNumber\":\"cardNumber\",\r\n    \"securityNumber\":\"securityNumber\",\r\n    \"cardHolderName\":\"cardHolderName\",\r\n    \"expiration\":\"2150-01-01\",\r\n    \"cardTypeId\":\"{{card_type_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{web_api_url}}/api/ordering/paymentMethods",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"ordering",
+								"paymentMethods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get payment methods",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"pm.test(\"Should have at least one element\", () => {\r",
+									"    pm.expect(response.length > 0).to.be.eq(true);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{web_api_url}}/api/ordering/paymentMethods",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"ordering",
+								"paymentMethods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"\r",
+									"pm.test(\"Status code is 204\", () => pm.response.to.have.status(204));\r",
+									"\r",
+									"if (pm.response.code == 204){\r",
+									"    pm.environment.set(\"order_confirm_request_id\", uuid.v4());\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-requestId",
+								"value": "{{order_confirm_request_id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"description\",\r\n    \"street\":\"street\",\r\n    \"city\":\"city\",\r\n    \"state\": \"state\",\r\n    \"country\":\"country\",\r\n    \"zipcode\":\"zipcode\",\r\n    \"paymentMethodId\": \"{{payment_method_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{web_api_url}}/api/ordering/{{order_id}}",
+							"host": [
+								"{{web_api_url}}"
+							],
+							"path": [
+								"api",
+								"ordering",
+								"{{order_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{id_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

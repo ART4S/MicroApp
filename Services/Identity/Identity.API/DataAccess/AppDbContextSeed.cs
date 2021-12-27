@@ -42,8 +42,9 @@ class AppDbContextSeed
 
         if (!File.Exists(filePath))
         {
-            // TODO: log
-            throw new Exception($"File {filePath} is missing");
+            _logger.LogError("File {filePath} not found", filePath);
+
+            throw new Exception($"File {filePath} not found");
         }
 
         List<TEntity> entities = new();

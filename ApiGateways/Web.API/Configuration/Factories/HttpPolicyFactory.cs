@@ -19,7 +19,7 @@ public static class HttpPolicyFactory
     {
         clientBuilder
             .AddPolicyHandler(BuildTimeoutPolicy())
-            .AddPolicyHandler(BuildRetryPolicy())
+            .AddPolicyHandler(BuildRetryPolicy)
             .AddPolicyHandler(BuildCircuitBreakerPolicy());
     }
 
@@ -28,7 +28,8 @@ public static class HttpPolicyFactory
         return Policy.TimeoutAsync<HttpResponseMessage>(_settings.TimeoutSec);
     }
 
-    private static IAsyncPolicy<HttpResponseMessage> BuildRetryPolicy()
+    private static IAsyncPolicy<HttpResponseMessage> BuildRetryPolicy(
+        IServiceProvider services, HttpRequestMessage request)
     {
         return HttpPolicyExtensions
             .HandleTransientHttpError()
@@ -36,9 +37,14 @@ public static class HttpPolicyFactory
             .WaitAndRetryAsync(
                 retryCount: _settings.RetryCount,
                 attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
-                (_, _, _, _) =>
+                (response, _, attempt, _) =>
                 {
-                    // TODO: log
+                    services.GetRequiredService<ILoggerFactory>()
+                        .CreateLogger("HttpPolicies")
+                        .LogError("Got {StatusCode} from {Request} on attempt {Attempt}",
+                            response.Result.StatusCode, 
+                            response.Result.RequestMessage!.ToString(),
+                            attempt);
                 });
     }
 
@@ -50,14 +56,6 @@ public static class HttpPolicyFactory
             .OrResult(x => x.StatusCode == HttpStatusCode.TooManyRequests)
             .CircuitBreakerAsync(
                 _settings.CircuitBreaker.AttemptsBeforeBreak,
-                TimeSpan.FromSeconds(_settings.CircuitBreaker.DurationOfBreakSec),
-                onBreak: (_, _) =>
-                {
-                    // TODO: log
-                },
-                onReset: () =>
-                {
-                    // TODO: log
-                });
+                TimeSpan.FromSeconds(_settings.CircuitBreaker.DurationOfBreakSec));
     }
 }

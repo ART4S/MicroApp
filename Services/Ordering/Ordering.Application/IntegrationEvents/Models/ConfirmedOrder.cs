@@ -5,11 +5,7 @@ public record ConfirmedOrder
     public Guid OrderId { get; set; }
     public Guid BuyerId { get; set; }
     public int OrderStatusId { get; set; }
-    public List<ConfirmedOrderItem> Items { get; set; } = new List<ConfirmedOrderItem>();
+    public List<ConfirmedOrderItem> Items { get; set; }
 }
 
-public record ConfirmedOrderItem
-{
-    public Guid ProductId { get; set; }
-    public int Quantity { get; set; }
-}
+public record ConfirmedOrderItem(Guid ProductId, int Quantity);

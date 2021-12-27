@@ -56,6 +56,8 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
     private IModel CreateSubscriptionChannel()
     {
+        _logger.LogWarning("Creating subscription channel");
+
         IModel channel;
 
         try
@@ -64,7 +66,7 @@ public class RabbitMQEventBus : IEventBus, IDisposable
         }
         catch(Exception ex)
         {
-            // TODO: log
+            _logger.LogCritical(ex, "Error occured while creating subscription channel");
             throw;
         }
 
@@ -83,7 +85,9 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
         channel.CallbackException += (s, a) =>
         {
-            // TODO: log
+            _logger.LogError(a.Exception, "Subscription channel got error");
+
+            _logger.LogWarning("Existing channel will be closed");
 
             _subscriptionChannel?.Dispose();
             _subscriptionChannel = CreateSubscriptionChannel();
@@ -100,18 +104,12 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
     public void Publish(IEvent @event)
     {
-        var policy = Policy.Handle<BrokerUnreachableException>().Or<SocketException>().WaitAndRetry(
-            retryCount: _settings.Retries,
-            sleepDurationProvider: (attempt) => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
-            onRetry: (exception, _) =>
-            {
-                // TODO: log
-            });
-
-        // TODO: log
-
-        using (var channel = _connection.CreateModel())
+        try
         {
+            _logger.LogInformation("Creating publisher channel");
+
+            using var channel = _connection.CreateModel();
+
             channel.ExchangeDeclare(
                 exchange: BROKER_NAME,
                 type: ExchangeType.Direct,
@@ -119,22 +117,35 @@ public class RabbitMQEventBus : IEventBus, IDisposable
                 autoDelete: false,
                 arguments: null);
 
-            // TODO: log
+            _logger.LogInformation("Start publishing event {@Event}", @event);
 
-            policy.Execute(() =>
-            {
-                IBasicProperties props = channel.CreateBasicProperties();
+            Policy.Handle<BrokerUnreachableException>().Or<SocketException>().WaitAndRetry(
+                retryCount: _settings.Retries,
+                sleepDurationProvider: (attempt) => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
+                onRetry: (exception, _, attempt, _) =>
+                {
+                    _logger.LogError(exception, "Error occured while publishing event on attempt {Attempt}", attempt);
+                }).Execute(() =>
+                {
+                    IBasicProperties props = channel.CreateBasicProperties();
 
-                props.DeliveryMode = 2;
-                props.ContentType = MediaTypeNames.Application.Json;
+                    props.DeliveryMode = 2;
+                    props.ContentType = MediaTypeNames.Application.Json;
 
-                channel.BasicPublish(
-                    exchange: BROKER_NAME,
-                    routingKey: GetEventName(@event),
-                    basicProperties: props,
-                    body: JsonSerializer.SerializeToUtf8Bytes(@event, @event.GetType()));
-            });
+                    channel.BasicPublish(
+                        exchange: BROKER_NAME,
+                        routingKey: GetEventName(@event),
+                        basicProperties: props,
+                        body: JsonSerializer.SerializeToUtf8Bytes(@event, @event.GetType()));
+                });
         }
+        catch(Exception ex)
+        {
+            _logger.LogInformation(ex, "Error occured while publishing event {@Event}", @event);
+            throw;
+        }
+
+        _logger.LogInformation("Publishing event {@Event} succeed", @event);
     }
 
     public void Subscribe<TEvent, TEventHandler>()
@@ -178,35 +189,35 @@ public class RabbitMQEventBus : IEventBus, IDisposable
     {
         string eventName = args.RoutingKey;
 
+        _logger.LogInformation("Received event {EventName}", eventName);
+
         try
         {
+            _logger.LogInformation("Start processing {EventName}", eventName);
+
             await HandleEvent(eventName, args.Body.ToArray());
         }
-        catch(JsonException ex)
+        catch(Exception ex) when(ex is JsonException || ex is NotSupportedException)
         {
-            // TODO: log
-            _logger.LogError("", ex);
-        }
-        catch (NotSupportedException ex)
-        {
-            // TODO: log
-            _logger.LogError("", ex);
+            _logger.LogError(ex, "Error occured while deserializing event {EventName}", eventName);
+            return;
         }
         catch(Exception ex)
         {
-            // TODO: log
-            _logger.LogError("", ex);
+            _logger.LogError(ex, "Got unknown type of exception while processing event {EventName}", eventName);
             return;
         }
 
         _subscriptionChannel.BasicAck(args.DeliveryTag, multiple: false);
+
+        _logger.LogInformation("Processing event {EventName} succeed", eventName);
     }
 
     private async Task HandleEvent(string eventName, byte[] body)
     {
         if (!_events.TryGetValue(eventName, out var eventInfo))
         {
-            // TODO: log
+            _logger.LogWarning("Event {EventName} not found in subscriptions", eventName);
             return;
         }
 
@@ -219,7 +230,9 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
         foreach (var handlerInfo in eventInfo.Handlers)
         {
-            var handler = scope.ServiceProvider.GetRequiredService(handlerInfo.EventHandlerType);
+            _logger.LogInformation("Creating handler {HandlerType}", handlerInfo.EventHandlerType.Name);
+
+            object handler = scope.ServiceProvider.GetRequiredService(handlerInfo.EventHandlerType);
 
             await (Task) GetType().GetMethod("ExecuteEvent", BindingFlags.Static | BindingFlags.NonPublic)
                 .MakeGenericMethod(eventInfo.EventType, handlerInfo.EventHandlerType)
@@ -242,7 +255,7 @@ public class RabbitMQEventBus : IEventBus, IDisposable
 
         if (!_events.TryGetValue(eventName, out var eventInfo))
         {
-            _logger.LogWarning("There are no subscribtions of {Event} yet", typeof(TEvent).Name);
+            _logger.LogWarning("There are no subscribtions of {Event}", typeof(TEvent).Name);
             return;
         }
 

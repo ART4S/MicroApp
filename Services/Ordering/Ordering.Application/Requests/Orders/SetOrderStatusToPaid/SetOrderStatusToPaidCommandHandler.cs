@@ -35,6 +35,7 @@ public class SetOrderStatusToPaidCommandHandler : IRequestHandler<SetOrderStatus
     {
         Order order = await _orderingDb.Orders
             .Include(x => x.OrderItems)
+            .Include(x => x.OrderStatus)
             .SingleOrDefaultAsync(x => x.Id == request.OrderId) ??
         throw new EntityNotFoundException(nameof(Order));
 
@@ -50,7 +51,10 @@ public class SetOrderStatusToPaidCommandHandler : IRequestHandler<SetOrderStatus
         }
         else
         {
-            // TODO: log
+            _logger.LogWarning(
+                "Order status must be {ExpectedStatus} but got {ActualStatus}",
+                OrderStatusDict.Accepted.Name,
+                order.OrderStatus.Name);
         }
 
         return Unit.Value;

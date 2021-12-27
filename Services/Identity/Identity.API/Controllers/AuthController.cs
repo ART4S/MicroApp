@@ -11,13 +11,16 @@ namespace Identity.API.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
+    private readonly ILogger _logger;
     private readonly IAuthService _authService;
     private readonly ICurrentTime _currentTime;
 
     public AuthController(
+        ILogger<AuthController> logger,
         IAuthService authService, 
         ICurrentTime currentTime)
     {
+        _logger = logger;
         _authService = authService;
         _currentTime = currentTime;
     }
@@ -27,14 +30,12 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Login(LoginVm loginVm)
     {
-        // TODO: log
+        _logger.LogInformation("Attempt to login for user {User}", loginVm.UserName);
 
         User? user = await _authService.FindUserByName(loginVm.UserName);
 
         if (user is null || !await _authService.ValidateUserCredentials(user, loginVm.Password))
             return BadRequest("Invalid credentials");
-
-        // TODO: log
 
         AuthenticationProperties props = new()
         {
@@ -46,6 +47,8 @@ public class AuthController : ControllerBase
             props.ExpiresUtc = _currentTime.Now.AddDays(365);
 
         await _authService.SignIn(user, props);
+
+        _logger.LogInformation("User {User} logged in", loginVm.UserName);
 
         return Ok();
     }

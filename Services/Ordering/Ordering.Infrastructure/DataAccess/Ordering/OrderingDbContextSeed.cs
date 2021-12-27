@@ -49,7 +49,7 @@ public class OrderingDbContextSeed
         }
         catch(Exception ex)
         {
-            _logger.LogError("", ex); // TODO: log
+            _logger.LogError(ex, "Error occured while seeding initial data. Rolling back transaction...");
 
             transaction.Rollback();
 

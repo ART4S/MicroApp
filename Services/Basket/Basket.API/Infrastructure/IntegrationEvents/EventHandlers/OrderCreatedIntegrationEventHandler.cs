@@ -19,8 +19,26 @@ public class OrderCreatedIntegrationEventHandler : IEventHandler<OrderCreatedInt
 
     public async Task Handle(OrderCreatedIntegrationEvent @event)
     {
-        await _basketRepo.Remove(@event.Order.BuyerId.ToString());
+        string userId = @event.Order?.BuyerId.ToString();
 
-        // TODO: log
+        if (string.IsNullOrEmpty(userId))
+        {
+            _logger.LogError("UserId is missing");
+            return;
+        }
+
+        _logger.LogInformation("Removing basket for user {UserId}", userId);
+
+        try
+        {
+            await _basketRepo.Remove(userId);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Error occured while removing basket fro user {UserId}", userId);
+            return;
+        }
+
+        _logger.LogInformation("Removing basket for user {UserId} succeed", userId);
     }
 }

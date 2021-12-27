@@ -1,23 +1,12 @@
 ﻿namespace Ordering.Application.IntegrationEvents.Models;
 
-public record AcceptedOrder
-{
-    public Guid OrderId { get; set; }
-    public Guid BuyerId { get; set; }
-    public int OrderStatusId { get; set; }
-    public decimal Total { get; set; }
-    public BuyerCardInfo PaymentCard { get; set; }
-}
+public record AcceptedOrder(
+    Guid OrderId, Guid BuyerId, 
+    int OrderStatusId, decimal Total, 
+    BuyerCardInfo PaymentCard);
 
-public record BuyerCardInfo
-{
-    public string CardNumber { get; set; }
+public record BuyerCardInfo(
+    string CardNumber, string SecurityNumber, 
+    string CardHolderName, DateTime Expiration, 
+    int CardTypeId);
 
-    public string SecurityNumber { get; set; }
-
-    public string CardHolderName { get; set; }
-
-    public DateTime Expiration { get; set; }
-
-    public int CardTypeId { get; set; }
-}

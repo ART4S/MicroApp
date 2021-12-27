@@ -1,8 +1,3 @@
-﻿namespace Ordering.Application.IntegrationEvents.Models;
+﻿namespace Ordering.SignalR.IntegrationEvents.Models;
 
-public record Order
-{
-    public Guid OrderId { get; set; }
-    public Guid BuyerId { get; set; }
-    public int OrderStatusId { get; set; }
-}
+public record Order(Guid OrderId, Guid BuyerId, int OrderStatusId);

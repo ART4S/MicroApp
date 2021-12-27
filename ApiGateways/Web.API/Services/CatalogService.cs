@@ -66,14 +66,13 @@ public class CatalogService : ICatalogService
         string? contentType = response.Content.Headers.ContentType?.MediaType;
 
         if (contentType is null)
-        {
-            contentType = "image/png";
-            _logger.LogInformation(""); // TODO: log
-        }
+            _logger.LogInformation("ContentType header is missing");
+
+        const string fallbackContentType = "image/png";
 
         return new()
         {
-            ContentType = contentType,
+            ContentType = contentType ?? fallbackContentType,
             Content = await response.Content.ReadAsStreamAsync()
         };
     }
