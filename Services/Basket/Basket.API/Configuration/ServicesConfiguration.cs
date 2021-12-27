@@ -6,6 +6,7 @@ using Basket.API.Infrastructure.Services;
 using EventBus.RabbitMQ;
 using EventBus.RabbitMQ.DependencyInjection;
 using Google.Protobuf.Collections;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using StackExchange.Redis;
 using TaskScheduling.Core;
 using TaskScheduling.DependencyInjection;
@@ -70,7 +71,7 @@ static class ServicesConfiguration
             {
                 new BackgroundTaskSettings<DeleteExpiredBasketsBackgroundTask>
                 (
-                    Schedule: configuration.GetValue<string>("BackgroundTasks:Schedule:DeleteExpiredBaskets")
+                    Schedule: configuration["BackgroundTasks:Schedule:DeleteExpiredBaskets"]
                 )
                 {
                     Factory = (sp) => ActivatorUtilities.CreateInstance<DeleteExpiredBasketsBackgroundTask>(sp, basketExpirationDays)
@@ -83,5 +84,22 @@ static class ServicesConfiguration
 
                 logger.LogError(exception, "Error occured while executing task {TaskType}", task.GetType().Name);
             });
+    }
+
+    public static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks()
+            .AddCheck(
+                name: "Self",
+                check: () => HealthCheckResult.Healthy(),
+                tags: new[] { "api" })
+            .AddRedis(
+                redisConnectionString: configuration.GetConnectionString("RedisConnection"),
+                name: "Basket Db",
+                tags: new[] { "database", "redis" })
+            .AddRabbitMQ(
+                rabbitConnectionString: configuration["RabbitMQSettings:Uri"],
+                name: "MQ",
+                tags: new[] { "rabbitmq" });
     }
 }

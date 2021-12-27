@@ -5,6 +5,7 @@ using Identity.API.Settings;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Reflection;
 
 namespace Identity.API.Configuration;
@@ -104,5 +105,18 @@ static class ServicesConfiguration
                     .AllowCredentials();
             });
         });
+    }
+
+    public static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks()
+            .AddCheck(
+                name: "Self",
+                check: () => HealthCheckResult.Healthy(),
+                tags: new[] { "api" })
+            .AddSqlServer(
+                connectionString: configuration.GetConnectionString("DefaultConnection"),
+                name: "Identity Db",
+                tags: new[] { "database", "sql" });
     }
 }

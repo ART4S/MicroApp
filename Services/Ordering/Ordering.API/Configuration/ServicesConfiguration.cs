@@ -229,15 +229,16 @@ static class ServicesConfiguration
     {
         services.AddHealthChecks()
             .AddCheck(
-                name: "self", 
-                check: () => HealthCheckResult.Healthy())
+                name: "Self", 
+                check: () => HealthCheckResult.Healthy(),
+                tags: new[] { "api" })
             .AddSqlServer(
                 connectionString: configuration.GetConnectionString("DefaultConnection"), 
-                name: "Database", 
-                tags: new[] { "db", "sql" })
+                name: "Ordering Db", 
+                tags: new[] { "database", "sql" })
             .AddRabbitMQ(
                 rabbitConnectionString: configuration.GetValue<string>("RabbitMQSettings:Uri"), 
-                name: "RabbitMQ", 
+                name: "MQ", 
                 tags: new [] { "rabbitmq" });
     }
 }

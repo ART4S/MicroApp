@@ -27,12 +27,12 @@ static class AppConfiguration
     {
         endpoints.MapHealthChecks("/liveness", new()
         {
-            Predicate = x => x.Name == "self"
+            Predicate = x => x.Name == "Self"
         });
 
         endpoints.MapHealthChecks("/hc", new()
         {
-            Predicate = x => x.Name != "self",
+            Predicate = _ => true,
             AllowCachingResponses = false,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });

@@ -1,4 +1,5 @@
 ﻿using EventBus.Abstractions;
+using HealthChecks.UI.Client;
 using Ordering.SignalR.IntegrationEvents.EventHandlers;
 using Ordering.SignalR.IntegrationEvents.Events;
 
@@ -15,5 +16,20 @@ static class AppConfiguration
         eventBus.Subscribe<OrderAcceptedIntegrationEvent, OrderStatusChangedIntegrationEventHandler>();
         eventBus.Subscribe<OrderPaidIntegrationEvent, OrderStatusChangedIntegrationEventHandler>();
         eventBus.Subscribe<OrderCancelledIntegrationEvent, OrderStatusChangedIntegrationEventHandler>();
+    }
+
+    public static void MapHealthChecks(this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapHealthChecks("/liveness", new()
+        {
+            Predicate = x => x.Name == "Self"
+        });
+
+        endpoints.MapHealthChecks("/hc", new()
+        {
+            Predicate = _ => true,
+            AllowCachingResponses = false,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
     }
 }

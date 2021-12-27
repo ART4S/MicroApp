@@ -19,6 +19,7 @@ class Startup
         services.AddCustomIdentity(Configuration, Environment);
         services.AddCustomIdentityServer(Configuration);
         services.AddCorsPolicies();
+        services.AddHealthChecks(Configuration);
     }
 
     public void Configure(IApplicationBuilder app)
@@ -45,6 +46,7 @@ class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapHealthChecks();
         });
     }
 }

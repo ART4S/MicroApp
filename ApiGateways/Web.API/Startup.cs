@@ -28,11 +28,13 @@ class Startup
 
         services.AddCustomAuthentication(Configuration);
         services.AddCustomAuthorization();
+
+        services.AddHealthChecks(Configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+        app.UseCustomExceptionHandler();
 
         if (env.IsDevelopment())
         {
@@ -52,6 +54,7 @@ class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapHealthChecks();
         });
     }
 }

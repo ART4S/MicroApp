@@ -23,11 +23,12 @@ static class ServicesConfiguration
     {
         services.AddHealthChecks()
             .AddCheck(
-                name: "self", 
-                check: () => HealthCheckResult.Healthy())
+                name: "Self",
+                check: () => HealthCheckResult.Healthy(),
+                tags: new[] { "api" })
             .AddRabbitMQ(
                 rabbitConnectionString: configuration.GetValue<string>("RabbitMQSettings:Uri"),
-                name: "RabbitMQ",
+                name: "MQ",
                 tags: new[] { "rabbitmq" });
     }
 }

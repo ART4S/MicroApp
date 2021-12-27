@@ -6,8 +6,7 @@ namespace Ordering.SignalR;
 [Authorize]
 public class NotificationsHub : Hub
 {
-    private string GetUserId() => 
-        Context.User!.Claims.Single(x => x.Type == "sub").Value;
+    private string GetUserId() => Context.User!.Claims.Single(x => x.Type == "sub").Value;
 
     public override async Task OnConnectedAsync()
     {

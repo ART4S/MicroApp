@@ -20,6 +20,7 @@ class Startup
         services.AddIntegrationServices(Configuration);
         services.AddAutoMapper();
         services.AddTaskScheduling(Configuration);
+        services.AddHealthChecks(Configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -32,6 +33,8 @@ class Startup
                 endpoints.MapGrpcReflectionService();
 
             endpoints.MapGrpcService<BasketService>();
+
+            endpoints.MapHealthChecks();
         });
 
         app.SubscribeToEvents();

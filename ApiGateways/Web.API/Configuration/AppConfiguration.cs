@@ -1,17 +1,14 @@
-﻿using EventBus.Abstractions;
-using HealthChecks.UI.Client;
-using Payment.API.IntegrationEvents.EventHandlers;
-using Payment.API.IntegrationEvents.Events;
+﻿using HealthChecks.UI.Client;
+using Web.API.Configuration;
+using Web.API.Configuration.Middlewares;
 
-namespace Payment.API.Configuration;
+namespace Web.API.Configuration;
 
 static class AppConfiguration
 {
-    public static void SubscribeToEvents(this IApplicationBuilder app)
+    public static void UseCustomExceptionHandler(this IApplicationBuilder app)
     {
-        var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-
-        eventBus.Subscribe<OrderAcceptedIntegrationEvent, OrderAcceptedIntegrationEventHandler>();
+        app.UseMiddleware<CustomExceptionHandlerMiddleware>();
     }
 
     public static void MapHealthChecks(this IEndpointRouteBuilder endpoints)

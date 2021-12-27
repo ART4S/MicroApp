@@ -13,6 +13,7 @@ using IntegrationServices;
 using IntegrationServices.Mongo;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using TaskScheduling.Core;
@@ -120,7 +121,7 @@ static class ServicesConfiguration
             taskSettings: new[]
             {
                 new BackgroundTaskSettings<PublishIntegrationEventsBackgroundTask>(
-                    Schedule: configuration.GetValue<string>("BackgroundTasks:IntegrationEventSchedule"))
+                    Schedule: configuration["BackgroundTasks:IntegrationEventSchedule"])
             },
             exceptionHandler: (exception, task, services) =>
             {
@@ -129,5 +130,22 @@ static class ServicesConfiguration
 
                 logger.LogError(exception, "Error occured while executing task {TaskType}", task.GetType().Name);
             });
+    }
+
+    public static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks()
+            .AddCheck(
+                name: "Self",
+                check: () => HealthCheckResult.Healthy(),
+                tags: new[] { "api" })
+            .AddMongoDb(
+                mongodbConnectionString: configuration["CatalogDbSettings:ConnectionString"],
+                name: "Catalog Db",
+                tags: new[] { "database", "mongo" })
+            .AddRabbitMQ(
+                rabbitConnectionString: configuration["RabbitMQSettings:Uri"],
+                name: "MQ",
+                tags: new[] { "rabbitmq" });
     }
 }

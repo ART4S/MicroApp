@@ -23,6 +23,8 @@ class Startup
         services.AddAutoMapper();
         services.AddValidation();
         services.ConfigureApi();
+        services.AddHealthChecks();
+        services.AddHealthChecks(Configuration);
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
@@ -49,6 +51,7 @@ class Startup
         app.UseEndpoints(endpoints => 
         { 
             endpoints.MapControllers();
+            endpoints.MapHealthChecks();
         });
 
         app.SubscribeToEvents();

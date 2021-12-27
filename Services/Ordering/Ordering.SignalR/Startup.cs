@@ -18,6 +18,8 @@ class Startup
         services.AddCustomAuthorization();
 
         services.AddRabbitMq(Configuration);
+
+        services.AddHealthChecks(Configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -32,6 +34,7 @@ class Startup
         app.UseEndpoints(endpoints => 
         {
             endpoints.MapHub<NotificationsHub>("/notifications");
+            endpoints.MapHealthChecks();
         });
 
         app.SubscribeToEvents();

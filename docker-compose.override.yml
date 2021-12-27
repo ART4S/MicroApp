@@ -45,10 +45,15 @@ services:
    environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=https://+:443;http://+:80
-     - ExternalUrls__Catalog__BasePath=http://catalog-api
-     - ExternalUrls__Basket__BasePath=http://basket-api
-     - ExternalUrls__Ordering__BasePath=http://ordering-api
      - ExternalUrls__Identity__BasePath=http://identity-api
+     - ExternalUrls__Catalog__BasePath=http://catalog-api
+     - ExternalUrls__Basket__BasePath=http://basket-api:5003
+     - ExternalUrls__Ordering__BasePath=http://ordering-api
+     - IdentityHC=http://identity-api/hc
+     - CatalogHC=http://catalog-api/hc
+     - BasketHC=http://basket-api/hc
+     - OrderingHC=http://ordering-api/hc
+     - PaymentHC=http://payment-api/hc
    ports:
     - 5000:80
 
@@ -113,8 +118,11 @@ services:
      - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
      - RabbitMQSettings__Retries=3
      - ClearDatabase=${CLEAR_DATABASE}
+     - HttpPort=80
+     - GrpcPort=5003
    ports:
      - "5002:80"
+     - "5003:5003"
 
   ordering-data:
    container_name: ordering-data
@@ -144,7 +152,7 @@ services:
      - ClearDatabase=${CLEAR_DATABASE}
      - IdentityUrl=http://identity-api
    ports:
-    - "5003:80"
+    - "5004:80"
 
   ordering-signalr:
    image: ordering-signalr:dev
@@ -162,7 +170,7 @@ services:
      - RabbitMQSettings__Retries=3
      - IdentityUrl=http://identity-api
    ports:
-    - "5004:80"
+    - "5005:80"
 
   payment-api:
    image: payment-api:dev
@@ -179,7 +187,7 @@ services:
      - RabbitMQSettings__Uri=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq
      - RabbitMQSettings__Retries=3
    ports:
-    - "5005:80"
+    - "5006:80"
 
   health-monitor:
    image: health-monitor:dev
@@ -192,12 +200,22 @@ services:
    environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=http://+:80
-     - HealthChecksUI__HealthChecks__0__Name=Ordering API
-     - HealthChecksUI__HealthChecks__0__Uri=http://ordering-api/hc
-     - HealthChecksUI__HealthChecks__1__Name=Payment API
-     - HealthChecksUI__HealthChecks__1__Uri=http://payment-api/hc
+     - HealthChecksUI__HealthChecks__0__Name=Web API
+     - HealthChecksUI__HealthChecks__0__Uri=http://web-api/hc
+     - HealthChecksUI__HealthChecks__1__Name=Identity API
+     - HealthChecksUI__HealthChecks__1__Uri=http://identity-api/hc
+     - HealthChecksUI__HealthChecks__2__Name=Catalog API
+     - HealthChecksUI__HealthChecks__2__Uri=http://catalog-api/hc
+     - HealthChecksUI__HealthChecks__3__Name=Basket API
+     - HealthChecksUI__HealthChecks__3__Uri=http://basket-api/hc
+     - HealthChecksUI__HealthChecks__4__Name=Ordering API
+     - HealthChecksUI__HealthChecks__4__Uri=http://ordering-api/hc
+     - HealthChecksUI__HealthChecks__5__Name=Ordering SignalR
+     - HealthChecksUI__HealthChecks__5__Uri=http://ordering-signalr/hc
+     - HealthChecksUI__HealthChecks__6__Name=Payment API
+     - HealthChecksUI__HealthChecks__6__Uri=http://payment-api/hc
    ports:
-    - "5006:80"
+    - "5007:80"
 
   mongo-express:
    image: mongo-express

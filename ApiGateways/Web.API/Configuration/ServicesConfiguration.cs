@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.IdentityModel.Tokens.Jwt;
 using Web.API.Configuration.Factories;
 using Web.API.Exceptions;
@@ -134,5 +135,34 @@ static class ServicesConfiguration
         {
             options.SuppressModelStateInvalidFilter = true;
         });
+    }
+
+    public static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks()
+            .AddCheck(
+                name: "Self",
+                check: () => HealthCheckResult.Healthy(),
+                tags: new[] { "api" })
+            .AddUrlGroup(
+                uri: new Uri(configuration["IdentityHC"]),
+                name: "Identity API",
+                tags: new[] { "api" })
+            .AddUrlGroup(
+                uri: new Uri(configuration["CatalogHC"]),
+                name: "Catalog API",
+                tags: new[] { "api" })
+            .AddUrlGroup(
+                uri: new Uri(configuration["BasketHC"]),
+                name: "Basket API",
+                tags: new[] { "api" })
+            .AddUrlGroup(
+                uri: new Uri(configuration["OrderingHC"]),
+                name: "Ordering API",
+                tags: new[] { "api" })
+            .AddUrlGroup(
+                uri: new Uri(configuration["PaymentHC"]),
+                name: "Payment API",
+                tags: new[] { "api" });
     }
 }

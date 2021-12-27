@@ -2,6 +2,7 @@
 using EventBus.RabbitMQ.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Ordering.SignalR.IntegrationEvents.EventHandlers;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -56,5 +57,18 @@ static class ServicesConfiguration
                 .RequireClaim("name")
                 .Build();
         });
+    }
+
+    public static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks()
+            .AddCheck(
+                name: "Self",
+                check: () => HealthCheckResult.Healthy(),
+                tags: new [] { "api" })
+            .AddRabbitMQ(
+                rabbitConnectionString: configuration.GetValue<string>("RabbitMQSettings:Uri"),
+                name: "MQ",
+                tags: new[] { "rabbitmq" });
     }
 }
