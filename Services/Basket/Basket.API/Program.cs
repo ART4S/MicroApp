@@ -9,9 +9,7 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
-    IConfiguration envConfig = GetEnvironmentConfig();
-
-    CreateHostBuilder(envConfig, args).Build().InitDatabase().Run();
+    CreateHostBuilder(args).Build().InitDatabase().Run();
 }
 catch (Exception ex)
 {
@@ -22,7 +20,7 @@ finally
     Log.CloseAndFlush();
 }
 
-static IHostBuilder CreateHostBuilder(IConfiguration envConfig, string[] args) =>
+static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)
         .UseSerilog((host, services, logConfig) => logConfig
             .ReadFrom.Configuration(host.Configuration)
@@ -30,6 +28,8 @@ static IHostBuilder CreateHostBuilder(IConfiguration envConfig, string[] args) =
             .WriteTo.Console())
         .ConfigureWebHostDefaults(webBuilder =>
         {
+            IConfiguration envConfig = GetEnvironmentConfig();
+
             webBuilder
                 .ConfigureKestrel(options =>
                 {
