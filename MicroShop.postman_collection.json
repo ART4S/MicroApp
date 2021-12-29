@@ -210,225 +210,222 @@
 			"name": "Identity",
 			"item": [
 				{
-					"name": "Auth",
-					"item": [
+					"name": "Get openid-configuration",
+					"event": [
 						{
-							"name": "Get openid-configuration",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{identity_api_url}}/.well-known/openid-configuration",
-									"host": [
-										"{{identity_api_url}}"
-									],
-									"path": [
-										".well-known",
-										"openid-configuration"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Login",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"UserName\":\"admin\",\r\n    \"Password\": \"admin\",\r\n    \"RememberMe\": true\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{identity_api_url}}/api/auth/login",
-									"host": [
-										"{{identity_api_url}}"
-									],
-									"path": [
-										"api",
-										"auth",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get autorization code",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
-											"\r",
-											"const response = JSON.parse(responseBody);\r",
-											"\r",
-											"pm.test(\"Code is present\", () => pm.expect(response.code).not.be.eq(undefined));\r",
-											"\r",
-											"pm.environment.set(\"code\", response.code);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{identity_api_url}}/connect/authorize?client_id=spa&client_secret=secret&response_type=code&redirect_uri=http://localhost:4000/api/auth/callback&nonce=nonce&state=state&scope=openid&code_challenge=PyQ9HYLtm6MF1IQAR_4uePKIIhAXUtI57TRefKeu2Go&code_challenge_method=S256",
-									"host": [
-										"{{identity_api_url}}"
-									],
-									"path": [
-										"connect",
-										"authorize"
-									],
-									"query": [
-										{
-											"key": "client_id",
-											"value": "spa"
-										},
-										{
-											"key": "client_secret",
-											"value": "secret"
-										},
-										{
-											"key": "response_type",
-											"value": "code"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://localhost:4000/api/auth/callback"
-										},
-										{
-											"key": "nonce",
-											"value": "nonce"
-										},
-										{
-											"key": "state",
-											"value": "state"
-										},
-										{
-											"key": "scope",
-											"value": "openid"
-										},
-										{
-											"key": "code_challenge",
-											"value": "PyQ9HYLtm6MF1IQAR_4uePKIIhAXUtI57TRefKeu2Go"
-										},
-										{
-											"key": "code_challenge_method",
-											"value": "S256"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get token",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
-											"\r",
-											"const response = JSON.parse(responseBody);\r",
-											"\r",
-											"pm.test(\"Token is present\", () => pm.expect(response.id_token).not.be.eq(undefined));\r",
-											"\r",
-											"pm.environment.set(\"id_token\", response.id_token);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "client_id",
-											"value": "spa",
-											"type": "text"
-										},
-										{
-											"key": "client_secret",
-											"value": "secret",
-											"type": "text"
-										},
-										{
-											"key": "scope",
-											"value": "openid",
-											"type": "text"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://localhost:4000/api/auth/callback",
-											"type": "text"
-										},
-										{
-											"key": "grant_type",
-											"value": "authorization_code",
-											"type": "text"
-										},
-										{
-											"key": "code",
-											"value": "{{code}}",
-											"type": "text"
-										},
-										{
-											"key": "code_verifier",
-											"value": "u2pgrvuFwowIE_6MKUrNLQF8NDr5_nExmH5cDMrnTH80sI2YJe6p_UPhnUnj83ax9rvf66yvmDybLEbXtT9q8uIfz_UNHEgy6z9X5gIWonod8Dbfv1PMDxZn.Mthajy0",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{identity_api_url}}/connect/token",
-									"host": [
-										"{{identity_api_url}}"
-									],
-									"path": [
-										"connect",
-										"token"
-									]
-								}
-							},
-							"response": []
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{identity_api_url}}/.well-known/openid-configuration",
+							"host": [
+								"{{identity_api_url}}"
+							],
+							"path": [
+								".well-known",
+								"openid-configuration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"UserName\":\"admin\",\r\n    \"Password\": \"admin\",\r\n    \"RememberMe\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{identity_api_url}}/api/auth/login",
+							"host": [
+								"{{identity_api_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get autorization code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"const response = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.test(\"Code is present\", () => pm.expect(response.code).not.be.eq(undefined));\r",
+									"\r",
+									"pm.environment.set(\"code\", response.code);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{identity_api_url}}/connect/authorize?client_id=spa&client_secret=secret&response_type=code&redirect_uri=http://localhost:4000/api/auth/callback&nonce=nonce&state=state&scope=openid&code_challenge=PyQ9HYLtm6MF1IQAR_4uePKIIhAXUtI57TRefKeu2Go&code_challenge_method=S256",
+							"host": [
+								"{{identity_api_url}}"
+							],
+							"path": [
+								"connect",
+								"authorize"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "spa"
+								},
+								{
+									"key": "client_secret",
+									"value": "secret"
+								},
+								{
+									"key": "response_type",
+									"value": "code"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:4000/api/auth/callback"
+								},
+								{
+									"key": "nonce",
+									"value": "nonce"
+								},
+								{
+									"key": "state",
+									"value": "state"
+								},
+								{
+									"key": "scope",
+									"value": "openid"
+								},
+								{
+									"key": "code_challenge",
+									"value": "PyQ9HYLtm6MF1IQAR_4uePKIIhAXUtI57TRefKeu2Go"
+								},
+								{
+									"key": "code_challenge_method",
+									"value": "S256"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"pm.test(\"Token is present\", () => pm.expect(response.id_token).not.be.eq(undefined));\r",
+									"\r",
+									"if (response.id_token) {\r",
+									"    pm.environment.set(\"id_token\", response.id_token);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "spa",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "secret",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "openid",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:4000/api/auth/callback",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "{{code}}",
+									"type": "text"
+								},
+								{
+									"key": "code_verifier",
+									"value": "u2pgrvuFwowIE_6MKUrNLQF8NDr5_nExmH5cDMrnTH80sI2YJe6p_UPhnUnj83ax9rvf66yvmDybLEbXtT9q8uIfz_UNHEgy6z9X5gIWonod8Dbfv1PMDxZn.Mthajy0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{identity_api_url}}/connect/token",
+							"host": [
+								"{{identity_api_url}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
