@@ -116,7 +116,7 @@ grpcui -plaintext localhost:5003
 
 # Developer Notes
 
-### Создание миграций
+### Добавление миграций
 
 **Catalog**
 
