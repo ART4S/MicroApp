@@ -48,6 +48,10 @@
 
 ![Ordering ERD](https://github.com/ART4S/MicroShop/blob/master/Resources/Ordering%20ERD.PNG)
 
+**Identity**
+
+![Identity ERD](https://github.com/ART4S/MicroShop/blob/master/Resources/Identity%20ERD.PNG)
+
 ## Хранение данных
 
 **Catalog**
