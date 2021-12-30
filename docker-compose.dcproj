@@ -18,10 +18,4 @@
   <ItemGroup>
     <None Remove="MicroShop.postman_environment.json" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="MicroShop.postman_collection.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="MicroShop.postman_collection.json" />
-  </ItemGroup>
 </Project>
