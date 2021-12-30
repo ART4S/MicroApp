@@ -52,6 +52,8 @@
 
 ![Identity ERD](https://github.com/ART4S/MicroShop/blob/master/Resources/Identity%20ERD.PNG)
 
+Отдельно стоит упомянуть, что внутренняя структура данных в Identity построенна на основе [ASP.NET Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=visual-studio) (не путать с [IdentityServer4](https://identityserver4.readthedocs.io/en/latest/)). Т.е на представленной схеме объекты являются прототипами, на основе которых Identity построила свою модель с таблицами и связями.
+
 ## Хранение данных
 
 **Catalog**
