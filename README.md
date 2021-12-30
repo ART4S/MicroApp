@@ -71,7 +71,7 @@
 ## Контейнеризация
 
 Работоспособность всех сервисов можно протестировать в Docker, для этого в каждом проекте присутствует отдельный Dockerfile, а для централизованной сборки и запуска – проект docker-compose.
-Для удобства конфигурирования почти все переменные окружения сервисов находятся в файле docker-compose.override.yml
+Для удобства конфигурирования почти все настройки сервисов вынесены из appsettings.json в файл docker-compose.override.yml
 
 ![Docker](https://github.com/ART4S/MicroShop/blob/master/Resources/Docker.PNG)
 
