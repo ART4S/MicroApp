@@ -91,12 +91,14 @@
 
 ## Тестирование API
 
-Для проверки работоспособности приложения был подготовлен набор запросов и минимальный набор тестов через Postman.
-
+Для проверки работоспособности приложения был подготовлен набор запросов и минимальный набор тестов через Postman. Достаточно сделать импорт следуюих файлов:
+```files
+MicroShop.postman_collection.json
+MicroShop.postman_environment.json
+```
 ![Postman](https://github.com/ART4S/MicroShop/blob/master/Resources/Postman.PNG)
 
-Тестирование корзины по grpc может быть выполнено с помощью утилиты https://github.com/fullstorydev/grpcui
-Для запуска достаточно ввести в командную строку следующее:
+Тестирование корзины по grpc может быть выполнено с помощью утилиты https://github.com/fullstorydev/grpcui. Для запуска достаточно ввести в командную строку следующее:
 ```powershell
 grpcui -plaintext localhost:5003
 ```
