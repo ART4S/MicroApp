@@ -1,4 +1,4 @@
-# MicroShop гайд
+# MicroShop
 
 Целью проекта было изучение и практическое применение концепций из книги [.NET Microservices: Architecture for Containerized .NET Applications](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/)
 
