@@ -1,6 +1,6 @@
 # MicroShop
 
-Целью проекта - практическое применение концепций из книги [.NET Microservices: Architecture for Containerized .NET Applications](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/)
+Цель проекта - практическое применение концепций из книги [.NET Microservices: Architecture for Containerized .NET Applications](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/)
 
 За основу была взята бизнес модель представленного в книге проекта [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
 
