@@ -25,30 +25,25 @@ internal class SchedulerService
     public async Task Run(CancellationToken stoppingToken)
     {
         while(!stoppingToken.IsCancellationRequested)
-        {
+        {         
             var now = DateTime.UtcNow;
-
-            var tasksToRun = _taskSettings.Where(x => x.NextRunTime <= now);
-
-            if (!tasksToRun.Any())
+            
+            foreach (var task in _taskSettings)
             {
-                await Task.Delay(TimeSpan.FromSeconds(_settings.PollingIntervalSec), stoppingToken);
-                continue;
+                if (task.NextRunTime <= now)
+                {
+                    task.CalculateNextRunTime();
+                    
+                    await RunTask(task);
+                }
             }
-
-            var scope = _services.CreateScope();
-
-            foreach (var task in tasksToRun)
-                await HandleTask(task);
             
             await Task.Delay(TimeSpan.FromSeconds(_settings.PollingIntervalSec), stoppingToken);
         }
     }
     
-    private async Task HandleTask(RecurringBackgroundTask task, CancellationToken stoppingToken)
-    {
-        task.CalculateNextRunTime();
-        
+    private async Task RunTask(RecurringBackgroundTask task, CancellationToken stoppingToken)
+    {        
         using var scope = _services.CreateScope();
 
         try
