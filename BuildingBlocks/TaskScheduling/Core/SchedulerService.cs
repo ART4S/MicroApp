@@ -24,66 +24,44 @@ internal class SchedulerService
 
     public async Task Run(CancellationToken stoppingToken)
     {
-        do
+        while(!stoppingToken.IsCancellationRequested)
         {
             var now = DateTime.UtcNow;
 
             var tasksToRun = _taskSettings.Where(x => x.NextRunTime <= now);
 
             if (!tasksToRun.Any())
+            {
+                await Task.Delay(TimeSpan.FromSeconds(_settings.PollingIntervalSec), stoppingToken);
                 continue;
+            }
 
             var scope = _services.CreateScope();
 
             foreach (var task in tasksToRun)
-            {
-                if (!TryCreateTask(task, scope.ServiceProvider, out IBackgroundTask taskReadyToRun))
-                    continue;
-
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        await taskReadyToRun.Run(stoppingToken);
-                    }
-                    catch (Exception exception)
-                    {
-                        _exceptionHandler(exception, taskReadyToRun, _services);
-                    }
-
-                }); // Fire and forget
-
-                task.CalculateNextRunTime();
-            }
-        } while (!await isStopped());
-
-        async Task<bool> isStopped()
-        {
+                await HandleTask(task);
+            
             await Task.Delay(TimeSpan.FromSeconds(_settings.PollingIntervalSec), stoppingToken);
-            return stoppingToken.IsCancellationRequested;
         }
     }
-
-    private bool TryCreateTask(
-        RecurringBackgroundTask taskDescription, 
-        IServiceProvider services, 
-        out IBackgroundTask task)
+    
+    private async Task HandleTask(RecurringBackgroundTask task, CancellationToken stoppingToken)
     {
-        task = null;
+        task.CalculateNextRunTime();
+        
+        using var scope = _services.CreateScope();
 
         try
         {
-            task = (IBackgroundTask)(taskDescription.Factory is not null
-                ? taskDescription.Factory(services)
-                : ActivatorUtilities.CreateInstance(services, taskDescription.Type));
-
-            return true;
+            var taskObj = (IBackgroundTask)(taskDescription.Factory is not null
+                ? taskDescription.Factory(scope.ServiceProvider)
+                : ActivatorUtilities.CreateInstance(scope.ServiceProvider, taskDescription.Type));
+            
+            await taskObj.Run(stoppingToken);
         }
-        catch(Exception exeption)
+        catch(Exception ex)
         {
-            _exceptionHandler?.Invoke(exeption, task, services);
+            _exceptionHandler.Invoke(ex, task, scope.ServiceProvider);
         }
-
-        return false;
     }
 }
