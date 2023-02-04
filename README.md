@@ -2,7 +2,7 @@
 
 Цель проекта - практическое применение концепций из книги [.NET Microservices: Architecture for Containerized .NET Applications](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/)
 
-За основу была взята бизнес модель представленного в книге проекта [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
+За основу была взята схема данных представленного в книге проекта [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
 
 ## Сервисы
 
@@ -10,7 +10,7 @@
 
 1. **Identity** 
 	
-	Или сервер аутентификации (OAuth).  Сервис хранит в себе данные пользователей и их роли в системе. Позволяет произвести логин пользователя в системе (логаут и регистрация не 	реализованы) и поддерживает Authorization Code Flow для получаения токена пользователя, с которым в последствии можно авторизоваться в любом сервисе.
+	IdP сервер.  Сервис хранит в себе данные пользователей и их роли в системе. Позволяет произвести логин пользователя в системе (логаут и регистрация не 	реализованы) и поддерживает Authorization Code Flow для получаения токена пользователя, с которым в последствии можно быть авторизованным в любом сервисе.
 
 2. **Catalog**
 
@@ -113,34 +113,3 @@ grpcui -plaintext localhost:5003
 ```
 
 ![grpcui](https://github.com/ART4S/MicroShop/blob/master/Resources/grpcui.PNG)
-
-# Developer Notes
-
-### Добавление миграций
-
-**Catalog**
-
-*CatalogDbContext*: dotnet ef migrations add Catalog_Initial -s ./Services/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj -p ./Services/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj -c CatalogDbContext -o DataAccess/Catalog/Migrations
-
-*IntegrationDbContext*: dotnet ef migrations add Integration_Initial -s ./Services/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj -p ./Services/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj -c IntegrationDbContext -o DataAccess/Integration/Migrations
-
-**Ordering**
-
-*OrderingDbContext*: dotnet ef migrations add Ordering_Initial -s ./Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj -p ./Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj -c OrderingDbContext -o DataAccess/Ordering/Migrations
-
-*IntegrationDbContext*: dotnet ef migrations add Integration_Initial -s ./Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj -p ./Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj -c IntegrationDbContext -o DataAccess/Integration/Migrations
-
-*IdempotencyDbContext*: dotnet ef migrations add Idempotency_Initial -s ./Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj -p ./Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj -c IdempotencyDbContext -o DataAccess/Idempotency/Migrations
-
-**Payment**
-
-*IntegrationDbContext*: dotnet ef migrations add Integration_Initial -s ./Services/Payment/Payment.API/Payment.API.csproj -p ./Services/Payment/Payment.API/Payment.API.csproj -c IntegrationDbContext -o DataAccess/Integration/Migrations
-
-
-**Identity**
-
-*PersistedGrantDbContext*: dotnet ef migrations add PersistedGrant_Initial -s ./Services/Identity/Identity.API/Identity.API.csproj -p ./Services/Identity/Identity.API/Identity.API.csproj -c PersistedGrantDbContext -o DataAccess/Migrations/PersistedGrant
-
-*ConfigurationDbContext*: dotnet ef migrations add Configuration_Initial  -s ./Services/Identity/Identity.API/Identity.API.csproj -p ./Services/Identity/Identity.API/Identity.API.csproj -c ConfigurationDbContext -o DataAccess/Migrations/Configuration
-
-*AppDbContext*: dotnet ef migrations add App_Initial -s ./Services/Identity/Identity.API/Identity.API.csproj -p ./Services/Identity/Identity.API/Identity.API.csproj -c AppDbContext -o DataAccess/Migrations/App
